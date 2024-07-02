@@ -1,16 +1,16 @@
-package cromega.studio.measurepedia.ui.activities.start
+package cromega.studio.measurepedia.ui.activities.home
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import cromega.studio.measurepedia.ui.activities.generic.ProjectActivity
+import cromega.studio.measurepedia.ui.activities.generic.Activity
 import cromega.studio.measurepedia.ui.theme.MeasurepediaTheme
 
-class StartActivity : ProjectActivity() {
+class HomeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MeasurepediaTheme {
-                StartState.initialize()
+                HomeState.initialize()
             }
         }
     }

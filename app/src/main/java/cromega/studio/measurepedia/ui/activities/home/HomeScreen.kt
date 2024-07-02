@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.ui.activities.start
+package cromega.studio.measurepedia.ui.activities.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import cromega.studio.measurepedia.R
 import cromega.studio.measurepedia.utils.ResourcesUtils
 
-object StartScreen {
+object HomeScreen {
 
     @Composable
     fun Screen() =
