@@ -1,7 +1,6 @@
 package cromega.studio.measurepedia.ui.activities.generic
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import cromega.studio.measurepedia.data.database.tables.instances.BodyPartsTable
@@ -14,15 +13,13 @@ import cromega.studio.measurepedia.utils.TablesUtils
 
 abstract class Activity: ComponentActivity()
 {
-    private lateinit var tablesUtils: TablesUtils
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         ResourcesUtils.updateInstance(resources)
-
-        tablesUtils =
-            TablesUtils(
+        TablesUtils
+            .updateInstances(
                 personsTable = PersonsTable(applicationContext),
                 bodyPartsTable = BodyPartsTable(applicationContext),
                 metricSystemsUnitsTable = MetricSystemsUnitsTable(applicationContext),
@@ -34,6 +31,6 @@ abstract class Activity: ComponentActivity()
     override fun onDestroy()
     {
         super.onDestroy()
-        tablesUtils.close()
+        TablesUtils.closeInstances()
     }
 }
