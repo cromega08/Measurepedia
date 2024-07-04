@@ -13,8 +13,6 @@ import java.util.Locale
 
 abstract class MeasurepediaDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION)
 {
-    protected val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-
     init { onInit() }
 
     override fun onCreate(db: SQLiteDatabase)

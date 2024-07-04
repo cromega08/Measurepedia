@@ -2,11 +2,11 @@ package cromega.studio.measurepedia.data.database.tables.instances
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import cromega.studio.measurepedia.data.database.tables.generic.Table
+import cromega.studio.measurepedia.data.models.Record
 import cromega.studio.measurepedia.extensions.isNotNull
 
-class RecordsTable(context: Context) : Table(context) {
+open class RecordsTable(context: Context) : Table<Record>(context) {
     override val TABLE_INFO: RecordsTableInfo
         get() = RecordsTableInfo()
     override val ON_INIT_QUERIES: Array<String>
@@ -33,44 +33,27 @@ class RecordsTable(context: Context) : Table(context) {
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_PERSON_ID}, ${TABLE_INFO.COLUMN_FIELD_ID}, ${TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID}) values (1, 10, 1)",
         )
 
+    override val COMPLETE_PROJECTION: Array<String>
+        get() = TABLE_INFO.COLUMNS
+
     override fun afterInit() = readAll()
 
-    fun readAll() {
-        val projection: Array<String> = arrayOf(
-            TABLE_INFO.COLUMN_ID,
-            TABLE_INFO.COLUMN_PERSON_ID,
-            TABLE_INFO.COLUMN_FIELD_ID,
-            TABLE_INFO.COLUMN_MEASURE,
-            TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID
-        )
-
-        val result: Cursor = read(projection)
-    }
-
-    fun read(id: Int) {
-        val projection: Array<String> = arrayOf(
-            TABLE_INFO.COLUMN_ID,
-            TABLE_INFO.COLUMN_PERSON_ID,
-            TABLE_INFO.COLUMN_FIELD_ID,
-            TABLE_INFO.COLUMN_MEASURE,
-            TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID
-        )
-
-        val selection: String = "${TABLE_INFO.COLUMN_ID} = ?"
-        val selectionArgs: Array<String> = arrayOf(id.toString())
-
-        val result: Cursor = read(
-            projection = projection,
-            selection = selection,
-            selectionArgs = selectionArgs
-        )
-    }
+    override fun readAll() =
+        (read { i, map ->
+            Record(
+                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
+                personId = map[TABLE_INFO.COLUMN_PERSON_ID]?.get(i) as Int,
+                fieldId = map[TABLE_INFO.COLUMN_FIELD_ID]?.get(i) as Int,
+                measure = map[TABLE_INFO.COLUMN_MEASURE]?.get(i) as Float,
+                metricSystemUnitId = map[TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID]?.get(i) as Int
+            )
+        }).toTypedArray()
 
     fun insert(personId: Int, fieldId: Int, measure: Float? = null, metricSystemUnitId: Int) =
-        insert(generateContentValue(personId, fieldId, measure, metricSystemUnitId))
+        insertQuery(generateContentValue(personId, fieldId, measure, metricSystemUnitId))
 
     fun update(id: Int, personId: Int, fieldId: Int, measure: Float, metricSystemUnitId: Int) =
-        update(id, generateContentValue(personId, fieldId, measure, metricSystemUnitId))
+        updateQuery(id, generateContentValue(personId, fieldId, measure, metricSystemUnitId))
 
     private fun generateContentValue(
         personId: Int? = null,
@@ -87,6 +70,15 @@ class RecordsTable(context: Context) : Table(context) {
     protected inner class RecordsTableInfo : TableInfo() {
         override val TABLE: String
             get() = "records"
+
+        override val COLUMNS: Array<String>
+            get() = arrayOf(
+                COLUMN_ID,
+                COLUMN_PERSON_ID,
+                COLUMN_FIELD_ID,
+                COLUMN_MEASURE,
+                COLUMN_METRIC_SYSTEM_UNIT_ID
+            )
 
         val COLUMN_PERSON_ID: String
             get() = "person_id"

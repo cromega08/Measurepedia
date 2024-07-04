@@ -2,12 +2,13 @@ package cromega.studio.measurepedia.data.database.tables.instances
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import cromega.studio.measurepedia.data.database.tables.generic.Table
+import cromega.studio.measurepedia.data.models.Field
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
+import cromega.studio.measurepedia.extensions.toBoolean
 
-open class FieldsTable(context: Context) : Table(context)
+open class FieldsTable(context: Context) : Table<Field>(context)
 {
     override val TABLE_INFO: FieldsTableInfo
         get() = FieldsTableInfo()
@@ -31,30 +32,26 @@ open class FieldsTable(context: Context) : Table(context)
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_BODY_PART_ID}) values ('left foot', 6);",
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_BODY_PART_ID}) values ('right foot', 6);",
         )
+    override val COMPLETE_PROJECTION: Array<String>
+        get() = TABLE_INFO.COLUMNS
 
-    override fun afterInit() = read()
+    override fun afterInit() = readAll()
 
-    fun read() {
-        val projection: Array<String> =
-            arrayOf(
-                TABLE_INFO.COLUMN_ID,
-                TABLE_INFO.COLUMN_NAME,
-                TABLE_INFO.COLUMN_ACTIVE
+    override fun readAll(): Array<Field> =
+        (read { i, map ->
+            Field(
+                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
+                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
+                bodyPartId = map[TABLE_INFO.COLUMN_BODY_PART_ID]?.get(i) as Int,
+                active = (map[TABLE_INFO.COLUMN_ACTIVE]?.get(i) as Int).toBoolean()
             )
-
-        val sortOrder: String = "${TABLE_INFO.COLUMN_NAME} desc"
-
-        val result: Cursor = read(
-            projection = projection,
-            sortOrder = sortOrder
-        )
-    }
+        }).toTypedArray()
 
     fun insert(name: String) =
-        insert(generateContentValue(name))
+        insertQuery(generateContentValue(name))
 
     fun update(id: Int, name: String, available: Boolean) =
-        update(id, generateContentValue(name, available))
+        updateQuery(id, generateContentValue(name, available))
 
     private fun generateContentValue(name: String? = null, active: Boolean? = null): ContentValues =
         ContentValues().apply {
@@ -66,6 +63,15 @@ open class FieldsTable(context: Context) : Table(context)
     {
         override val TABLE: String
             get() = "fields"
+
+        override val COLUMNS: Array<String>
+            get() =
+                arrayOf(
+                    COLUMN_ID,
+                    COLUMN_NAME,
+                    COLUMN_BODY_PART_ID,
+                    COLUMN_ACTIVE
+                )
 
         val COLUMN_NAME: String
             get() = "name"

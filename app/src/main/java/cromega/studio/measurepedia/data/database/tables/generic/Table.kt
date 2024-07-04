@@ -7,11 +7,21 @@ import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 import android.util.Log
 import cromega.studio.measurepedia.data.database.connection.MeasurepediaDatabase
+import cromega.studio.measurepedia.extensions.addIfNotNull
+import cromega.studio.measurepedia.extensions.generateLogicMap
+import cromega.studio.measurepedia.extensions.generateSimpleMap
+import cromega.studio.measurepedia.extensions.get
+import cromega.studio.measurepedia.extensions.getOrNull
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-abstract class Table(context: Context) : MeasurepediaDatabase(context)
+abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
 {
+    protected val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
     protected abstract val TABLE_INFO : TableInfo
     protected abstract val ON_INIT_QUERIES: Array<String>
+    protected abstract val COMPLETE_PROJECTION : Array<String>
 
     override fun onInit()
     {
@@ -37,7 +47,52 @@ abstract class Table(context: Context) : MeasurepediaDatabase(context)
         Log.i(this.javaClass.name, "${TABLE_INFO.TABLE} created in $DATABASE_NAME")
     }
 
+    protected fun extractColumnsData(cursor: Cursor, admitNull: Boolean = false): Map<String, MutableList<Any>> {
+        val toReturn: Map<String, MutableList<Any>> = TABLE_INFO.generateColumnsDataMap()
+
+        val columns: Map<String, Int> = TABLE_INFO.generateColumnsToIndexMap(cursor)
+
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                TABLE_INFO.COLUMNS.forEach {
+                    toReturn[it]
+                        ?.addIfNotNull(
+                            if (admitNull) cursor.getOrNull(columns[it]!!)
+                            else cursor.get(columns[it]!!)
+                        )
+                }
+            } while (cursor.moveToNext())
+        }
+
+        return toReturn
+    }
+
     protected fun read(
+        sortOrder: String? = null,
+        admitNullOnColumnsData: Boolean = false,
+        generateModel: (Int, Map<String, MutableList<Any>>) -> Model
+    ): MutableList<Model>
+    {
+        val toReturn: MutableList<Model> = mutableListOf()
+
+        val rowsData: Cursor = readQuery(COMPLETE_PROJECTION)
+
+        val rowsCount: Int = rowsData.count
+
+        val columnsData: Map<String, MutableList<Any>> =
+            extractColumnsData(rowsData, admitNullOnColumnsData)
+
+        for(index in 0 until rowsCount)
+        {
+            toReturn.add(generateModel(index, columnsData))
+        }
+
+        return toReturn
+    }
+
+    protected fun readQuery(
         projection: Array<String>,
         selection: String? = null,
         selectionArgs: Array<String>? = null,
@@ -55,14 +110,14 @@ abstract class Table(context: Context) : MeasurepediaDatabase(context)
         )
     }
 
-    protected fun insert(toInsert: ContentValues) =
+    protected fun insertQuery(toInsert: ContentValues) =
         writableDatabase.insert(
             TABLE_INFO.TABLE,
             null,
             toInsert
         )
 
-    protected fun update(
+    protected fun updateQuery(
         id: Int,
         toUpdate: ContentValues,
         selection: String = "${TABLE_INFO.COLUMN_ID} = ?",
@@ -88,11 +143,20 @@ abstract class Table(context: Context) : MeasurepediaDatabase(context)
         )
     }
 
-    protected abstract fun afterInit()
+    protected abstract fun afterInit(): Any
+
+    abstract fun readAll(): Array<Model>
 
     protected abstract inner class TableInfo : BaseColumns
     {
         abstract val TABLE: String
+        abstract val COLUMNS: Array<String>
         val COLUMN_ID = BaseColumns._ID
+
+        fun generateColumnsDataMap(): Map<String, MutableList<Any>> =
+            COLUMNS.generateSimpleMap(constructFunction = ::mutableListOf)
+
+        fun generateColumnsToIndexMap(cursor: Cursor): Map<String, Int> =
+            COLUMNS.generateLogicMap { cursor.getColumnIndex(it) }
     }
 }

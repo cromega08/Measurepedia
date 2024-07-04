@@ -2,13 +2,13 @@ package cromega.studio.measurepedia.data.database.tables.instances
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import cromega.studio.measurepedia.data.database.tables.generic.Table
 import cromega.studio.measurepedia.data.models.BodyPart
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
+import cromega.studio.measurepedia.extensions.toBoolean
 
-open class BodyPartsTable(context: Context) : Table(context)
+open class BodyPartsTable(context: Context) : Table<BodyPart>(context)
 {
     override val TABLE_INFO: BodyPartsTableInfo
         get() = BodyPartsTableInfo()
@@ -27,25 +27,25 @@ open class BodyPartsTable(context: Context) : Table(context)
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}) values ('foots');"
         )
 
-    override fun afterInit() = read()
+    override val COMPLETE_PROJECTION: Array<String>
+        get() = TABLE_INFO.COLUMNS
 
-    fun read()
-    {
-        val projection: Array<String> =
-            arrayOf(
-                TABLE_INFO.COLUMN_ID,
-                TABLE_INFO.COLUMN_NAME,
-                TABLE_INFO.COLUMN_ACTIVE
+    override fun afterInit() = readAll()
+
+    override fun readAll(): Array<BodyPart> =
+        (read { i, map ->
+            BodyPart(
+                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
+                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
+                active = (map[TABLE_INFO.COLUMN_ACTIVE]?.get(i) as Int).toBoolean()
             )
-
-        val result: Cursor = read(projection)
-    }
+        }).toTypedArray()
 
     fun insert(name: String, active: Boolean? = null) =
-        insert(generateContentValue(name, active))
+        insertQuery(generateContentValue(name, active))
 
     fun update(id: Int, name: String, active: Boolean) =
-        update(id, generateContentValue(name, active))
+        updateQuery(id, generateContentValue(name, active))
 
     private fun generateContentValue(name: String? = null, active: Boolean? = null) =
         ContentValues().apply {
@@ -53,13 +53,18 @@ open class BodyPartsTable(context: Context) : Table(context)
             if (active.isNotNull()) put(TABLE_INFO.COLUMN_ACTIVE, active)
         }
 
-    private fun loadModel(id: Int, name: String, active: Boolean) : BodyPart =
-        BodyPart(id, name, active)
-
     protected inner class BodyPartsTableInfo : TableInfo()
     {
         override val TABLE: String
             get() = "body_parts"
+
+        override val COLUMNS: Array<String>
+            get() =
+                arrayOf(
+                    COLUMN_ID,
+                    COLUMN_NAME,
+                    COLUMN_ACTIVE
+                )
 
         val COLUMN_NAME: String
             get() = "name"

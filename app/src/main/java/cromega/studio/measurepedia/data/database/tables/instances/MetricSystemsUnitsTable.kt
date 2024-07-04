@@ -2,11 +2,11 @@ package cromega.studio.measurepedia.data.database.tables.instances
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import cromega.studio.measurepedia.data.database.tables.generic.Table
+import cromega.studio.measurepedia.data.models.MetricSystemUnit
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 
-open class MetricSystemsUnitsTable(context: Context) : Table(context) {
+open class MetricSystemsUnitsTable(context: Context) : Table<MetricSystemUnit>(context) {
     override val TABLE_INFO: MetricSystemsUnitsTableInfo
         get() = MetricSystemsUnitsTableInfo()
     override val ON_INIT_QUERIES: Array<String>
@@ -21,25 +21,25 @@ open class MetricSystemsUnitsTable(context: Context) : Table(context) {
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_ABBREVIATION}) values ('inches', 'in')",
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_ABBREVIATION}) values ('feet', 'ft')"
         )
+    override val COMPLETE_PROJECTION: Array<String>
+        get() = TABLE_INFO.COLUMNS
 
-    override fun afterInit() = read()
+    override fun afterInit() = readAll()
 
-    fun read() {
-        val projection: Array<String> =
-            arrayOf(
-                TABLE_INFO.COLUMN_ID,
-                TABLE_INFO.COLUMN_NAME,
-                TABLE_INFO.COLUMN_ABBREVIATION
+    override fun readAll() =
+        (read { i, map ->
+            MetricSystemUnit(
+                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
+                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
+                abbreviation = map[TABLE_INFO.COLUMN_ABBREVIATION]?.get(i) as String
             )
-
-        val result: Cursor = read(projection)
-    }
+        }).toTypedArray()
 
     fun insert(name: String, abbreviation: String) =
-        insert(generateContentValue(name, abbreviation))
+        insertQuery(generateContentValue(name, abbreviation))
 
     fun update(id: Int, name: String, abbreviation: String) =
-        update(id, generateContentValue(name, abbreviation))
+        updateQuery(id, generateContentValue(name, abbreviation))
 
     private fun generateContentValue(name: String?, abbreviation: String? = null) =
         ContentValues().apply {
@@ -51,6 +51,13 @@ open class MetricSystemsUnitsTable(context: Context) : Table(context) {
     {
         override val TABLE: String
             get() = "metric_systems_units"
+
+        override val COLUMNS: Array<String>
+            get() = arrayOf(
+                COLUMN_ID,
+                COLUMN_NAME,
+                COLUMN_ABBREVIATION
+            )
 
         val COLUMN_NAME: String
             get() = "name"

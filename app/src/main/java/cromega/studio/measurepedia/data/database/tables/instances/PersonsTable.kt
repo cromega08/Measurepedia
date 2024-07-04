@@ -2,13 +2,17 @@ package cromega.studio.measurepedia.data.database.tables.instances
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import cromega.studio.measurepedia.data.database.tables.generic.Table
+import cromega.studio.measurepedia.data.models.Person
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
+import cromega.studio.measurepedia.extensions.toBoolean
+import cromega.studio.measurepedia.extensions.toDateWithFormat
 import java.sql.Date
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-open class PersonsTable(context: Context) : Table(context)
+open class PersonsTable(context: Context) : Table<Person>(context)
 {
     override val TABLE_INFO: PersonsTableInfo
         get() = PersonsTableInfo()
@@ -25,47 +29,56 @@ open class PersonsTable(context: Context) : Table(context)
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}) values ('client');"
         )
 
-    override fun afterInit() = read()
+    override val COMPLETE_PROJECTION: Array<String>
+        get() = TABLE_INFO.COLUMNS
 
-    fun read() {
-        val projection: Array<String> =
-            arrayOf(
-                TABLE_INFO.COLUMN_ID,
-                TABLE_INFO.COLUMN_NAME,
-                TABLE_INFO.COLUMN_ALIAS,
-                TABLE_INFO.COLUMN_UPDATED,
-                TABLE_INFO.COLUMN_MEASURED
+    override fun afterInit() = readAll()
+
+    override fun readAll(): Array<Person> =
+        (read { i, map ->
+            val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+            Person(
+                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
+                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
+                alias = map[TABLE_INFO.COLUMN_ALIAS]?.get(i) as? String?,
+                updated = (map[TABLE_INFO.COLUMN_UPDATED]?.get(i) as String) toDateWithFormat dateFormat,
+                measured = (map[TABLE_INFO.COLUMN_MEASURED]?.get(i) as Int).toBoolean()
             )
-
-        val sortOrder: String = "${TABLE_INFO.COLUMN_NAME} desc"
-
-        val result: Cursor = read(
-            projection = projection,
-            sortOrder = sortOrder
-        )
-    }
+        }).toTypedArray()
 
     fun insert(name: String, alias: String? = null, updated: Date? = null) =
-        insert(generateContentValue(name, alias, updated))
+        insertQuery(generateContentValue(name, alias, updated))
 
     fun update(id: Int, name: String, alias: String? = null, updated: Date? = null, measured: Boolean? = null) =
-        update(id, generateContentValue(name, alias, updated, measured))
+        updateQuery(id, generateContentValue(name, alias, updated, measured))
 
-    private fun generateContentValue(name: String? = null, alias: String? = null, updated: Date? = null, measured: Boolean? = null): ContentValues {
-        val contentValues: ContentValues = ContentValues()
-
-        if (name.isNotNullOrBlank()) contentValues.put(TABLE_INFO.COLUMN_NAME, name)
-        if (alias.isNotNullOrBlank()) contentValues.put(TABLE_INFO.COLUMN_ALIAS, alias)
-        if (updated.isNotNull()) contentValues.put(TABLE_INFO.COLUMN_UPDATED, DATE_FORMAT.format(updated))
-        if (measured.isNotNull()) contentValues.put(TABLE_INFO.COLUMN_MEASURED, measured)
-
-        return contentValues
-    }
+    private fun generateContentValue(
+        name: String? = null,
+        alias: String? = null,
+        updated: Date? = null,
+        measured: Boolean? = null
+    ): ContentValues =
+        ContentValues().apply {
+            if (name.isNotNullOrBlank()) put(TABLE_INFO.COLUMN_NAME, name)
+            if (alias.isNotNullOrBlank()) put(TABLE_INFO.COLUMN_ALIAS, alias)
+            if (updated.isNotNull()) put(TABLE_INFO.COLUMN_UPDATED, DATE_FORMAT.format(updated))
+            if (measured.isNotNull()) put(TABLE_INFO.COLUMN_MEASURED, measured)
+        }
 
     protected inner class PersonsTableInfo : TableInfo()
     {
         override val TABLE: String
             get() = "persons"
+
+        override val COLUMNS: Array<String>
+            get() = arrayOf(
+                COLUMN_ID,
+                COLUMN_NAME,
+                COLUMN_ALIAS,
+                COLUMN_UPDATED,
+                COLUMN_MEASURED
+            )
 
         val COLUMN_NAME: String
             get() = "name"
