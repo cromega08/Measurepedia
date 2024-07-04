@@ -13,7 +13,8 @@ data class TablesUtils(
     val fieldsTable: FieldsTable,
     val recordsTable: RecordsTable
 ) {
-    fun close() {
+    fun close()
+    {
         personsTable.close()
         bodyPartsTable.close()
         metricSystemsUnitsTable.close()

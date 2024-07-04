@@ -15,7 +15,8 @@ import cromega.studio.measurepedia.utils.TablesUtils
 abstract class Activity: ComponentActivity()
 {
     private lateinit var tablesUtils: TablesUtils
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         ResourcesUtils.updateInstance(resources)
@@ -30,7 +31,8 @@ abstract class Activity: ComponentActivity()
             )
     }
 
-    override fun onDestroy() {
+    override fun onDestroy()
+    {
         super.onDestroy()
         tablesUtils.close()
     }

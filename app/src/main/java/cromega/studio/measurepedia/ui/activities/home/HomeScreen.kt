@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import cromega.studio.measurepedia.R
 import cromega.studio.measurepedia.utils.ResourcesUtils
 
-object HomeScreen {
-
+object HomeScreen
+{
     @Composable
     fun Screen() =
         Scaffold(
@@ -19,18 +19,21 @@ object HomeScreen {
         )
 
     @Composable
-    fun Header() {
+    fun Header()
+    {
         Column {
             Text(text = ResourcesUtils.getString(R.string.app_name))
         }
     }
 
     @Composable
-    fun Main(paddingValues: PaddingValues) {
+    fun Main(paddingValues: PaddingValues)
+    {
     }
 
     @Composable
-    fun Footer() {
+    fun Footer()
+    {
         Column {
             Text(text = ResourcesUtils.getString(R.string.developer_name))
         }

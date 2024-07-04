@@ -5,8 +5,10 @@ import androidx.activity.compose.setContent
 import cromega.studio.measurepedia.ui.activities.generic.Activity
 import cromega.studio.measurepedia.ui.theme.MeasurepediaTheme
 
-class HomeActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class HomeActivity : Activity()
+{
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContent {
             MeasurepediaTheme {
