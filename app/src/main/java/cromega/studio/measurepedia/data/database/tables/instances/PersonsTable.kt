@@ -34,18 +34,23 @@ open class PersonsTable(context: Context) : Table<Person>(context)
 
     override fun afterInit() = readAll()
 
-    override fun readAll(): Array<Person> =
-        (read { i, map ->
-            val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    override fun generateModel(
+        index: Int,
+        columnsData: Map<String, MutableList<Any>>
+    ): Person 
+    {
+        val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
-            Person(
-                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
-                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
-                alias = map[TABLE_INFO.COLUMN_ALIAS]?.get(i) as? String?,
-                updated = (map[TABLE_INFO.COLUMN_UPDATED]?.get(i) as String) toDateWithFormat dateFormat,
-                measured = (map[TABLE_INFO.COLUMN_MEASURED]?.get(i) as Int).toBoolean()
-            )
-        }).toTypedArray()
+        return Person(
+            id = columnsData[TABLE_INFO.COLUMN_ID]?.get(index) as Int,
+            name = columnsData[TABLE_INFO.COLUMN_NAME]?.get(index) as String,
+            alias = columnsData[TABLE_INFO.COLUMN_ALIAS]?.get(index) as? String?,
+            updated = (columnsData[TABLE_INFO.COLUMN_UPDATED]?.get(index) as String) toDateWithFormat dateFormat,
+            measured = (columnsData[TABLE_INFO.COLUMN_MEASURED]?.get(index) as Int).toBoolean()
+        )
+    }
+
+    override fun readAll(): Array<Person> = read().toTypedArray()
 
     fun insert(name: String, alias: String? = null, updated: Date? = null) =
         insertQuery(generateContentValue(name, alias, updated))

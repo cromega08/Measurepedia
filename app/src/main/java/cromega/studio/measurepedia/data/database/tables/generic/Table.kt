@@ -47,7 +47,7 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
         Log.i(this.javaClass.name, "${TABLE_INFO.TABLE} created in $DATABASE_NAME")
     }
 
-    protected fun extractColumnsData(cursor: Cursor, admitNull: Boolean = false): Map<String, MutableList<Any>> {
+    protected fun extractColumnsData(cursor: Cursor): Map<String, MutableList<Any>> {
         val toReturn: Map<String, MutableList<Any>> = TABLE_INFO.generateColumnsDataMap()
 
         val columns: Map<String, Int> = TABLE_INFO.generateColumnsToIndexMap(cursor)
@@ -58,10 +58,7 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
             {
                 TABLE_INFO.COLUMNS.forEach {
                     toReturn[it]
-                        ?.addIfNotNull(
-                            if (admitNull) cursor.getOrNull(columns[it]!!)
-                            else cursor.get(columns[it]!!)
-                        )
+                        ?.addIfNotNull(cursor.get(columns[it]!!))
                 }
             } while (cursor.moveToNext())
         }
@@ -70,9 +67,7 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
     }
 
     protected fun read(
-        sortOrder: String? = null,
-        admitNullOnColumnsData: Boolean = false,
-        generateModel: (Int, Map<String, MutableList<Any>>) -> Model
+        sortOrder: String? = null
     ): MutableList<Model>
     {
         val toReturn: MutableList<Model> = mutableListOf()
@@ -81,8 +76,7 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
 
         val rowsCount: Int = rowsData.count
 
-        val columnsData: Map<String, MutableList<Any>> =
-            extractColumnsData(rowsData, admitNullOnColumnsData)
+        val columnsData: Map<String, MutableList<Any>> = extractColumnsData(rowsData)
 
         for(index in 0 until rowsCount)
         {
@@ -144,6 +138,8 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
     }
 
     protected abstract fun afterInit(): Any
+
+    protected abstract fun generateModel(index: Int, columnsData: Map<String, MutableList<Any>>): Model
 
     abstract fun readAll(): Array<Model>
 

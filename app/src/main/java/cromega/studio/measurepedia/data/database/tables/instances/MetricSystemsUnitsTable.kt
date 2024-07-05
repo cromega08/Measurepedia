@@ -26,14 +26,17 @@ open class MetricSystemsUnitsTable(context: Context) : Table<MetricSystemUnit>(c
 
     override fun afterInit() = readAll()
 
-    override fun readAll() =
-        (read { i, map ->
-            MetricSystemUnit(
-                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
-                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
-                abbreviation = map[TABLE_INFO.COLUMN_ABBREVIATION]?.get(i) as String
-            )
-        }).toTypedArray()
+    override fun generateModel(
+        index: Int,
+        columnsData: Map<String, MutableList<Any>>
+    ): MetricSystemUnit =
+        MetricSystemUnit(
+            id = columnsData[TABLE_INFO.COLUMN_ID]?.get(index) as Int,
+            name = columnsData[TABLE_INFO.COLUMN_NAME]?.get(index) as String,
+            abbreviation = columnsData[TABLE_INFO.COLUMN_ABBREVIATION]?.get(index) as String
+        )
+    
+    override fun readAll() = read().toTypedArray()
 
     fun insert(name: String, abbreviation: String) =
         insertQuery(generateContentValue(name, abbreviation))

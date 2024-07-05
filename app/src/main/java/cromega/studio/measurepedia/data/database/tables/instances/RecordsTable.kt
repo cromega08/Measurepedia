@@ -38,16 +38,19 @@ open class RecordsTable(context: Context) : Table<Record>(context) {
 
     override fun afterInit() = readAll()
 
-    override fun readAll() =
-        (read { i, map ->
-            Record(
-                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
-                personId = map[TABLE_INFO.COLUMN_PERSON_ID]?.get(i) as Int,
-                fieldId = map[TABLE_INFO.COLUMN_FIELD_ID]?.get(i) as Int,
-                measure = map[TABLE_INFO.COLUMN_MEASURE]?.get(i) as Float,
-                metricSystemUnitId = map[TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID]?.get(i) as Int
-            )
-        }).toTypedArray()
+    override fun generateModel(
+        index: Int,
+        columnsData: Map<String, MutableList<Any>>
+    ): Record =
+        Record(
+            id = columnsData[TABLE_INFO.COLUMN_ID]?.get(index) as Int,
+            personId = columnsData[TABLE_INFO.COLUMN_PERSON_ID]?.get(index) as Int,
+            fieldId = columnsData[TABLE_INFO.COLUMN_FIELD_ID]?.get(index) as Int,
+            measure = columnsData[TABLE_INFO.COLUMN_MEASURE]?.get(index) as Float,
+            metricSystemUnitId = columnsData[TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID]?.get(index) as Int
+        )
+    
+    override fun readAll() = read().toTypedArray()
 
     fun insert(personId: Int, fieldId: Int, measure: Float? = null, metricSystemUnitId: Int) =
         insertQuery(generateContentValue(personId, fieldId, measure, metricSystemUnitId))

@@ -32,14 +32,17 @@ open class BodyPartsTable(context: Context) : Table<BodyPart>(context)
 
     override fun afterInit() = readAll()
 
-    override fun readAll(): Array<BodyPart> =
-        (read { i, map ->
-            BodyPart(
-                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
-                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
-                active = (map[TABLE_INFO.COLUMN_ACTIVE]?.get(i) as Int).toBoolean()
-            )
-        }).toTypedArray()
+    override fun generateModel(
+        index: Int,
+        columnsData: Map<String, MutableList<Any>>
+    ): BodyPart =
+        BodyPart(
+            id = columnsData[TABLE_INFO.COLUMN_ID]?.get(index) as Int,
+            name = columnsData[TABLE_INFO.COLUMN_NAME]?.get(index) as String,
+            active = (columnsData[TABLE_INFO.COLUMN_ACTIVE]?.get(index) as Int).toBoolean()
+        )
+
+    override fun readAll(): Array<BodyPart> = read().toTypedArray()
 
     fun insert(name: String, active: Boolean? = null) =
         insertQuery(generateContentValue(name, active))

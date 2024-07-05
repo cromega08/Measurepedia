@@ -37,15 +37,18 @@ open class FieldsTable(context: Context) : Table<Field>(context)
 
     override fun afterInit() = readAll()
 
-    override fun readAll(): Array<Field> =
-        (read { i, map ->
-            Field(
-                id = map[TABLE_INFO.COLUMN_ID]?.get(i) as Int,
-                name = map[TABLE_INFO.COLUMN_NAME]?.get(i) as String,
-                bodyPartId = map[TABLE_INFO.COLUMN_BODY_PART_ID]?.get(i) as Int,
-                active = (map[TABLE_INFO.COLUMN_ACTIVE]?.get(i) as Int).toBoolean()
-            )
-        }).toTypedArray()
+    override fun generateModel(
+        index: Int,
+        columnsData: Map<String, MutableList<Any>>
+    ): Field =
+        Field(
+            id = columnsData[TABLE_INFO.COLUMN_ID]?.get(index) as Int,
+            name = columnsData[TABLE_INFO.COLUMN_NAME]?.get(index) as String,
+            bodyPartId = columnsData[TABLE_INFO.COLUMN_BODY_PART_ID]?.get(index) as Int,
+            active = (columnsData[TABLE_INFO.COLUMN_ACTIVE]?.get(index) as Int).toBoolean()
+        )
+
+    override fun readAll(): Array<Field> = read().toTypedArray()
 
     fun insert(name: String) =
         insertQuery(generateContentValue(name))
