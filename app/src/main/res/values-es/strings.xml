@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_an_option">Selecciona una Opcion</string>
+    <string name="order_by">Ordenar por</string>
+    <string name="and_if">y si</string>
+    <string name="measured">Medido</string>
+    <string name="not_measured">Sin Medir</string>
+    <string name="search">Buscar</string>
+    <string name="measured_or_not">Medido o No</string>
+    <string name="recent">Reciente</string>
+    <string name="oldest">Antiguo</string>
+    <string name="creation">Creacion</string>
+</resources>

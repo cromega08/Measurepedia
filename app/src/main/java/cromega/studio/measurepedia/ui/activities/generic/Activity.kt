@@ -8,8 +8,8 @@ import cromega.studio.measurepedia.data.database.tables.instances.FieldsTable
 import cromega.studio.measurepedia.data.database.tables.instances.MetricSystemsUnitsTable
 import cromega.studio.measurepedia.data.database.tables.instances.PersonsTable
 import cromega.studio.measurepedia.data.database.tables.instances.RecordsTable
-import cromega.studio.measurepedia.utils.ResourcesUtils
-import cromega.studio.measurepedia.utils.TablesUtils
+import cromega.studio.measurepedia.resources.utils.ResourcesUtils
+import cromega.studio.measurepedia.resources.utils.TablesUtils
 
 abstract class Activity: ComponentActivity()
 {

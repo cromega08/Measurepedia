@@ -52,6 +52,8 @@ open class PersonsTable(context: Context) : Table<Person>(context)
 
     override fun readAll(): Array<Person> = read().toTypedArray()
 
+    fun readOrderedByDate(): Array<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} desc").toTypedArray()
+
     fun insert(name: String, alias: String? = null, updated: Date? = null) =
         insertQuery(generateContentValue(name, alias, updated))
 

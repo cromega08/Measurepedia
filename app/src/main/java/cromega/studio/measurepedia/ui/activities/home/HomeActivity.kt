@@ -13,6 +13,7 @@ class HomeActivity : Activity()
         setContent {
             MeasurepediaTheme {
                 HomeState.initialize()
+                HomeScreen.Screen()
             }
         }
     }

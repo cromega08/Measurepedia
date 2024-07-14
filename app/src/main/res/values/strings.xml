@@ -1,4 +1,14 @@
 <resources>
-    <string name="app_name">Measurepedia</string>
-    <string name="developer_name">CromegaStudio</string>
+    <string name="app_name" translatable="false">Measurepedia</string>
+    <string name="developer_name" translatable="false">CromegaStudio</string>
+    <string name="search">Search</string>
+    <string name="select_an_option">Select an Option</string>
+    <string name="order_by">Order by</string>
+    <string name="and_if">and if</string>
+    <string name="measured">Measured</string>
+    <string name="not_measured">Not Measured</string>
+    <string name="measured_or_not">Measured or Not</string>
+    <string name="recent">Recent</string>
+    <string name="oldest">Oldest</string>
+    <string name="creation">Creation</string>
 </resources>

@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.utils
+package cromega.studio.measurepedia.resources.utils
 
 import cromega.studio.measurepedia.data.database.tables.instances.BodyPartsTable
 import cromega.studio.measurepedia.data.database.tables.instances.FieldsTable

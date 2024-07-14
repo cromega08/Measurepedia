@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.utils
+package cromega.studio.measurepedia.resources.utils
 
 import android.content.res.Resources
 import androidx.annotation.StringRes
