@@ -22,7 +22,7 @@ fun GenericFooterRow(
         modifier =
         Modifier
             .fillMaxWidth()
-            .heightIn(min = 1.dp, 125.dp)
+            .heightIn(min = 1.dp, 115.dp)
             .padding(top = 0.dp, bottom = 50.dp, start = 20.dp, end = 20.dp)
             .then(modifier),
         horizontalArrangement = horizontalArrangement,

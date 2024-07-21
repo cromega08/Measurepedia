@@ -1,7 +1,6 @@
 package cromega.studio.measurepedia.ui.components.layouts
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +32,6 @@ fun <T> Dropdown(
         modifier =
         Modifier
             .background(color = Color.LightGray, shape = RoundedCornerShape(5.dp))
-            .border(width = 2.5.dp, color = Color.Black, shape = RoundedCornerShape(5.dp))
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clickable(onClick = onClickMenu)
             .then(modifier),

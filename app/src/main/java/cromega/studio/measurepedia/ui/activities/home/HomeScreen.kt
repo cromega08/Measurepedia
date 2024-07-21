@@ -1,7 +1,6 @@
 package cromega.studio.measurepedia.ui.activities.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,7 +31,6 @@ import cromega.studio.measurepedia.ui.components.elements.FaceIcon
 import cromega.studio.measurepedia.ui.components.elements.SearchBar
 import cromega.studio.measurepedia.ui.components.elements.SettingsIcon
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
-import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalLine
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.elements.TextLeftAligned
 import cromega.studio.measurepedia.ui.components.elements.TextRightAligned
@@ -227,7 +225,6 @@ internal object HomeScreen
                modifier =
                Modifier
                    .fillMaxWidth()
-                   .border(color = Color.Black, width = 2.5.dp, shape = RoundedCornerShape(10.dp))
                    .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
                horizontalArrangement = Arrangement.Center,
                verticalAlignment = Alignment.CenterVertically
@@ -243,8 +240,6 @@ internal object HomeScreen
                    Text(text = ResourcesUtils.getString(R.string.fields))
                }
 
-               SpacerVerticalLine(modifier = Modifier.fillMaxHeight())
-
                VerticalIconButton(
                    modifier =
                    Modifier
@@ -256,8 +251,6 @@ internal object HomeScreen
                    Text(text = ResourcesUtils.getString(R.string.import_data))
                }
 
-               SpacerVerticalLine(modifier = Modifier.fillMaxHeight())
-
                VerticalIconButton(
                    modifier =
                    Modifier
@@ -268,8 +261,6 @@ internal object HomeScreen
                    UploadIcon()
                    Text(text = ResourcesUtils.getString(R.string.export))
                }
-
-               SpacerVerticalLine(modifier = Modifier.fillMaxHeight())
 
                VerticalIconButton(
                    modifier =
