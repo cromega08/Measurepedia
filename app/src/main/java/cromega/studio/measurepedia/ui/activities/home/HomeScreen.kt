@@ -234,11 +234,7 @@ internal object HomeScreen
                 if ((searchValidations atLeastOneIs true) && measuredValidation )
                 {
                     /*
-                    * TODO: Required to include a long press option for the persons, with options like:
-                    *  - Change Person Information
-                    *  - Take measures
-                    *  - Export Person Information
-                    *  - Export Person Measures (Should send user to measures details view and show a bottom dialog to confirm the data sharing
+                    * TODO: Include "Missing Functionalities" related to other Activities
                     * */
 
                     CardConstraintLayout(
