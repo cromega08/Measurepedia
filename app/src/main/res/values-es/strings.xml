@@ -10,4 +10,10 @@
     <string name="recent">Reciente</string>
     <string name="oldest">Antiguo</string>
     <string name="creation">Creacion</string>
+    <string name="fields">Campos</string>
+    <string name="import_data">Importar</string>
+    <string name="export">Exportar</string>
+    <string name="settings">Configuracion</string>
+    <string name="download">Descargar</string>
+    <string name="upload">Subir</string>
 </resources>

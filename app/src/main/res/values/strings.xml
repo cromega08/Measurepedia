@@ -11,4 +11,10 @@
     <string name="recent">Recent</string>
     <string name="oldest">Oldest</string>
     <string name="creation">Creation</string>
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="fields">Fields</string>
+    <string name="import_data">Import</string>
+    <string name="export">Export</string>
+    <string name="settings">Settings</string>
 </resources>

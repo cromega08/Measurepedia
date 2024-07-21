@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cromega.studio.measurepedia.R
+import cromega.studio.measurepedia.resources.utils.ResourcesUtils
 
 @Composable
 fun SearchIcon() = Icon(imageVector = Icons.Default.Search, contentDescription = Icons.Default.Search.name)
@@ -44,7 +45,7 @@ fun FaceIcon() = Icon(imageVector = Icons.Default.Face, contentDescription = Ico
 fun DownloadIcon() =
     Icon(
         painter = painterResource(id = R.drawable.download),
-        contentDescription = "",
+        contentDescription = ResourcesUtils.getString(R.string.download),
         modifier = Modifier.size(24.dp)
     )
 
@@ -52,7 +53,7 @@ fun DownloadIcon() =
 fun UploadIcon() =
     Icon(
         painter = painterResource(id = R.drawable.upload),
-        contentDescription = "",
+        contentDescription = ResourcesUtils.getString(R.string.upload),
         modifier = Modifier.size(24.dp)
     )
 

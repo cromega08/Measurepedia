@@ -19,10 +19,24 @@ fun GenericHeaderColumn(
 ) =
     Column(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
-                .then(modifier),
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+            .then(modifier),
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        content = content
+    )
+
+@Composable
+fun CenteredColumn(
+    modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Center,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    content: @Composable (ColumnScope.() -> Unit)
+) =
+    Column(
+        modifier = Modifier.then(modifier),
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         content = content
