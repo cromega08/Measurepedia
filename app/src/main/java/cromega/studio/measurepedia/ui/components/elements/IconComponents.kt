@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.ui.components
+package cromega.studio.measurepedia.ui.components.elements
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear

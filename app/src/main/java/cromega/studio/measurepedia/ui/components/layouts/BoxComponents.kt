@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.ui.components
+package cromega.studio.measurepedia.ui.components.layouts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cromega.studio.measurepedia.ui.components.elements.TextSmall
+import cromega.studio.measurepedia.ui.components.elements.VerticalArrowsIcon
 
 @Composable
 fun <T> Dropdown(

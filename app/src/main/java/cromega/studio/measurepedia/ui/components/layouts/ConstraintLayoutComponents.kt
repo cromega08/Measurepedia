@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.ui.components
+package cromega.studio.measurepedia.ui.components.layouts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding

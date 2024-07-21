@@ -1,6 +1,5 @@
-package cromega.studio.measurepedia.ui.components
+package cromega.studio.measurepedia.ui.components.elements
 
-import android.icu.text.StringSearch
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
-import kotlin.math.max
 
 @Composable
 fun SearchBar(

@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.ui.components
+package cromega.studio.measurepedia.ui.components.elements
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

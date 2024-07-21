@@ -19,18 +19,18 @@ import cromega.studio.measurepedia.enums.MeasuredOrder
 import cromega.studio.measurepedia.extensions.atLeastOneIs
 import cromega.studio.measurepedia.resources.utils.ResourcesUtils
 import cromega.studio.measurepedia.resources.utils.TablesUtils
-import cromega.studio.measurepedia.ui.components.CardConstraintLayout
-import cromega.studio.measurepedia.ui.components.Dropdown
-import cromega.studio.measurepedia.ui.components.GenericBodyLazyColumn
-import cromega.studio.measurepedia.ui.components.GenericHeaderColumn
-import cromega.studio.measurepedia.ui.components.SearchBar
-import cromega.studio.measurepedia.ui.components.SpacerHorizontalSmall
-import cromega.studio.measurepedia.ui.components.SpacerVerticalSmall
-import cromega.studio.measurepedia.ui.components.TextLeftAligned
-import cromega.studio.measurepedia.ui.components.TextRightAligned
-import cromega.studio.measurepedia.ui.components.TextSmall
-import cromega.studio.measurepedia.ui.components.TextSubtitle
-import cromega.studio.measurepedia.ui.components.TextTitle
+import cromega.studio.measurepedia.ui.components.elements.SearchBar
+import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
+import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
+import cromega.studio.measurepedia.ui.components.elements.TextLeftAligned
+import cromega.studio.measurepedia.ui.components.elements.TextRightAligned
+import cromega.studio.measurepedia.ui.components.elements.TextSmall
+import cromega.studio.measurepedia.ui.components.elements.TextSubtitle
+import cromega.studio.measurepedia.ui.components.elements.TextTitle
+import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
+import cromega.studio.measurepedia.ui.components.layouts.Dropdown
+import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
+import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 
 internal object HomeScreen
 {

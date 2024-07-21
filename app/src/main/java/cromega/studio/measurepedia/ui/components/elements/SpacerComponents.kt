@@ -1,4 +1,4 @@
-package cromega.studio.measurepedia.ui.components
+package cromega.studio.measurepedia.ui.components.elements
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
