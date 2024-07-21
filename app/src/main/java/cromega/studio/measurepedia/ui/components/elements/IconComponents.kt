@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -59,3 +60,7 @@ fun UploadIcon() =
 
 @Composable
 fun SettingsIcon() = Icon(imageVector = Icons.Default.Settings, contentDescription = Icons.Default.Settings.name)
+
+@Composable
+fun KebabMenuIcon() =
+    Icon(imageVector = Icons.Default.MoreVert, contentDescription = Icons.Default.MoreVert.name)

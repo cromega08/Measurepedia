@@ -9,20 +9,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TextTitle(modifier: Modifier = Modifier, text: String) =
+fun TextTitle(modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, text: String) =
     Text(
         modifier = Modifier.then(modifier),
         fontSize = 35.sp,
         fontWeight = FontWeight.SemiBold,
+        textAlign = textAlign,
         text = text
     )
 
 @Composable
-fun TextSubtitle(modifier: Modifier = Modifier, text: String) =
+fun TextSubtitle(modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, text: String) =
     Text(
         modifier = Modifier.then(modifier),
         fontSize = 22.5.sp,
         fontStyle = FontStyle.Italic,
+        textAlign = textAlign,
         text = text
     )
 

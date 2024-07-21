@@ -1,5 +1,6 @@
 package cromega.studio.measurepedia.data.models
 
+import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 import cromega.studio.measurepedia.extensions.toStringWithFormat
 import java.util.Date
 import java.util.Locale
@@ -16,6 +17,8 @@ data class Person(
     fun getName(): String =
         name
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale = locale) else it.toString() }
+
+    fun hasAlias(): Boolean = alias.isNotNullOrBlank()
 
     fun getAlias(): String =
         alias?.

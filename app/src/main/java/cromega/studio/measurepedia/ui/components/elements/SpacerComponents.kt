@@ -14,8 +14,17 @@ import androidx.compose.ui.unit.dp
 fun SpacerVerticalSmall(modifier: Modifier = Modifier) =
     Spacer(
         modifier =
+        Modifier
+            .height(10.dp)
+            .then(modifier)
+    )
+
+@Composable
+fun SpacerVerticalMedium(modifier: Modifier = Modifier) =
+    Spacer(
+        modifier =
             Modifier
-                .height(10.dp)
+                .height(20.dp)
                 .then(modifier)
     )
 
@@ -23,10 +32,29 @@ fun SpacerVerticalSmall(modifier: Modifier = Modifier) =
 fun SpacerHorizontalSmall(modifier: Modifier = Modifier) =
     Spacer(
         modifier =
-            Modifier
-                .width(10.dp)
-                .then(modifier)
+        Modifier
+            .width(10.dp)
+            .then(modifier)
     )
+
+@Composable
+fun SpacerHorizontalLine(
+    modifier: Modifier = Modifier,
+    height: Dp = 2.5.dp,
+    width: Dp = 0.dp,
+    color: Color = Color.Black
+) {
+    val finalModifier: Modifier =
+        Modifier
+            .height(height)
+            .background(color = color)
+            .then(modifier)
+
+    if (width > 0.dp)
+        finalModifier.width(width)
+
+    Spacer(modifier = finalModifier)
+}
 
 @Composable
 fun SpacerVerticalLine(

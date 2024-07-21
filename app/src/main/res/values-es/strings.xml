@@ -13,7 +13,11 @@
     <string name="fields">Campos</string>
     <string name="import_data">Importar</string>
     <string name="export">Exportar</string>
-    <string name="settings">Configuracion</string>
+    <string name="settings">Ajustes</string>
     <string name="download">Descargar</string>
     <string name="upload">Subir</string>
+    <string name="update_person_info">Actualizar Informacion</string>
+    <string name="take_measures">Tomar Medidas</string>
+    <string name="export_person_info">Exportar Informacion</string>
+    <string name="import_person_info">Importar Informacion</string>
 </resources>
