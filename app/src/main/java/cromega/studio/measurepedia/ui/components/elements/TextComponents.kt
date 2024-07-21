@@ -47,6 +47,7 @@ fun TextRightAligned(modifier: Modifier = Modifier, text: String) =
 @Composable
 fun TextSmall(modifier: Modifier = Modifier, text: String) =
     Text(
+        modifier = Modifier.then(modifier),
         fontSize = 13.sp,
         text = text
     )
