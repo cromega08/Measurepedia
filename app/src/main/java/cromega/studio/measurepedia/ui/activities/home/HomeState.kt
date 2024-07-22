@@ -60,7 +60,7 @@ internal object HomeState
 
     fun closeOptionsDialog() = run { optionsDialogOpened.value = false }
 
-    fun isSelectedPerson(): Boolean = selectedPerson.isNotNull()
+    fun hasSelectedPerson(): Boolean = selectedPerson.isNotNull()
 
     fun getSelectedPerson(): Person = selectedPerson!!
 

@@ -61,96 +61,14 @@ internal object HomeScreen
     fun Screen() =
         Scaffold(
             topBar = { Header() },
-            content = {
-                Main(it)
-                if (
-                    HomeState.isOptionsDialogOpen() &&
-                    HomeState.isSelectedPerson()
-                    )
-                {
-
-                    /*
-                    * TODO: Include functionalities for buttons
-                    * */
-                    ColumnOrderedDialog(
-                        columnModifier = Modifier.fillMaxWidth(),
-                        onDismissRequest = { HomeState.setSelectedPerson(null); HomeState.closeOptionsDialog() }
-                    ) {
-                        val selectedPerson: Person = HomeState.getSelectedPerson()
-
-                        SpacerVerticalMedium()
-
-                        TextTitle(
-                            modifier = Modifier.fillMaxWidth(0.7f),
-                            textAlign = TextAlign.Center,
-                            text = selectedPerson.getName()
-                        )
-
-                        if (selectedPerson.hasAlias())
-                            TextSubtitle(
-                                modifier = Modifier.fillMaxWidth(0.7f),
-                                textAlign = TextAlign.Center,
-                                text = selectedPerson.getAlias()
-                            )
-
-                        SpacerVerticalSmall()
-                        SpacerHorizontalLine(modifier = Modifier.fillMaxWidth(0.7f))
-                        SpacerVerticalSmall()
-
-                        RoundedCornerButton(
-                            modifier = Modifier
-                                .scale(1.25f)
-                                .fillMaxWidth(0.7f),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Text(text = ResourcesUtils.getString(R.string.update_person_info))
-                        }
-
-                        SpacerVerticalSmall()
-
-                        RoundedCornerButton(
-                            modifier = Modifier
-                                .scale(1.25f)
-                                .fillMaxWidth(0.7f),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Text(text = ResourcesUtils.getString(R.string.take_measures))
-                        }
-
-                        SpacerVerticalSmall()
-
-                        RoundedCornerButton(
-                            modifier = Modifier
-                                .scale(1.25f)
-                                .fillMaxWidth(0.7f),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Text(text = ResourcesUtils.getString(R.string.export_person_info))
-                        }
-
-                        SpacerVerticalSmall()
-
-                        RoundedCornerButton(
-                            modifier = Modifier
-                                .scale(1.25f)
-                                .fillMaxWidth(0.7f),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Text(text = ResourcesUtils.getString(R.string.import_person_info))
-                        }
-
-                        SpacerVerticalMedium()
-                    }
-                }
-                      },
+            content = { Main(it) },
             bottomBar = { Footer() },
             floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) { AddIcon() } },
             floatingActionButtonPosition = FabPosition.Center
         )
 
     @Composable
-    fun Header()
-    {
+    fun Header() =
         GenericHeaderColumn {
             val focusManager: FocusManager = LocalFocusManager.current
 
@@ -197,11 +115,11 @@ internal object HomeScreen
                 )
             }
         }
-    }
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun Main(paddingValues: PaddingValues) =
+    fun Main(paddingValues: PaddingValues)
+    {
         GenericBodyLazyColumn(
             contentPadding = paddingValues
         ) {
@@ -236,7 +154,6 @@ internal object HomeScreen
                     /*
                     * TODO: Include "Missing Functionalities" related to other Activities
                     * */
-
                     CardConstraintLayout(
                         modifier =
                         Modifier
@@ -321,9 +238,87 @@ internal object HomeScreen
             }
         }
 
+        if (
+            HomeState.isOptionsDialogOpen() &&
+            HomeState.hasSelectedPerson()
+        ) {
+            /*
+            * TODO: Include functionalities for buttons
+            * */
+            ColumnOrderedDialog(
+                columnModifier = Modifier.fillMaxWidth(),
+                onDismissRequest = { HomeState.setSelectedPerson(null); HomeState.closeOptionsDialog() }
+            ) {
+                val selectedPerson: Person = HomeState.getSelectedPerson()
+
+                SpacerVerticalMedium()
+
+                TextTitle(
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    textAlign = TextAlign.Center,
+                    text = selectedPerson.getName()
+                )
+
+                if (selectedPerson.hasAlias())
+                    TextSubtitle(
+                        modifier = Modifier.fillMaxWidth(0.7f),
+                        textAlign = TextAlign.Center,
+                        text = selectedPerson.getAlias()
+                    )
+
+                SpacerVerticalSmall()
+                SpacerHorizontalLine(modifier = Modifier.fillMaxWidth(0.7f))
+                SpacerVerticalSmall()
+
+                RoundedCornerButton(
+                    modifier = Modifier
+                        .scale(1.25f)
+                        .fillMaxWidth(0.7f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = ResourcesUtils.getString(R.string.update_person_info))
+                }
+
+                SpacerVerticalSmall()
+
+                RoundedCornerButton(
+                    modifier = Modifier
+                        .scale(1.25f)
+                        .fillMaxWidth(0.7f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = ResourcesUtils.getString(R.string.take_measures))
+                }
+
+                SpacerVerticalSmall()
+
+                RoundedCornerButton(
+                    modifier = Modifier
+                        .scale(1.25f)
+                        .fillMaxWidth(0.7f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = ResourcesUtils.getString(R.string.export_person_info))
+                }
+
+                SpacerVerticalSmall()
+
+                RoundedCornerButton(
+                    modifier = Modifier
+                        .scale(1.25f)
+                        .fillMaxWidth(0.7f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = ResourcesUtils.getString(R.string.import_person_info))
+                }
+
+                SpacerVerticalMedium()
+            }
+        }
+    }
+
     @Composable
-    fun Footer()
-    {
+    fun Footer() =
         /*
         * TODO: Include functionalities for different Buttons
         * */
@@ -381,5 +376,4 @@ internal object HomeScreen
                }
            }
         }
-    }
 }
