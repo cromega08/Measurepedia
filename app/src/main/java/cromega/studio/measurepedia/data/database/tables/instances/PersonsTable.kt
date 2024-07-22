@@ -25,7 +25,7 @@ open class PersonsTable(context: Context) : Table<Person>(context)
                     "${TABLE_INFO.COLUMN_UPDATED} date not null default (date('now')), " +
                     "${TABLE_INFO.COLUMN_MEASURED} boolean not null default false" +
                     ");",
-            "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_ALIAS}) values ('user', 'measurer');",
+            "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_ALIAS}, ${TABLE_INFO.COLUMN_MEASURED}) values ('user', 'measurer', true);",
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}) values ('client');"
         )
 
