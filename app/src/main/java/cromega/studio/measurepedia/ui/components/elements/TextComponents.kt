@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TextTitle(modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, text: String) =
     Text(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         fontSize = 35.sp,
         fontWeight = FontWeight.SemiBold,
         textAlign = textAlign,
@@ -21,7 +21,7 @@ fun TextTitle(modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.St
 @Composable
 fun TextSubtitle(modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, text: String) =
     Text(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         fontSize = 22.5.sp,
         fontStyle = FontStyle.Italic,
         textAlign = textAlign,
@@ -31,7 +31,7 @@ fun TextSubtitle(modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign
 @Composable
 fun TextLeftAligned(modifier: Modifier = Modifier, text: String) =
     Text(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         textAlign = TextAlign.Start,
         text = text
     )
@@ -39,7 +39,7 @@ fun TextLeftAligned(modifier: Modifier = Modifier, text: String) =
 @Composable
 fun TextRightAligned(modifier: Modifier = Modifier, text: String) =
     Text(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         textAlign = TextAlign.End,
         text = text
     )
@@ -47,7 +47,7 @@ fun TextRightAligned(modifier: Modifier = Modifier, text: String) =
 @Composable
 fun TextSmall(modifier: Modifier = Modifier, text: String) =
     Text(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         fontSize = 13.sp,
         text = text
     )

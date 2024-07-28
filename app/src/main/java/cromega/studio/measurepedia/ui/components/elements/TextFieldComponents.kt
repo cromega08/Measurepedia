@@ -19,7 +19,7 @@ fun SearchBar(
     onQueryChange: (String) -> Unit,
     onSearch: KeyboardActionScope.() -> Unit
 ) = TextField(
-    modifier = Modifier.then(modifier),
+    modifier = modifier,
     value = query,
     onValueChange = onQueryChange,
     placeholder = { Text(hint) },

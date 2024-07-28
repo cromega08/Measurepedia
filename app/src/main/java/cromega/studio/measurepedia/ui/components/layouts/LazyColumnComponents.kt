@@ -22,10 +22,9 @@ fun GenericBodyLazyColumn(
 ) =
     LazyColumn(
         modifier =
-        Modifier
+        modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .then(modifier),
+            .padding(horizontal = 20.dp),
         contentPadding = contentPadding,
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,

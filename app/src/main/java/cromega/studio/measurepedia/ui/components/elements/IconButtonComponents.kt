@@ -17,7 +17,7 @@ fun VerticalIconButton(
     content: @Composable (ColumnScope.() -> Unit)
 ) =
     IconButton(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         enabled = enabled,
         colors = colors,
         onClick = onClick,

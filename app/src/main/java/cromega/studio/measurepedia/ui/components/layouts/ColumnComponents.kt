@@ -19,10 +19,9 @@ fun GenericHeaderColumn(
 ) =
     Column(
         modifier =
-        Modifier
+        modifier
             .fillMaxWidth()
-            .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
-            .then(modifier),
+            .padding(top = 35.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         content = content
@@ -36,7 +35,7 @@ fun CenteredColumn(
     content: @Composable (ColumnScope.() -> Unit)
 ) =
     Column(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         content = content

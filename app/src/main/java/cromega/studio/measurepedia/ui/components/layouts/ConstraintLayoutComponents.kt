@@ -17,9 +17,8 @@ inline fun CardConstraintLayout(
 ) =
     ConstraintLayout(
         modifier =
-            Modifier
+            modifier
                 .background(color = Color.LightGray, shape = RoundedCornerShape(15.dp))
-                .padding(horizontal = 20.dp, vertical = 15.dp)
-                .then(modifier),
+                .padding(horizontal = 20.dp, vertical = 15.dp),
         content = content
     )

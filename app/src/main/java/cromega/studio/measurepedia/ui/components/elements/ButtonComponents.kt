@@ -16,7 +16,7 @@ fun RoundedCornerButton(
     content: @Composable (RowScope.() -> Unit)
 ) =
     Button(
-        modifier = Modifier.then(modifier),
+        modifier = modifier,
         shape = RoundedCornerShape(cornerSize),
         onClick = onClick,
         content = content

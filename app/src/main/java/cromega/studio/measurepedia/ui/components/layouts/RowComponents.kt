@@ -20,11 +20,10 @@ fun GenericFooterRow(
 ) =
     Row(
         modifier =
-        Modifier
+        modifier
             .fillMaxWidth()
-            .heightIn(min = 1.dp, 115.dp)
-            .padding(top = 0.dp, bottom = 50.dp, start = 20.dp, end = 20.dp)
-            .then(modifier),
+            .heightIn(min = 1.dp, 100.dp)
+            .padding(top = 0.dp, bottom = 35.dp, start = 20.dp, end = 20.dp),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment,
         content = content

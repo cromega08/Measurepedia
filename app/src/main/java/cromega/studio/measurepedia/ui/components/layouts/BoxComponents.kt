@@ -30,11 +30,10 @@ fun <T> Dropdown(
 ) =
     Box(
         modifier =
-        Modifier
+        modifier
             .background(color = Color.LightGray, shape = RoundedCornerShape(5.dp))
             .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clickable(onClick = onClickMenu)
-            .then(modifier),
+            .clickable(onClick = onClickMenu),
         contentAlignment = Alignment.Center
     ) {
         Row(

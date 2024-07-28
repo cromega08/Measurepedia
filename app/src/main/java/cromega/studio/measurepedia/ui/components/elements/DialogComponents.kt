@@ -49,10 +49,9 @@ fun ColumnOrderedDialog(
     ) {
         Column(
             modifier =
-                Modifier
+                columnModifier
                     .padding(all = 10.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(20.dp))
-                    .then(columnModifier),
+                    .background(color = Color.White, shape = RoundedCornerShape(20.dp)),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
             content = content
