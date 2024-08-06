@@ -18,7 +18,7 @@ open class FieldsTable(context: Context) : Table<Field>(context)
                     "${TABLE_INFO.COLUMN_ID} integer primary key, " +
                     "${TABLE_INFO.COLUMN_NAME} text not null unique, " +
                     "${TABLE_INFO.COLUMN_BODY_PART_ID} integer not null, " +
-                    "${TABLE_INFO.COLUMN_ACTIVE} boolean not null default true," +
+                    "${TABLE_INFO.COLUMN_ACTIVE} boolean not null default 1," +
                     "foreign key (${TABLE_INFO.COLUMN_BODY_PART_ID}) references ${TABLE_INFO.REFERENCE_TABLE_BODY_PARTS}(${TABLE_INFO.COLUMN_ID})" +
                     ");",
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}, ${TABLE_INFO.COLUMN_BODY_PART_ID}) values ('height', 1);",

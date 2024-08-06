@@ -17,7 +17,7 @@ open class BodyPartsTable(context: Context) : Table<BodyPart>(context)
             "create table if not exists ${TABLE_INFO.TABLE}(" +
                     "${TABLE_INFO.COLUMN_ID} integer primary key, " +
                     "${TABLE_INFO.COLUMN_NAME} text not null unique, " +
-                    "${TABLE_INFO.COLUMN_ACTIVE} boolean not null default true" +
+                    "${TABLE_INFO.COLUMN_ACTIVE} boolean not null default 1" +
                     ");",
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}) values ('complete body');",
             "insert into ${TABLE_INFO.TABLE}(${TABLE_INFO.COLUMN_NAME}) values ('trunk');",
