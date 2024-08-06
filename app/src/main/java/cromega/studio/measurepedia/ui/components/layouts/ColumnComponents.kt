@@ -21,7 +21,7 @@ fun GenericHeaderColumn(
         modifier =
         modifier
             .fillMaxWidth()
-            .padding(top = 35.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
+            .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         content = content
