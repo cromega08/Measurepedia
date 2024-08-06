@@ -161,7 +161,7 @@ internal object HomeScreen
                             .combinedClickable(
                                 onLongClick = { HomeState.setSelectedPerson(person); HomeState.openOptionsDialog() },
                                 onDoubleClick = { HomeState.setSelectedPerson(person); HomeState.openOptionsDialog() },
-                                onClick = { HomeState.setSelectedPerson(person) }
+                                onClick = { HomeState.setSelectedPerson(person); HomeState.openMeasuresActivity() }
                             )
                     ) {
                         val (nameRef, aliasRef, optionsRef, measuredRef, updateRef, middleSpaceRef) = createRefs()
@@ -285,7 +285,7 @@ internal object HomeScreen
                     modifier = Modifier
                         .scale(1.25f)
                         .fillMaxWidth(0.7f),
-                    onClick = { /*TODO*/ }
+                    onClick = { HomeState.openMeasuresActivity() }
                 ) {
                     Text(text = ResourcesUtils.getString(R.string.take_measures))
                 }

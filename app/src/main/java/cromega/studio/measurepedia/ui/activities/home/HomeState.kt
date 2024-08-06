@@ -17,17 +17,21 @@ internal object HomeState
     private lateinit var dateOrderOption: MutableState<DateOrder>
     private lateinit var measuredOrderOption: MutableState<MeasuredOrder>
     private lateinit var optionsDialogOpened: MutableState<Boolean>
+    private lateinit var openMeasuresFunction: (Map<String, Any>) -> Unit
     private var selectedPerson: Person? = null
 
+
     @Composable
-    fun initialize()
-    {
+    fun initialize(
+        openMeasuresFunction: (Map<String, Any>) -> Unit
+    ) {
         searchText = rememberSaveable { mutableStateOf("") }
         dateFilterExpanded = rememberSaveable { mutableStateOf(false) }
         measuredFilterExpanded = rememberSaveable { mutableStateOf(false) }
         dateOrderOption = rememberSaveable { mutableStateOf(DateOrder.CREATION) }
         measuredOrderOption = rememberSaveable { mutableStateOf(MeasuredOrder.MEASURED_OR_NOT) }
         optionsDialogOpened = rememberSaveable { mutableStateOf(false) }
+        this.openMeasuresFunction = openMeasuresFunction
     }
 
     fun getSearchText(): String = searchText.value
@@ -65,4 +69,11 @@ internal object HomeState
     fun getSelectedPerson(): Person = selectedPerson!!
 
     fun setSelectedPerson(newPerson: Person?) = run { selectedPerson = newPerson }
+
+    fun openMeasuresActivity() =
+        openMeasuresFunction(
+            mapOf(
+                "selectedPerson" to selectedPerson!!.id
+            )
+        )
 }
