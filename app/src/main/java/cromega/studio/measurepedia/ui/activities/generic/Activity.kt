@@ -10,6 +10,7 @@ import cromega.studio.measurepedia.data.database.tables.instances.FieldsTable
 import cromega.studio.measurepedia.data.database.tables.instances.MetricSystemsUnitsTable
 import cromega.studio.measurepedia.data.database.tables.instances.PersonsTable
 import cromega.studio.measurepedia.data.database.tables.instances.RecordsTable
+import cromega.studio.measurepedia.enums.Languages
 import cromega.studio.measurepedia.extensions.putExtra
 import cromega.studio.measurepedia.resources.utils.ResourcesUtils
 import cromega.studio.measurepedia.resources.utils.TablesUtils
@@ -33,9 +34,10 @@ abstract class Activity: ComponentActivity()
             )
     }
 
-    fun setLocale(language: String)
+    fun setLocale(language: Languages)
     {
-        val locale: Locale = Locale(language)
+        val locale: Locale = Locale(language.localeAcronym)
+
         Locale.setDefault(locale)
 
         val configuration: Configuration = resources.configuration
