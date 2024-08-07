@@ -20,4 +20,5 @@
     <string name="take_measures">Tomar Medidas</string>
     <string name="export_person_info">Exportar Informacion</string>
     <string name="import_person_info">Importar Informacion</string>
+    <string name="update_measures">Actualizar Medidas</string>
 </resources>
