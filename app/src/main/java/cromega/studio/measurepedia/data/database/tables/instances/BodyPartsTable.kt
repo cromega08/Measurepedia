@@ -3,7 +3,7 @@ package cromega.studio.measurepedia.data.database.tables.instances
 import android.content.ContentValues
 import android.content.Context
 import cromega.studio.measurepedia.data.database.tables.generic.Table
-import cromega.studio.measurepedia.data.models.BodyPart
+import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 import cromega.studio.measurepedia.extensions.toBoolean

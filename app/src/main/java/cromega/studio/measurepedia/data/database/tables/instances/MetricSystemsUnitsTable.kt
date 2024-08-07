@@ -3,7 +3,7 @@ package cromega.studio.measurepedia.data.database.tables.instances
 import android.content.ContentValues
 import android.content.Context
 import cromega.studio.measurepedia.data.database.tables.generic.Table
-import cromega.studio.measurepedia.data.models.MetricSystemUnit
+import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 
 open class MetricSystemsUnitsTable(context: Context) : Table<MetricSystemUnit>(context) {

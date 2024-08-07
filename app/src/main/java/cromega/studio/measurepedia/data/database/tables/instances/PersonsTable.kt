@@ -3,7 +3,7 @@ package cromega.studio.measurepedia.data.database.tables.instances
 import android.content.ContentValues
 import android.content.Context
 import cromega.studio.measurepedia.data.database.tables.generic.Table
-import cromega.studio.measurepedia.data.models.Person
+import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 import cromega.studio.measurepedia.extensions.toBoolean
@@ -37,7 +37,7 @@ open class PersonsTable(context: Context) : Table<Person>(context)
     override fun generateModel(
         index: Int,
         columnsData: Map<String, MutableList<Any>>
-    ): Person 
+    ): Person
     {
         val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import cromega.studio.measurepedia.data.models.Person
+import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
 import cromega.studio.measurepedia.enums.MeasuredOrder
 import cromega.studio.measurepedia.extensions.isNotNull
@@ -19,7 +19,6 @@ internal object HomeState
     private lateinit var optionsDialogOpened: MutableState<Boolean>
     private lateinit var openMeasuresFunction: (Map<String, Any>) -> Unit
     private var selectedPerson: Person? = null
-
 
     @Composable
     fun initialize(

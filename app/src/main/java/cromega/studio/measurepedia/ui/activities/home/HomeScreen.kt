@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cromega.studio.measurepedia.R
-import cromega.studio.measurepedia.data.models.Person
+import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
 import cromega.studio.measurepedia.enums.MeasuredOrder
 import cromega.studio.measurepedia.extensions.atLeastOneIs

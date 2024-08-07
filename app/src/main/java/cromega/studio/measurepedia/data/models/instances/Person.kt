@@ -1,17 +1,19 @@
-package cromega.studio.measurepedia.data.models
+package cromega.studio.measurepedia.data.models.instances
 
+import cromega.studio.measurepedia.data.models.generic.Model
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 import cromega.studio.measurepedia.extensions.toStringWithFormat
 import java.util.Date
 import java.util.Locale
 
-data class Person(
-    val id: Int,
+class Person(
+    id: Int,
     private val name: String,
     private val alias: String?,
     private val updated: Date,
     val measured: Boolean
-) {
+): Model(id = id)
+{
     private val locale: Locale = Locale.US
 
     fun getName(): String =

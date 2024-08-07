@@ -3,7 +3,7 @@ package cromega.studio.measurepedia.data.database.tables.instances
 import android.content.ContentValues
 import android.content.Context
 import cromega.studio.measurepedia.data.database.tables.generic.Table
-import cromega.studio.measurepedia.data.models.Record
+import cromega.studio.measurepedia.data.models.instances.Record
 import cromega.studio.measurepedia.extensions.isNotNull
 
 open class RecordsTable(context: Context) : Table<Record>(context) {
