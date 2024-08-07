@@ -2,6 +2,7 @@ package cromega.studio.measurepedia.data.models.instances
 
 import cromega.studio.measurepedia.data.models.generic.Model
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
+import cromega.studio.measurepedia.extensions.titlecase
 import cromega.studio.measurepedia.extensions.toStringWithFormat
 import java.util.Date
 import java.util.Locale
@@ -16,16 +17,11 @@ class Person(
 {
     private val locale: Locale = Locale.US
 
-    fun getName(): String =
-        name
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale = locale) else it.toString() }
+    fun getName(): String = name.titlecase()
 
     fun hasAlias(): Boolean = alias.isNotNullOrBlank()
 
-    fun getAlias(): String =
-        alias?.
-        replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale = locale) else it.toString() }
-            ?: ""
+    fun getAlias(): String = alias ?: ""
 
     fun getSearchablePersonIdentifier(): String =
         String

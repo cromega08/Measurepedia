@@ -15,12 +15,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cromega.studio.measurepedia.R
+import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.resources.utils.ResourcesUtils
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.elements.TextSubtitle
 import cromega.studio.measurepedia.ui.components.elements.TextTitle
-import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
