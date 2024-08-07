@@ -66,12 +66,20 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
     }
 
     protected fun read(
+        selection: String? = null,
+        selectionArgs: Array<String>? = null,
         sortOrder: String? = null
     ): MutableList<Model>
     {
         val toReturn: MutableList<Model> = mutableListOf()
 
-        val rowsData: Cursor = readQuery(COMPLETE_PROJECTION)
+        val rowsData: Cursor =
+            readQuery(
+                projection = COMPLETE_PROJECTION,
+                selection = selection,
+                selectionArgs = selectionArgs,
+                sortOrder = sortOrder
+            )
 
         val rowsCount: Int = rowsData.count
 

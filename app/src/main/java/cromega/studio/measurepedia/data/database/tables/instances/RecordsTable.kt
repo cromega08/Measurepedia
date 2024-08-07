@@ -5,6 +5,7 @@ import android.content.Context
 import cromega.studio.measurepedia.data.database.tables.generic.Table
 import cromega.studio.measurepedia.data.models.instances.Record
 import cromega.studio.measurepedia.extensions.isNotNull
+import cromega.studio.measurepedia.extensions.toText
 
 open class RecordsTable(context: Context) : Table<Record>(context) {
     override val TABLE_INFO: RecordsTableInfo
@@ -51,6 +52,21 @@ open class RecordsTable(context: Context) : Table<Record>(context) {
         )
     
     override fun readAll() = read().toTypedArray()
+
+    fun readByPerson(personId: Int): Array<Record> =
+        read(
+            selection = "${TABLE_INFO.COLUMN_PERSON_ID} = ?",
+            selectionArgs = arrayOf(personId.toString())
+        ).toTypedArray()
+
+    fun readByPersonAndFields(
+        personId: Int,
+        fieldIds: Array<Int>
+    ): Array<Record> =
+        read(
+            selection = "${TABLE_INFO.COLUMN_PERSON_ID} = ? and ${TABLE_INFO.COLUMN_FIELD_ID} in ${fieldIds.toText()}",
+            selectionArgs = arrayOf(personId.toString())
+        ).toTypedArray()
 
     fun insert(personId: Int, fieldId: Int, measure: Float? = null, metricSystemUnitId: Int) =
         insertQuery(generateContentValue(personId, fieldId, measure, metricSystemUnitId))

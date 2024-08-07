@@ -52,6 +52,12 @@ open class PersonsTable(context: Context) : Table<Person>(context)
 
     override fun readAll(): Array<Person> = read().toTypedArray()
 
+    fun readPerson(id: Int): Person =
+        read(
+            selection = "${TABLE_INFO.COLUMN_ID} = ?",
+            selectionArgs = arrayOf(id.toString())
+        ).toTypedArray()[0]
+
     fun readOrderedByUpdatedRecent(): Array<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} desc").toTypedArray()
 
     fun readOrderedByUpdatedOldest(): Array<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} asc").toTypedArray()

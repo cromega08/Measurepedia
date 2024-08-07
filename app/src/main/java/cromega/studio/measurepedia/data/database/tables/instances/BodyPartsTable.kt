@@ -44,6 +44,14 @@ open class BodyPartsTable(context: Context) : Table<BodyPart>(context)
 
     override fun readAll(): Array<BodyPart> = read().toTypedArray()
 
+    fun readByActive(
+        active: Boolean = true
+    ): Array<BodyPart> =
+        read(
+            selection = "${TABLE_INFO.COLUMN_ACTIVE} = ?",
+            selectionArgs = arrayOf((if (active) 1 else 2).toString())
+        ).toTypedArray()
+
     fun insert(name: String, active: Boolean? = null) =
         insertQuery(generateContentValue(name, active))
 
