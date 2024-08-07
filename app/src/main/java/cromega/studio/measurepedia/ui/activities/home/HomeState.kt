@@ -72,7 +72,7 @@ internal object HomeState
     fun openMeasuresActivity() =
         openMeasuresFunction(
             mapOf(
-                "selectedPerson" to selectedPerson!!.id
+                "selectedPersonId" to selectedPerson!!.id
             )
         )
 }
