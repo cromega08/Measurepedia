@@ -20,6 +20,7 @@ import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.elements.TextSubtitle
 import cromega.studio.measurepedia.ui.components.elements.TextTitle
+import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
@@ -37,7 +38,25 @@ internal object MeasuresScreen
     @Composable
     fun Header() =
         GenericHeaderColumn {
-            TextTitle(text = "Measures")
+            Column(
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val selectedPerson: Person = MeasuresState.selectedPerson
+
+                SpacerVerticalSmall()
+
+                TextTitle(text = selectedPerson.getName())
+
+                if (selectedPerson.hasAlias())
+                    TextSubtitle(text = selectedPerson.getAlias())
+
+                SpacerVerticalSmall()
+            }
         }
 
     @Composable
