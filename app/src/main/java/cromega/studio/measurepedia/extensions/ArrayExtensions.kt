@@ -5,6 +5,15 @@ import cromega.studio.measurepedia.data.models.generic.Model
 inline fun <reified Instance : Model> Array<Instance>.extractIds(): Array<Int> =
     this.map { it.id }.toTypedArray()
 
+inline fun <T> Array<T>.findOrDefault(
+    predicate: (T) -> Boolean,
+    generateDefault: (Map<String, Any>) -> T,
+    dataForDefault: Map<String, Any> = mapOf()
+): T
+{
+    return firstOrNull(predicate) ?: generateDefault(dataForDefault)
+}
+
 inline fun <E, T> Array<E>.generateSimpleMap(
     constructFunction: () -> T
 ): Map<E, T>
