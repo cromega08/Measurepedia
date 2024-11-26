@@ -7,3 +7,12 @@ class MetricSystemUnit(
     val name: String,
     val abbreviation: String
 ): Model(id = id)
+{
+    override fun clone(): Model {
+        return MetricSystemUnit(
+            id = id,
+            name = name,
+            abbreviation = abbreviation
+        )
+    }
+}

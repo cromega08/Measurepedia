@@ -34,4 +34,14 @@ class Person(
 
     fun getMeasuredTexts(measuredText: String, notMeasuredText: String) =
         if (measured) measuredText else notMeasuredText
+
+    override fun clone(): Person {
+        return Person(
+            id = id,
+            name = name,
+            alias = alias,
+            updated = updated,
+            measured = measured
+        )
+    }
 }

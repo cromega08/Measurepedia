@@ -10,4 +10,12 @@ class BodyPart(
 ) : Model(id = id)
 {
     fun getName() = name.titlecase()
+
+    override fun clone(): BodyPart {
+        return BodyPart(
+            id = id,
+            name = name,
+            active = active
+        )
+    }
 }
