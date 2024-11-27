@@ -9,6 +9,7 @@ import cromega.studio.measurepedia.data.models.instances.Field
 import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.data.models.instances.Record
+import cromega.studio.measurepedia.extensions.extractIds
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.resources.utils.TablesUtils
 
@@ -24,20 +25,42 @@ internal object MeasuresState
 
     @Composable
     fun initialize(
-        selectedPerson: Person,
-        bodyParts: Array<BodyPart>,
-        fields: Array<Field>,
-        records: Array<Record>,
-        metricSystemsUnits: Array<MetricSystemUnit>,
+        selectedPersonId: Int,
         openHomeFunction: () -> Unit
     ) {
-        this.selectedPerson = selectedPerson
-        this.bodyParts = bodyParts
-        this.fields = fields
-        this.metricSystemsUnits = metricSystemsUnits
+        this.selectedPerson =
+            TablesUtils
+                .personsTable
+                .readPerson(id = selectedPersonId)
+
+        this.bodyParts =
+            TablesUtils
+                .bodyPartsTable
+                .readByActive()
+
+        this.fields =
+            TablesUtils
+                .fieldsTable
+                .readByActiveAndBodyParts(
+                    bodyPartsIds = bodyParts.extractIds()
+                )
+
+        this.metricSystemsUnits =
+            TablesUtils
+                .metricSystemsUnitsTable
+                .readAll()
+
         this.openHomeFunction = openHomeFunction
 
-        this.records = remember { mutableStateListOf(*records)  }
+        val recordsData =
+            TablesUtils
+                .recordsTable
+                .readByPersonAndFields(
+                    personId = selectedPersonId,
+                    fieldIds = fields.extractIds()
+                )
+
+        this.records = remember { mutableStateListOf(*recordsData)  }
         this.fieldsMeasureSelectorExpanded =
             remember { mutableStateListOf(*Array(fields.size) { false }) }
     }
