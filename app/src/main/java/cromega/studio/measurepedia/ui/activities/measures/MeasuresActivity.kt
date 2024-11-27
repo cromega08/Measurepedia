@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.data.models.instances.Field
+import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.data.models.instances.Record
 import cromega.studio.measurepedia.extensions.extractIds
@@ -45,6 +46,11 @@ class MeasuresActivity : Activity()
                     fieldIds = fields.extractIds()
                 )
 
+        val metricSystemsUnits: Array<MetricSystemUnit> =
+            TablesUtils
+                .metricSystemsUnitsTable
+                .readAll()
+
         setContent {
             MeasurepediaTheme {
                 MeasuresState.initialize(
@@ -52,6 +58,7 @@ class MeasuresActivity : Activity()
                     bodyParts = bodyParts,
                     fields = fields,
                     records = records,
+                    metricSystemsUnits = metricSystemsUnits,
                     openHomeFunction = { changeActivity(HomeActivity::class) }
                 )
                 MeasuresScreen.Screen()
