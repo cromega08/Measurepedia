@@ -20,7 +20,7 @@ internal object MeasuresState
     lateinit var fields: Array<Field>
     lateinit var records: SnapshotStateList<Record>
     lateinit var metricSystemsUnits: Array<MetricSystemUnit>
-    lateinit var fieldsMeasureSelectorExpanded: SnapshotStateList<Boolean>
+    lateinit var fieldsMetricSystemUnitSelectorExpanded: SnapshotStateList<Boolean>
     private lateinit var openHomeFunction: () -> Unit
 
     @Composable
@@ -61,7 +61,7 @@ internal object MeasuresState
                 )
 
         this.records = remember { mutableStateListOf(*recordsData)  }
-        this.fieldsMeasureSelectorExpanded =
+        this.fieldsMetricSystemUnitSelectorExpanded =
             remember { mutableStateListOf(*Array(fields.size) { false }) }
     }
 
@@ -115,7 +115,7 @@ internal object MeasuresState
 
     fun invertFieldMetricSystemUnitState(fieldIndex: Int)
     {
-        fieldsMeasureSelectorExpanded[fieldIndex] = !fieldsMeasureSelectorExpanded[fieldIndex]
+        fieldsMetricSystemUnitSelectorExpanded[fieldIndex] = !fieldsMetricSystemUnitSelectorExpanded[fieldIndex]
     }
 
     fun flushRecordsForUpdates()

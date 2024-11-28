@@ -99,146 +99,152 @@ internal object MeasuresScreen
             items(bodyParts.size) { bodyPartIndex ->
                 val bodyPart: BodyPart = bodyParts[bodyPartIndex]
 
-                CardConstraintLayout(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val (bodyPartRef, separationRef, iconRef, fieldsRef) = createRefs()
-
-                    Text(
-                        modifier =
-                        Modifier
-                            .constrainAs(bodyPartRef) {
-                                top.linkTo(parent.top)
-                                start.linkTo(parent.start)
-                            },
-                        fontWeight = FontWeight.Bold,
-                        text = bodyPart.getName()
-                    )
-
-                    Box(
-                        modifier =
-                        Modifier
-                            .constrainAs(iconRef) {
-                                top.linkTo(bodyPartRef.top)
-                                bottom.linkTo(bodyPartRef.bottom)
-                                end.linkTo(parent.end)
-                            },
-                        contentAlignment = Alignment.Center,
-                        content = { VerticalArrowsIcon() }
-                    )
-
-                    SpacerHorizontalLine(
-                        modifier =
-                        Modifier
-                            .height(2.5.dp)
-                            .constrainAs(separationRef) {
-                                top.linkTo(bodyPartRef.top)
-                                bottom.linkTo(bodyPartRef.bottom)
-                                start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
-                                end.linkTo(anchor = iconRef.start, margin = 5.dp)
-
-                                width = Dimension.fillToConstraints
-                            },
-                        color = Color.White
-                    )
-
-                    Column (
-                        modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .constrainAs(fieldsRef) {
-                                top.linkTo(anchor = bodyPartRef.bottom, margin = 5.dp)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-
-                                width = Dimension.fillToConstraints
-                            }
+                if (bodyPart.active)
+                {
+                    CardConstraintLayout(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        val bodyPartFields: Array<Field> =
-                            MeasuresState
-                                .fields
-                                .filter { it.bodyPartId == bodyPart.id }
-                                .toTypedArray()
-                        
-                        val bodyPartFieldsIds: Array<Int> = bodyPartFields.extractIds()
-                        
-                        val records: MutableList<Record> =
-                            MeasuresState
-                                .records
-                                .filter { bodyPartFieldsIds.contains(it.fieldId) }
-                                .toMutableList()
+                        val (bodyPartRef, separationRef, iconRef, fieldsRef) = createRefs()
 
-                        bodyPartFields.forEach{ field ->
+                        Text(
+                            modifier =
+                            Modifier
+                                .constrainAs(bodyPartRef) {
+                                    top.linkTo(parent.top)
+                                    start.linkTo(parent.start)
+                                },
+                            fontWeight = FontWeight.Bold,
+                            text = bodyPart.getName()
+                        )
 
-                            val currentFieldGeneralIndex: Int = MeasuresState.fields.indexOf(field)
+                        Box(
+                            modifier =
+                            Modifier
+                                .constrainAs(iconRef) {
+                                    top.linkTo(bodyPartRef.top)
+                                    bottom.linkTo(bodyPartRef.bottom)
+                                    end.linkTo(parent.end)
+                                },
+                            contentAlignment = Alignment.Center,
+                            content = { VerticalArrowsIcon() }
+                        )
 
-                            val record: Record = records.find { it.fieldId == field.id }!!
+                        SpacerHorizontalLine(
+                            modifier =
+                            Modifier
+                                .height(2.5.dp)
+                                .constrainAs(separationRef) {
+                                    top.linkTo(bodyPartRef.top)
+                                    bottom.linkTo(bodyPartRef.bottom)
+                                    start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
+                                    end.linkTo(anchor = iconRef.start, margin = 5.dp)
 
-                            val metricSystemUnit =
-                                metricSystemsUnits
-                                    .findOrDefault(
-                                        predicate = { record.metricSystemUnitId == it.id },
-                                        generateDefault = { metricSystemsUnits[0] }
-                                    )
+                                    width = Dimension.fillToConstraints
+                                },
+                            color = Color.White
+                        )
 
-                            Row(
-                                modifier =
-                                Modifier
-                                    .fillParentMaxWidth()
-                                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = field.getTitledName(),
-                                    overflow = TextOverflow.Clip
-                                )
+                        Column (
+                            modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .constrainAs(fieldsRef) {
+                                    top.linkTo(anchor = bodyPartRef.bottom, margin = 5.dp)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
 
-                                Spacer(modifier = Modifier.weight(0.25f))
+                                    width = Dimension.fillToConstraints
+                                }
+                        ) {
+                            val bodyPartFields: Array<Field> =
+                                MeasuresState
+                                    .fields
+                                    .filter { it.bodyPartId == bodyPart.id }
+                                    .toTypedArray()
 
-                                TextField(
-                                    modifier =
-                                    Modifier
-                                        .widthIn(max = 100.dp)
-                                        .weight(0.83f)
-                                        .onFocusChanged {focusState ->
-                                            if (!focusState.isFocused)
-                                            {
+                            val bodyPartFieldsIds: Array<Int> = bodyPartFields.extractIds()
+
+                            val records: MutableList<Record> =
+                                MeasuresState
+                                    .records
+                                    .filter { bodyPartFieldsIds.contains(it.fieldId) }
+                                    .toMutableList()
+
+                            bodyPartFields.forEach{ field ->
+
+                                if (field.active)
+                                {
+                                    val currentFieldGeneralIndex: Int = MeasuresState.fields.indexOf(field)
+
+                                    val record: Record = records.find { it.fieldId == field.id }!!
+
+                                    val metricSystemUnit =
+                                        metricSystemsUnits
+                                            .findOrDefault(
+                                                predicate = { record.metricSystemUnitId == it.id },
+                                                generateDefault = { metricSystemsUnits[0] }
+                                            )
+
+                                    Row(
+                                        modifier =
+                                        Modifier
+                                            .fillParentMaxWidth()
+                                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                                        horizontalArrangement = Arrangement.SpaceEvenly,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            modifier = Modifier.weight(1f),
+                                            text = field.getTitledName(),
+                                            overflow = TextOverflow.Clip
+                                        )
+
+                                        Spacer(modifier = Modifier.weight(0.25f))
+
+                                        TextField(
+                                            modifier =
+                                            Modifier
+                                                .widthIn(max = 100.dp)
+                                                .weight(0.83f)
+                                                .onFocusChanged {focusState ->
+                                                    if (!focusState.isFocused)
+                                                    {
+                                                        MeasuresState
+                                                            .updateRecordMeasureByPrintable(recordId = record.id)
+                                                    }
+                                                },
+                                            value = record.measurePrintable,
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                            onValueChange = {userInput ->
                                                 MeasuresState
-                                                    .updateRecordMeasureByPrintable(recordId = record.id)
+                                                    .updateRecordMeasurePrintable(
+                                                        recordId = record.id,
+                                                        newMeasurePrintable = userInput
+                                                    )
                                             }
-                                        },
-                                    value = record.measurePrintable,
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                                    onValueChange = {userInput ->
-                                        MeasuresState
-                                            .updateRecordMeasurePrintable(
-                                                recordId = record.id,
-                                                newMeasurePrintable = userInput
-                                            )
-                                    }
-                                )
-                                Dropdown(
-                                    modifier = Modifier.weight(0.83f),
-                                    expanded = MeasuresState.fieldsMeasureSelectorExpanded[currentFieldGeneralIndex],
-                                    option = metricSystemUnit,
-                                    options = metricSystemsUnits,
-                                    extractOptionName = { selectedUnit -> selectedUnit.abbreviation },
-                                    onOptionSelected = {selectedUnit ->
-                                        MeasuresState
-                                            .updateRecordMetricSystemUnitId(
-                                                recordId = record.id,
-                                                newMetricSystemUnitId = selectedUnit.id
-                                            )
+                                        )
 
-                                        MeasuresState.invertFieldMetricSystemUnitState(currentFieldGeneralIndex)
-                                    },
-                                    onClickMenu = {
-                                        MeasuresState.invertFieldMetricSystemUnitState(currentFieldGeneralIndex)
-                                    }
-                                )
+                                        Dropdown(
+                                            modifier = Modifier.weight(0.83f),
+                                            expanded = MeasuresState.fieldsMetricSystemUnitSelectorExpanded[currentFieldGeneralIndex],
+                                            option = metricSystemUnit,
+                                            options = metricSystemsUnits,
+                                            extractOptionName = { selectedUnit -> selectedUnit.abbreviation },
+                                            onOptionSelected = {selectedUnit ->
+                                                MeasuresState
+                                                    .updateRecordMetricSystemUnitId(
+                                                        recordId = record.id,
+                                                        newMetricSystemUnitId = selectedUnit.id
+                                                    )
 
+                                                MeasuresState.invertFieldMetricSystemUnitState(currentFieldGeneralIndex)
+                                            },
+                                            onClickMenu = {
+                                                MeasuresState.invertFieldMetricSystemUnitState(currentFieldGeneralIndex)
+                                            }
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
