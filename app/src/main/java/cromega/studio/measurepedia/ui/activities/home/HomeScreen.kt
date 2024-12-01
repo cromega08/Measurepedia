@@ -1,5 +1,6 @@
 package cromega.studio.measurepedia.ui.activities.home
 
+import android.content.res.Resources
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -28,8 +29,7 @@ import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
 import cromega.studio.measurepedia.enums.MeasuredOrder
 import cromega.studio.measurepedia.extensions.atLeastOneIs
-import cromega.studio.measurepedia.resources.utils.ResourcesUtils
-import cromega.studio.measurepedia.resources.utils.TablesUtils
+import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
 import cromega.studio.measurepedia.ui.components.elements.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.elements.DownloadIcon
@@ -55,34 +55,39 @@ import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 
-internal object HomeScreen
-{
+class HomeScreen(
+    viewModel: HomeViewModel,
+    resources: Resources
+): ActivityScreen<HomeViewModel>(
+    viewModel = viewModel,
+    resources = resources
+) {
     @Composable
-    fun Screen() =
+    override fun Screen() =
         Scaffold(
             topBar = { Header() },
             content = {
                 Main(it)
                 if (
-                    HomeState.isOptionsDialogOpen() &&
-                    HomeState.hasSelectedPerson()
+                    viewModel.optionsDialogOpened &&
+                    viewModel.hasSelectedPerson
                 ) PersonsOptionsDialog()
-                      },
+            },
             bottomBar = { Footer() },
             floatingActionButton = { FAB() },
             floatingActionButtonPosition = FabPosition.Center
         )
 
     @Composable
-    private fun Header() =
+    override fun Header() =
         GenericHeaderColumn {
             val focusManager: FocusManager = LocalFocusManager.current
 
             SearchBar(
                 modifier = Modifier.fillMaxWidth(),
-                hint = ResourcesUtils.getString(R.string.search),
-                query = HomeState.getSearchText(),
-                onQueryChange = { HomeState.setSearchText(it) },
+                hint = resources.getString(R.string.search),
+                query = viewModel.searchText,
+                onQueryChange = { viewModel.searchText = it },
                 onSearch = { focusManager.clearFocus() }
             )
 
@@ -92,70 +97,55 @@ internal object HomeScreen
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextSmall(text = ResourcesUtils.getString(R.string.order_by))
+                TextSmall(text = resources.getString(R.string.order_by))
 
                 SpacerHorizontalSmall()
 
                 Dropdown(
-                    expanded = HomeState.getDateFilterExpanded(),
-                    option = HomeState.getDateOrderOption(),
-                    options = arrayOf(DateOrder.RECENT, DateOrder.OLDEST, DateOrder.CREATION),
-                    extractOptionName = { ResourcesUtils.getString(it.textStringId) },
-                    onOptionSelected = { HomeState.setDateOrderOption(it); HomeState.setDateFilterExpanded(false) },
-                    onClickMenu = { HomeState.invertDateFilterExpanded() }
+                    expanded = viewModel.dateFilterExpanded,
+                    option = viewModel.dateOrderOption,
+                    options = DateOrder.asArray(),
+                    extractOptionName = { resources.getString(it.textStringId) },
+                    onOptionSelected = { viewModel.dateOrderOption = it; viewModel.dateFilterExpanded = false },
+                    onClickMenu = { viewModel.invertDateFilterExpanded() }
                 )
 
                 SpacerHorizontalSmall()
 
-                TextSmall(text = ResourcesUtils.getString(R.string.and_if))
+                TextSmall(text = resources.getString(R.string.and_if))
 
                 SpacerHorizontalSmall()
 
                 Dropdown(
-                    expanded = HomeState.getMeasuredFilterExpanded(),
-                    option = HomeState.getMeasuredOrderOption(),
-                    options = arrayOf(MeasuredOrder.MEASURED, MeasuredOrder.NOT_MEASURED, MeasuredOrder.MEASURED_OR_NOT),
-                    extractOptionName = { ResourcesUtils.getString(it.textStringId) },
-                    onOptionSelected = { HomeState.setMeasuredOrderOption(it); HomeState.setMeasuredFilterExpanded(false) },
-                    onClickMenu = { HomeState.invertMeasuredFilterExpanded() }
+                    expanded = viewModel.measuredFilterExpanded,
+                    option = viewModel.measuredOrderOption,
+                    options = MeasuredOrder.asArray(),
+                    extractOptionName = { resources.getString(it.textStringId) },
+                    onOptionSelected = { viewModel.measuredOrderOption = it ; viewModel.measuredFilterExpanded = false
+                                       },
+                    onClickMenu = { viewModel.invertMeasuredFilterExpanded() }
                 )
             }
         }
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    private fun Main(paddingValues: PaddingValues)
-    {
+    override fun Main(paddingValues: PaddingValues) =
         GenericBodyLazyColumn(
             contentPadding = paddingValues
         ) {
-            val persons: Array<Person> =
-                when (HomeState.getDateOrderOption())
-                {
-                    DateOrder.RECENT -> TablesUtils.personsTable.readOrderedByUpdatedRecent()
-                    DateOrder.OLDEST -> TablesUtils.personsTable.readOrderedByUpdatedOldest()
-                    else -> TablesUtils.personsTable.readAll()
-                }
+            val persons: Array<Person> = viewModel.readByDateAndMeasured()
 
             items(persons.size)
             {
                 val person: Person = persons[it]
-                val personSearch: String = person.getSearchablePersonIdentifier()
-                val searchText: String = HomeState.getSearchText().lowercase()
                 val searchValidations: BooleanArray =
                     booleanArrayOf(
-                        searchText.isBlank(),
-                        personSearch.contains(searchText.trim())
+                        viewModel.searchText.lowercase().isBlank(),
+                        person.searchableIdentifier.contains(viewModel.searchText.lowercase().trim())
                     )
-                val measuredValidation: Boolean =
-                    when (HomeState.getMeasuredOrderOption())
-                    {
-                        MeasuredOrder.MEASURED -> person.isMeasured()
-                        MeasuredOrder.NOT_MEASURED -> !person.isMeasured()
-                        else -> true
-                    }
 
-                if ((searchValidations atLeastOneIs true) && measuredValidation )
+                if (searchValidations atLeastOneIs true)
                 {
                     /*
                     * TODO: Include "Missing Functionalities" related to other Activities
@@ -165,9 +155,9 @@ internal object HomeScreen
                         Modifier
                             .fillMaxWidth()
                             .combinedClickable(
-                                onLongClick = { HomeState.setSelectedPerson(person); HomeState.openOptionsDialog() },
-                                onDoubleClick = { HomeState.setSelectedPerson(person); HomeState.openOptionsDialog() },
-                                onClick = { HomeState.setSelectedPerson(person); HomeState.openMeasuresActivity() }
+                                onLongClick = { viewModel.selectedPerson = person ; viewModel.optionsDialogOpened = true },
+                                onDoubleClick = { viewModel.selectedPerson = person ; viewModel.optionsDialogOpened = true },
+                                onClick = { viewModel.selectedPerson = person ; viewModel.openMeasuresActivity() }
                             )
                     ) {
                         val (nameRef, aliasRef, optionsRef, measuredRef, updateRef, middleSpaceRef) = createRefs()
@@ -179,7 +169,7 @@ internal object HomeScreen
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                 },
-                            text = person.getName()
+                            text = person.name
                         )
 
                         TextSubtitle(
@@ -190,7 +180,7 @@ internal object HomeScreen
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
                                 },
-                            text = person.getAlias()
+                            text = person.alias
                         )
 
                         IconButton(
@@ -202,7 +192,7 @@ internal object HomeScreen
                                     start.linkTo(nameRef.end)
                                     end.linkTo(parent.end)
                                 },
-                            onClick = { HomeState.setSelectedPerson(person); HomeState.openOptionsDialog() },
+                            onClick = { viewModel.selectedPerson = person; viewModel.optionsDialogOpened = true },
                             content = { KebabMenuIcon() }
                         )
 
@@ -223,7 +213,7 @@ internal object HomeScreen
                                     bottom.linkTo(parent.bottom)
                                     start.linkTo(parent.start)
                                 },
-                            text = person getUpdatedAsString "dd—MM—yyyy"
+                            text = person.updatedAsString
                         )
 
                         TextRightAligned(
@@ -233,76 +223,73 @@ internal object HomeScreen
                                     bottom.linkTo(parent.bottom)
                                     end.linkTo(parent.end)
                                 },
-                            text = person
-                                .getMeasuredTexts(
-                                    measuredText = ResourcesUtils.getString(R.string.measured),
-                                    notMeasuredText = ResourcesUtils.getString(R.string.not_measured)
-                                )
+                            text =
+                                if (person.measured) resources.getString(R.string.measured)
+                                else resources.getString(R.string.not_measured)
                         )
                     }
                 }
             }
         }
-    }
 
     @Composable
-    private fun Footer() =
+    override fun Footer() =
         /*
         * TODO: Include functionalities for different Buttons
         * */
         GenericFooterRow {
-           Row(
-               modifier =
-               Modifier
-                   .fillMaxWidth()
-                   .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
-               horizontalArrangement = Arrangement.Center,
-               verticalAlignment = Alignment.CenterVertically
-           ) {
-               VerticalIconButton(
-                   modifier =
-                   Modifier
-                       .fillMaxHeight()
-                       .weight(1f),
-                   onClick = { /*TODO*/ }
-               ) {
-                   FaceIcon()
-                   Text(text = ResourcesUtils.getString(R.string.fields))
-               }
+            Row(
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                VerticalIconButton(
+                    modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    FaceIcon()
+                    Text(text = resources.getString(R.string.fields))
+                }
 
-               VerticalIconButton(
-                   modifier =
-                   Modifier
-                       .fillMaxHeight()
-                       .weight(1f),
-                   onClick = { /*TODO*/ }
-               ) {
-                   DownloadIcon()
-                   Text(text = ResourcesUtils.getString(R.string.import_data))
-               }
+                VerticalIconButton(
+                    modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    DownloadIcon()
+                    Text(text = resources.getString(R.string.import_data))
+                }
 
-               VerticalIconButton(
-                   modifier =
-                   Modifier
-                       .fillMaxHeight()
-                       .weight(1f),
-                   onClick = { /*TODO*/ }
-               ) {
-                   UploadIcon()
-                   Text(text = ResourcesUtils.getString(R.string.export))
-               }
+                VerticalIconButton(
+                    modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    UploadIcon()
+                    Text(text = resources.getString(R.string.export))
+                }
 
-               VerticalIconButton(
-                   modifier =
-                   Modifier
-                       .fillMaxHeight()
-                       .weight(1f),
-                   onClick = { /*TODO*/ }
-               ) {
-                   SettingsIcon()
-                   Text(text = ResourcesUtils.getString(R.string.settings))
-               }
-           }
+                VerticalIconButton(
+                    modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    SettingsIcon()
+                    Text(text = resources.getString(R.string.settings))
+                }
+            }
         }
 
     @Composable
@@ -315,23 +302,23 @@ internal object HomeScreen
          * */
         ColumnOrderedDialog(
             columnModifier = Modifier.fillMaxWidth(),
-            onDismissRequest = { HomeState.setSelectedPerson(null); HomeState.closeOptionsDialog() }
+            onDismissRequest = { viewModel.selectedPerson = null ; viewModel.optionsDialogOpened = false }
         ) {
-            val selectedPerson: Person = HomeState.getSelectedPerson()
+            val selectedPerson: Person = viewModel.selectedPerson!!
 
             SpacerVerticalMedium()
 
             TextTitle(
                 modifier = Modifier.fillMaxWidth(0.7f),
                 textAlign = TextAlign.Center,
-                text = selectedPerson.getName()
+                text = selectedPerson.name
             )
 
-            if (selectedPerson.hasAlias())
+            if (selectedPerson.hasAlias)
                 TextSubtitle(
                     modifier = Modifier.fillMaxWidth(0.7f),
                     textAlign = TextAlign.Center,
-                    text = selectedPerson.getAlias()
+                    text = selectedPerson.alias
                 )
 
             SpacerVerticalSmall()
@@ -344,7 +331,7 @@ internal object HomeScreen
                     .fillMaxWidth(0.7f),
                 onClick = { /*TODO*/ }
             ) {
-                Text(text = ResourcesUtils.getString(R.string.update_person_info))
+                Text(text = resources.getString(R.string.update_person_info))
             }
 
             SpacerVerticalSmall()
@@ -353,20 +340,9 @@ internal object HomeScreen
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
-                onClick = { HomeState.openMeasuresActivity() }
+                onClick = { viewModel.openMeasuresActivity() }
             ) {
-                Text(text = ResourcesUtils.getString(R.string.take_measures))
-            }
-
-            SpacerVerticalSmall()
-
-            RoundedCornerButton(
-                modifier = Modifier
-                    .scale(1.25f)
-                    .fillMaxWidth(0.7f),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = ResourcesUtils.getString(R.string.export_person_info))
+                Text(text = resources.getString(R.string.take_measures))
             }
 
             SpacerVerticalSmall()
@@ -377,7 +353,18 @@ internal object HomeScreen
                     .fillMaxWidth(0.7f),
                 onClick = { /*TODO*/ }
             ) {
-                Text(text = ResourcesUtils.getString(R.string.import_person_info))
+                Text(text = resources.getString(R.string.export_person_info))
+            }
+
+            SpacerVerticalSmall()
+
+            RoundedCornerButton(
+                modifier = Modifier
+                    .scale(1.25f)
+                    .fillMaxWidth(0.7f),
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = resources.getString(R.string.import_person_info))
             }
 
             SpacerVerticalMedium()

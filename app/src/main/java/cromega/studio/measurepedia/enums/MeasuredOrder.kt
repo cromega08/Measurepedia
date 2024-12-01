@@ -8,4 +8,9 @@ enum class MeasuredOrder(val id: Int, @StringRes val textStringId: Int, val isDe
     MEASURED(id = 0, textStringId = R.string.measured, isDefault = false),
     NOT_MEASURED(id = 1, textStringId = R.string.not_measured, isDefault = false),
     MEASURED_OR_NOT(id = 2, textStringId = R.string.measured_or_not, isDefault = true);
+
+    companion object
+    {
+        fun asArray(): Array<MeasuredOrder> = entries.toTypedArray()
+    }
 }

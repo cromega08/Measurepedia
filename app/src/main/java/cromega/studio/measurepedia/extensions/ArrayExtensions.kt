@@ -70,3 +70,8 @@ fun <T> Array<T>.toText(
 
     return string.toString()
 }
+
+fun <T> Array<T>?.isNeitherNullOrEmpty(): Boolean
+{
+    return (this.isNotNull() && (this?.isNotEmpty() ?: false))
+}

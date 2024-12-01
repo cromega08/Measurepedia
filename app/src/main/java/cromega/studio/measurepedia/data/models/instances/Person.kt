@@ -9,31 +9,30 @@ import java.util.Locale
 
 class Person(
     id: Int,
-    private val name: String,
-    private val alias: String?,
-    private val updated: Date,
-    val measured: Boolean
+    name: String,
+    var alias: String,
+    var updated: Date,
+    var measured: Boolean
 ): Model(id = id)
 {
     private val locale: Locale = Locale.US
 
-    fun getName(): String = name.titlecase()
+    var name: String
+        get() = field.titlecase()
 
-    fun hasAlias(): Boolean = alias.isNotNullOrBlank()
+    val hasAlias: Boolean = alias.isNotNullOrBlank()
 
-    fun getAlias(): String = alias ?: ""
-
-    fun getSearchablePersonIdentifier(): String =
+    val searchableIdentifier: String =
         String
-            .format(locale = locale, "%s %s", getName(), getAlias())
+            .format(locale = locale, "%s %s", name.lowercase(), alias.lowercase())
             .lowercase(locale = locale)
 
-    infix fun getUpdatedAsString(format: String): String = updated toStringWithFormat format
+    val updatedAsString: String =
+        updated toStringWithFormat "dd-MM-yyyy"
 
-    fun isMeasured(): Boolean = measured
-
-    fun getMeasuredTexts(measuredText: String, notMeasuredText: String) =
-        if (measured) measuredText else notMeasuredText
+    init {
+        this.name = name
+    }
 
     override fun clone(): Person {
         return Person(

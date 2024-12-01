@@ -5,33 +5,26 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import cromega.studio.measurepedia.data.database.tables.instances.BodyPartsTable
-import cromega.studio.measurepedia.data.database.tables.instances.FieldsTable
-import cromega.studio.measurepedia.data.database.tables.instances.MetricSystemsUnitsTable
-import cromega.studio.measurepedia.data.database.tables.instances.PersonsTable
-import cromega.studio.measurepedia.data.database.tables.instances.RecordsTable
+import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.enums.Languages
 import cromega.studio.measurepedia.extensions.putExtra
-import cromega.studio.measurepedia.resources.utils.ResourcesUtils
-import cromega.studio.measurepedia.resources.utils.TablesUtils
 import java.util.Locale
 import kotlin.reflect.KClass
 
-abstract class Activity: ComponentActivity()
+abstract class Activity<VM: ActivityViewModel, SC: ActivityScreen<VM>>: ComponentActivity()
 {
+    val tablesManager: TablesManager = TablesManager()
+    abstract val viewModel: VM
+    abstract val screen: SC
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        ResourcesUtils.updateInstance(resources)
-        TablesUtils
-            .updateInstances(
-                personsTable = PersonsTable(applicationContext),
-                bodyPartsTable = BodyPartsTable(applicationContext),
-                metricSystemsUnitsTable = MetricSystemsUnitsTable(applicationContext),
-                fieldsTable = FieldsTable(applicationContext),
-                recordsTable = RecordsTable(applicationContext)
-            )
+
+        tablesManager.instantiate(context = applicationContext)
+
+        instantiateVariables()
     }
 
     fun setLocale(language: Languages)
@@ -47,7 +40,10 @@ abstract class Activity: ComponentActivity()
         resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
-    fun <Instance : Activity> changeActivity(activityToLoad: KClass<Instance>, data: Map<String, Any> = mapOf()) {
+    fun <VM: ActivityViewModel, SC: ActivityScreen<VM>, AC : Activity<VM, SC>> changeActivity(
+        activityToLoad: KClass<AC>,
+        data: Map<String, Any> = mapOf()
+    ) {
         val intent = Intent(this, activityToLoad.java)
 
         data.forEach { (key, value) -> intent.putExtra(key,  value) }
@@ -55,9 +51,11 @@ abstract class Activity: ComponentActivity()
         startActivity(intent)
     }
 
+    abstract fun instantiateVariables()
+
     override fun onDestroy()
     {
         super.onDestroy()
-        TablesUtils.closeInstances()
+        tablesManager.close()
     }
 }

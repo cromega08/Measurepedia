@@ -72,9 +72,6 @@ open class FieldsTable(context: Context) : Table<Field>(context)
             selection = "${TABLE_INFO.COLUMN_ACTIVE} = ? and ${TABLE_INFO.COLUMN_BODY_PART_ID} in ${bodyPartsIds.toText()}",
             selectionArgs = arrayOf((if (active) 1 else 2).toString())
         ).toTypedArray()
-//        readByBodyParts(bodyPartsIds = bodyPartsIds)
-//            .filter { it.active == active }
-//            .toTypedArray()
 
     fun insert(name: String) =
         insertQuery(generateContentValue(name))

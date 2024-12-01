@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 import android.util.Log
 import cromega.studio.measurepedia.data.database.connection.MeasurepediaDatabase
+import cromega.studio.measurepedia.data.models.generic.Model
 import cromega.studio.measurepedia.extensions.addIfNotNull
 import cromega.studio.measurepedia.extensions.generateLogicMap
 import cromega.studio.measurepedia.extensions.generateSimpleMap
@@ -14,7 +15,7 @@ import cromega.studio.measurepedia.extensions.get
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
+abstract class Table<M: Model>(context: Context) : MeasurepediaDatabase(context)
 {
     protected val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
@@ -69,9 +70,9 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
         selection: String? = null,
         selectionArgs: Array<String>? = null,
         sortOrder: String? = null
-    ): MutableList<Model>
+    ): MutableList<M>
     {
-        val toReturn: MutableList<Model> = mutableListOf()
+        val toReturn: MutableList<M> = mutableListOf()
 
         val rowsData: Cursor =
             readQuery(
@@ -146,9 +147,9 @@ abstract class Table<Model>(context: Context) : MeasurepediaDatabase(context)
 
     protected abstract fun afterInit(): Any
 
-    protected abstract fun generateModel(index: Int, columnsData: Map<String, MutableList<Any>>): Model
+    protected abstract fun generateModel(index: Int, columnsData: Map<String, MutableList<Any>>): M
 
-    abstract fun readAll(): Array<Model>
+    abstract fun readAll(): Array<M>
 
     protected abstract inner class TableInfo : BaseColumns
     {

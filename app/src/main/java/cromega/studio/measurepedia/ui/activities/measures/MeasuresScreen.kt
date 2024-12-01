@@ -1,5 +1,6 @@
 package cromega.studio.measurepedia.ui.activities.measures
 
+import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,9 +33,7 @@ import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.data.models.instances.Field
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.data.models.instances.Record
-import cromega.studio.measurepedia.extensions.extractIds
-import cromega.studio.measurepedia.extensions.findOrDefault
-import cromega.studio.measurepedia.resources.utils.ResourcesUtils
+import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
@@ -48,18 +46,15 @@ import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 
-internal object MeasuresScreen
-{
+class MeasuresScreen(
+    viewModel: MeasuresViewModel,
+    resources: Resources
+): ActivityScreen<MeasuresViewModel>(
+    viewModel = viewModel,
+    resources = resources
+) {
     @Composable
-    fun Screen() =
-        Scaffold(
-            topBar = { Header() },
-            content = { Main(it) },
-            bottomBar = { Footer() }
-        )
-
-    @Composable
-    fun Header() =
+    override fun Header() =
         GenericHeaderColumn(
             modifier =
                 Modifier.background(
@@ -75,26 +70,26 @@ internal object MeasuresScreen
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val selectedPerson: Person = MeasuresState.selectedPerson
+                val selectedPerson: Person = viewModel.selectedPerson
 
                 SpacerVerticalSmall()
 
-                TextTitle(text = selectedPerson.getName())
+                TextTitle(text = selectedPerson.name)
 
-                if (selectedPerson.hasAlias())
-                    TextSubtitle(text = selectedPerson.getAlias())
+                if (selectedPerson.hasAlias)
+                    TextSubtitle(text = selectedPerson.alias)
 
                 SpacerVerticalSmall()
             }
         }
 
     @Composable
-    fun Main(paddingValues: PaddingValues) =
+    override fun Main(paddingValues: PaddingValues) =
         GenericBodyLazyColumn(
             contentPadding = paddingValues
         ) {
-            val metricSystemsUnits = MeasuresState.metricSystemsUnits
-            val bodyParts: Array<BodyPart> = MeasuresState.bodyParts
+            val metricSystemsUnits = viewModel.metricSystemsUnits
+            val bodyParts: Array<BodyPart> = viewModel.bodyParts
 
             items(bodyParts.size) { bodyPartIndex ->
                 val bodyPart: BodyPart = bodyParts[bodyPartIndex]
@@ -117,6 +112,21 @@ internal object MeasuresScreen
                             text = bodyPart.getName()
                         )
 
+                        SpacerHorizontalLine(
+                            modifier =
+                            Modifier
+                                .height(2.5.dp)
+                                .constrainAs(separationRef) {
+                                    top.linkTo(bodyPartRef.top)
+                                    bottom.linkTo(bodyPartRef.bottom)
+                                    start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
+                                    end.linkTo(anchor = iconRef.start, margin = 7.5.dp)
+
+                                    width = Dimension.fillToConstraints
+                                },
+                            color = Color.White
+                        )
+
                         Box(
                             modifier =
                             Modifier
@@ -129,77 +139,48 @@ internal object MeasuresScreen
                             content = { VerticalArrowsIcon() }
                         )
 
-                        SpacerHorizontalLine(
-                            modifier =
-                            Modifier
-                                .height(2.5.dp)
-                                .constrainAs(separationRef) {
-                                    top.linkTo(bodyPartRef.top)
-                                    bottom.linkTo(bodyPartRef.bottom)
-                                    start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
-                                    end.linkTo(anchor = iconRef.start, margin = 5.dp)
-
-                                    width = Dimension.fillToConstraints
-                                },
-                            color = Color.White
-                        )
-
                         Column (
                             modifier =
                             Modifier
-                                .fillMaxWidth()
                                 .constrainAs(fieldsRef) {
                                     top.linkTo(anchor = bodyPartRef.bottom, margin = 5.dp)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
+                                    bottom.linkTo(anchor = parent.bottom, margin = 5.dp)
+                                    start.linkTo(anchor = parent.start, margin = 7.5.dp)
+                                    end.linkTo(anchor = parent.end, margin = 7.5.dp)
 
                                     width = Dimension.fillToConstraints
                                 }
                         ) {
-                            val bodyPartFields: Array<Field> =
-                                MeasuresState
-                                    .fields
-                                    .filter { it.bodyPartId == bodyPart.id }
-                                    .toTypedArray()
-
-                            val bodyPartFieldsIds: Array<Int> = bodyPartFields.extractIds()
-
-                            val records: MutableList<Record> =
-                                MeasuresState
-                                    .records
-                                    .filter { bodyPartFieldsIds.contains(it.fieldId) }
-                                    .toMutableList()
+                            val bodyPartFields: Array<Field> = viewModel.filterFieldsByBodyPartId(bodyPartId = bodyPart.id)
 
                             bodyPartFields.forEach{ field ->
 
                                 if (field.active)
                                 {
-                                    val currentFieldGeneralIndex: Int = MeasuresState.fields.indexOf(field)
+                                    val currentFieldGeneralIndex: Int = viewModel.findArrayIndexOfField(field = field)
 
-                                    val record: Record = records.find { it.fieldId == field.id }!!
+                                    val record: Record = viewModel.findRecordByFieldId(fieldId = field.id)
 
                                     val metricSystemUnit =
-                                        metricSystemsUnits
-                                            .findOrDefault(
-                                                predicate = { record.metricSystemUnitId == it.id },
-                                                generateDefault = { metricSystemsUnits[0] }
-                                            )
+                                        viewModel.findMetricSystemUnitById(metricSystemUnitId = record.metricSystemUnitId)
 
                                     Row(
                                         modifier =
                                         Modifier
                                             .fillParentMaxWidth()
-                                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                                            .padding(horizontal = 20.dp, vertical = 5.dp),
                                         horizontalArrangement = Arrangement.SpaceEvenly,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
+
+
                                         Text(
                                             modifier = Modifier.weight(1f),
                                             text = field.getTitledName(),
                                             overflow = TextOverflow.Clip
                                         )
 
-                                        Spacer(modifier = Modifier.weight(0.25f))
+                                        Spacer(modifier = Modifier.weight(0.1f))
 
                                         TextField(
                                             modifier =
@@ -209,14 +190,14 @@ internal object MeasuresScreen
                                                 .onFocusChanged {focusState ->
                                                     if (!focusState.isFocused)
                                                     {
-                                                        MeasuresState
+                                                        viewModel
                                                             .updateRecordMeasureByPrintable(recordId = record.id)
                                                     }
                                                 },
                                             value = record.measurePrintable,
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                             onValueChange = {userInput ->
-                                                MeasuresState
+                                                viewModel
                                                     .updateRecordMeasurePrintable(
                                                         recordId = record.id,
                                                         newMeasurePrintable = userInput
@@ -225,22 +206,22 @@ internal object MeasuresScreen
                                         )
 
                                         Dropdown(
-                                            modifier = Modifier.weight(0.83f),
-                                            expanded = MeasuresState.fieldsMetricSystemUnitSelectorExpanded[currentFieldGeneralIndex],
+                                            modifier = Modifier.weight(0.6f),
+                                            expanded = viewModel.metricSystemsUnitsSelectorsExpanded[currentFieldGeneralIndex],
                                             option = metricSystemUnit,
                                             options = metricSystemsUnits,
                                             extractOptionName = { selectedUnit -> selectedUnit.abbreviation },
                                             onOptionSelected = {selectedUnit ->
-                                                MeasuresState
+                                                viewModel
                                                     .updateRecordMetricSystemUnitId(
                                                         recordId = record.id,
                                                         newMetricSystemUnitId = selectedUnit.id
                                                     )
 
-                                                MeasuresState.invertFieldMetricSystemUnitState(currentFieldGeneralIndex)
+                                                viewModel.invertMetricSystemUnitSelector(currentFieldGeneralIndex)
                                             },
                                             onClickMenu = {
-                                                MeasuresState.invertFieldMetricSystemUnitState(currentFieldGeneralIndex)
+                                                viewModel.invertMetricSystemUnitSelector(currentFieldGeneralIndex)
                                             }
                                         )
                                     }
@@ -253,15 +234,15 @@ internal object MeasuresScreen
         }
 
     @Composable
-    fun Footer() =
+    override fun Footer() =
         GenericFooterRow {
             RoundedCornerButton(
                 modifier =
                     Modifier
                         .fillMaxWidth(0.8f),
                 onClick = {
-                    MeasuresState.flushRecordsForUpdates()
-                    MeasuresState.openHomeActivity()
+                    viewModel.updateData()
+                    viewModel.openHomeActivity()
                 }
             ) {
                 Column {
@@ -269,7 +250,7 @@ internal object MeasuresScreen
 
                     Text(
                         modifier = Modifier.scale(1.5f),
-                        text = ResourcesUtils.getString(R.string.update_measures)
+                        text = resources.getString(R.string.update_measures)
                     )
 
                     SpacerVerticalSmall()

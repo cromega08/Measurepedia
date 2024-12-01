@@ -44,7 +44,7 @@ open class PersonsTable(context: Context) : Table<Person>(context)
         return Person(
             id = columnsData[TABLE_INFO.COLUMN_ID]?.get(index) as Int,
             name = columnsData[TABLE_INFO.COLUMN_NAME]?.get(index) as String,
-            alias = columnsData[TABLE_INFO.COLUMN_ALIAS]?.get(index) as? String?,
+            alias = columnsData[TABLE_INFO.COLUMN_ALIAS]?.get(index) as? String? ?: "",
             updated = (columnsData[TABLE_INFO.COLUMN_UPDATED]?.get(index) as String) toDateWithFormat dateFormat,
             measured = (columnsData[TABLE_INFO.COLUMN_MEASURED]?.get(index) as Int).toBoolean()
         )
@@ -57,6 +57,16 @@ open class PersonsTable(context: Context) : Table<Person>(context)
             selection = "${TABLE_INFO.COLUMN_ID} = ?",
             selectionArgs = arrayOf(id.toString())
         ).toTypedArray()[0]
+
+    fun readOrderedByUpdated(recentFirst: Boolean = true): Array<Person> =
+        read(
+            sortOrder = "${TABLE_INFO.COLUMN_UPDATED} ${if (recentFirst) "desc" else "asc"}"
+        ).toTypedArray()
+
+    fun readFilteredByMeasured(measured: Boolean): Array<Person> =
+        read(
+            selection = "${TABLE_INFO.COLUMN_MEASURED} = ${if (measured) "1" else "0"}"
+        ).toTypedArray()
 
     fun readOrderedByUpdatedRecent(): Array<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} desc").toTypedArray()
 

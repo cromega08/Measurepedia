@@ -23,4 +23,6 @@
     <string name="export_person_info">Export Person Info</string>
     <string name="import_person_info">Import Person Info</string>
     <string name="update_measures">Update Measures</string>
+    <string name="title_activity_fields" translatable="false">FieldsActivity</string>
+    <string name="measures_updated">Measures Updated</string>
 </resources>
