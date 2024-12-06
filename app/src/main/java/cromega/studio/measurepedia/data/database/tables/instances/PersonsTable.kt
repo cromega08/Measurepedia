@@ -50,27 +50,27 @@ open class PersonsTable(context: Context) : Table<Person>(context)
         )
     }
 
-    override fun readAll(): Array<Person> = read().toTypedArray()
+    override fun readAll(): List<Person> = read()
 
     fun readPerson(id: Int): Person =
         read(
             selection = "${TABLE_INFO.COLUMN_ID} = ?",
             selectionArgs = arrayOf(id.toString())
-        ).toTypedArray()[0]
+        )[0]
 
-    fun readOrderedByUpdated(recentFirst: Boolean = true): Array<Person> =
+    fun readOrderedByUpdated(recentFirst: Boolean = true): List<Person> =
         read(
             sortOrder = "${TABLE_INFO.COLUMN_UPDATED} ${if (recentFirst) "desc" else "asc"}"
-        ).toTypedArray()
+        )
 
-    fun readFilteredByMeasured(measured: Boolean): Array<Person> =
+    fun readFilteredByMeasured(measured: Boolean): List<Person> =
         read(
             selection = "${TABLE_INFO.COLUMN_MEASURED} = ${if (measured) "1" else "0"}"
-        ).toTypedArray()
+        )
 
-    fun readOrderedByUpdatedRecent(): Array<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} desc").toTypedArray()
+    fun readOrderedByUpdatedRecent(): List<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} desc")
 
-    fun readOrderedByUpdatedOldest(): Array<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} asc").toTypedArray()
+    fun readOrderedByUpdatedOldest(): List<Person> = read(sortOrder = "${TABLE_INFO.COLUMN_UPDATED} asc")
 
     fun insert(name: String, alias: String? = null, updated: Date? = null) =
         insertQuery(generateContentValue(name, alias, updated))

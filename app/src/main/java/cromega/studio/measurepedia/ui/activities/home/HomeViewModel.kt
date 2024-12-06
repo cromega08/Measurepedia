@@ -58,7 +58,7 @@ class HomeViewModel(
 
     fun invertMeasuredFilterExpanded() { measuredFilterExpanded = !measuredFilterExpanded }
 
-    fun readByDateAndMeasured(): Array<Person> =
+    fun readByDateAndMeasured(): List<Person> =
         tablesManager
             .personsManager
             .readByDateAndMeasured(

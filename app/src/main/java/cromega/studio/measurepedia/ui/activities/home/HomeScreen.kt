@@ -134,7 +134,7 @@ class HomeScreen(
         GenericBodyLazyColumn(
             contentPadding = paddingValues
         ) {
-            val persons: Array<Person> = viewModel.readByDateAndMeasured()
+            val persons: List<Person> = viewModel.readByDateAndMeasured()
 
             items(persons.size)
             {

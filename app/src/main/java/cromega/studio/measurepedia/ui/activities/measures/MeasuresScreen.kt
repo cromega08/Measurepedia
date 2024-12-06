@@ -89,7 +89,7 @@ class MeasuresScreen(
             contentPadding = paddingValues
         ) {
             val metricSystemsUnits = viewModel.metricSystemsUnits
-            val bodyParts: Array<BodyPart> = viewModel.bodyParts
+            val bodyParts: List<BodyPart> = viewModel.bodyParts
 
             items(bodyParts.size) { bodyPartIndex ->
                 val bodyPart: BodyPart = bodyParts[bodyPartIndex]
@@ -151,7 +151,7 @@ class MeasuresScreen(
                                     width = Dimension.fillToConstraints
                                 }
                         ) {
-                            val bodyPartFields: Array<Field> = viewModel.filterFieldsByBodyPartId(bodyPartId = bodyPart.id)
+                            val bodyPartFields: List<Field> = viewModel.filterFieldsByBodyPartId(bodyPartId = bodyPart.id)
 
                             bodyPartFields.forEach{ field ->
 
@@ -172,7 +172,6 @@ class MeasuresScreen(
                                         horizontalArrangement = Arrangement.SpaceEvenly,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-
 
                                         Text(
                                             modifier = Modifier.weight(1f),
@@ -209,7 +208,7 @@ class MeasuresScreen(
                                             modifier = Modifier.weight(0.6f),
                                             expanded = viewModel.metricSystemsUnitsSelectorsExpanded[currentFieldGeneralIndex],
                                             option = metricSystemUnit,
-                                            options = metricSystemsUnits,
+                                            options = metricSystemsUnits.toTypedArray(),
                                             extractOptionName = { selectedUnit -> selectedUnit.abbreviation },
                                             onOptionSelected = {selectedUnit ->
                                                 viewModel

@@ -6,9 +6,9 @@ import cromega.studio.measurepedia.data.models.instances.BodyPart
 class BodyPartsManager(
     private val bodyPartsTable: BodyPartsTable
 ) {
-    fun readAll(): Array<BodyPart> = bodyPartsTable.readAll()
+    fun readAll(): List<BodyPart> = bodyPartsTable.readAll()
 
-    fun readByActive(active: Boolean = true): Array<BodyPart> =
+    fun readByActive(active: Boolean = true): List<BodyPart> =
         bodyPartsTable.readByActive(active = active)
 
     fun insert(name: String, active: Boolean? = null) =

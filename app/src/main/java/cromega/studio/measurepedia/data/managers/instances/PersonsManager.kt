@@ -20,9 +20,9 @@ class PersonsManager(
 
     fun readPerson(personId: Int): Person = personsTable.readPerson(id = personId)
 
-    fun readAll(): Array<Person> = personsTable.readAll()
+    fun readAll(): List<Person> = personsTable.readAll()
 
-    fun readOrderedByDateOrder(dateOrder: DateOrder): Array<Person> =
+    fun readOrderedByDateOrder(dateOrder: DateOrder): List<Person> =
         when (dateOrder)
         {
             DateOrder.RECENT -> personsTable.readOrderedByUpdated(true)
@@ -30,7 +30,7 @@ class PersonsManager(
             DateOrder.CREATION -> personsTable.readAll()
         }
 
-    fun readFilteredByMeasured(measuredOrder: MeasuredOrder): Array<Person> =
+    fun readFilteredByMeasured(measuredOrder: MeasuredOrder): List<Person> =
         when(measuredOrder)
         {
             MeasuredOrder.MEASURED -> personsTable.readFilteredByMeasured(true)
@@ -41,7 +41,7 @@ class PersonsManager(
     fun readByDateAndMeasured(
         dateOrder: DateOrder,
         measuredOrder: MeasuredOrder
-    ): Array<Person> =
+    ): List<Person> =
         readOrderedByDateOrder(dateOrder)
             .filter {person ->
                 when(measuredOrder)
@@ -51,7 +51,6 @@ class PersonsManager(
                     MeasuredOrder.MEASURED_OR_NOT -> true
                 }
             }
-            .toTypedArray()
 
     fun insert(name: String, alias: String? = null, updated: Date? = null)
     {
@@ -69,7 +68,7 @@ class PersonsManager(
         if (personInsertedCorrectly)
         {
             val metricSystemUnitDefault: MetricSystemUnit = metricSystemsUnitsTable.readAll()[0]
-            val fields: Array<Field> = fieldsTable.readAll()
+            val fields: List<Field> = fieldsTable.readAll()
 
             fields.forEach { field ->
                 recordsTable.insert(

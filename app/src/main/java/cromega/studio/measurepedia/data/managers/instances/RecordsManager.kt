@@ -7,9 +7,9 @@ import cromega.studio.measurepedia.extensions.isNotNull
 class RecordsManager(
     private val recordsTable: RecordsTable
 ) {
-    fun readAll(): Array<Record> = recordsTable.readAll()
+    fun readAll(): List<Record> = recordsTable.readAll()
 
-    fun readFilteredBy(personId: Int, fieldIds: Array<Int>? = null): Array<Record>
+    fun readFilteredBy(personId: Int, fieldIds: List<Int>? = null): List<Record>
     {
         return if (fieldIds.isNotNull())
             {

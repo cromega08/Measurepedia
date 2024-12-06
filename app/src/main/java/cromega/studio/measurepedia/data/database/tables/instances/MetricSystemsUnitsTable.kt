@@ -36,7 +36,7 @@ open class MetricSystemsUnitsTable(context: Context) : Table<MetricSystemUnit>(c
             abbreviation = columnsData[TABLE_INFO.COLUMN_ABBREVIATION]?.get(index) as String
         )
     
-    override fun readAll() = read().toTypedArray()
+    override fun readAll(): List<MetricSystemUnit> = read()
 
     fun insert(name: String, abbreviation: String) =
         insertQuery(generateContentValue(name, abbreviation))

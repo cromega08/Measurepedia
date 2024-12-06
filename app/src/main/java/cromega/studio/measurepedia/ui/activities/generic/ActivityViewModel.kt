@@ -8,5 +8,3 @@ abstract class ActivityViewModel(
     protected val tablesManager: TablesManager,
     protected val resources: Resources
 ) : ViewModel()
-{
-}

@@ -149,7 +149,7 @@ abstract class Table<M: Model>(context: Context) : MeasurepediaDatabase(context)
 
     protected abstract fun generateModel(index: Int, columnsData: Map<String, MutableList<Any>>): M
 
-    abstract fun readAll(): Array<M>
+    abstract fun readAll(): List<M>
 
     protected abstract inner class TableInfo : BaseColumns
     {

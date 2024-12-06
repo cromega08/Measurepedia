@@ -28,12 +28,12 @@ class MeasuresViewModel(
             .personsManager
             .readPerson(selectedPersonId)
 
-    val bodyParts: Array<BodyPart> =
+    val bodyParts: List<BodyPart> =
         tablesManager
             .bodyPartsManager
             .readByActive()
 
-    val fields: Array<Field> =
+    val fields: List<Field> =
         tablesManager
             .fieldsManager
             .readFilteredBy(
@@ -41,7 +41,7 @@ class MeasuresViewModel(
                 bodyPartsIds = bodyParts.extractIds()
             )
 
-    val metricSystemsUnits: Array<MetricSystemUnit> =
+    val metricSystemsUnits: List<MetricSystemUnit> =
         tablesManager
             .metricSystemsUnitsManager
             .readAll()
@@ -54,11 +54,11 @@ class MeasuresViewModel(
                     .readFilteredBy(
                         personId = selectedPersonId,
                         fieldIds = fields.extractIds()
-                    )
+                    ).toTypedArray()
                 )
         )
 
-    val records: Array<Record> = recordsState.toTypedArray()
+    val records: List<Record> = recordsState
 
     val metricSystemsUnitsSelectorsExpanded = mutableStateListOf( *Array(fields.size) { false } )
 
@@ -69,15 +69,13 @@ class MeasuresViewModel(
     fun findMetricSystemUnitById(metricSystemUnitId: Int): MetricSystemUnit =
         metricSystemsUnits.find { it.id == metricSystemUnitId }!!
 
-    fun filterFieldsByBodyPartId(bodyPartId: Int): Array<Field> =
+    fun filterFieldsByBodyPartId(bodyPartId: Int): List<Field> =
         fields
             .filter { it.bodyPartId == bodyPartId }
-            .toTypedArray()
 
-    fun filterRecordsByFieldsIds(fieldsIds: Array<Int>): Array<Record> =
+    fun filterRecordsByFieldsIds(fieldsIds: List<Int>): List<Record> =
         records
             .filter { fieldsIds.contains(it.fieldId) }
-            .toTypedArray()
 
     private fun updateRecord(recordId: Int, transform: (Record) -> Record)
     {

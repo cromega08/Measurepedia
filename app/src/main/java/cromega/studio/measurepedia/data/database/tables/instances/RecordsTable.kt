@@ -62,22 +62,22 @@ open class RecordsTable(context: Context) : Table<Record>(context) {
             metricSystemUnitId = columnsData[TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID]?.get(index) as Int
         )
     
-    override fun readAll() = read().toTypedArray()
+    override fun readAll(): List<Record> = read()
 
-    fun readByPerson(personId: Int): Array<Record> =
+    fun readByPerson(personId: Int): List<Record> =
         read(
             selection = "${TABLE_INFO.COLUMN_PERSON_ID} = ?",
             selectionArgs = arrayOf(personId.toString())
-        ).toTypedArray()
+        )
 
     fun readByPersonAndFields(
         personId: Int,
-        fieldIds: Array<Int>
-    ): Array<Record> =
+        fieldIds: List<Int>
+    ): List<Record> =
         read(
             selection = "${TABLE_INFO.COLUMN_PERSON_ID} = ? and ${TABLE_INFO.COLUMN_FIELD_ID} in ${fieldIds.toText()}",
             selectionArgs = arrayOf(personId.toString())
-        ).toTypedArray()
+        )
 
     fun insert(personId: Int, fieldId: Int, measure: Float? = null, metricSystemUnitId: Int) =
         insertQuery(generateContentValue(personId, fieldId, measure, metricSystemUnitId))

@@ -6,7 +6,7 @@ import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 class MetricSystemsUnitsManager(
     private val metricSystemsUnitsTable: MetricSystemsUnitsTable
 ) {
-    fun readAll(): Array<MetricSystemUnit> = metricSystemsUnitsTable.readAll()
+    fun readAll(): List<MetricSystemUnit> = metricSystemsUnitsTable.readAll()
 
     fun insert(name: String, abbreviation: String) =
         metricSystemsUnitsTable

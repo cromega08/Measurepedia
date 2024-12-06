@@ -9,12 +9,12 @@ import cromega.studio.measurepedia.extensions.isNull
 class FieldsManager(
     private val fieldsTable: FieldsTable
 ) {
-   fun readAll(): Array<Field> = fieldsTable.readAll()
+   fun readAll(): List<Field> = fieldsTable.readAll()
 
     fun readFilteredBy(
         active: Boolean? = null,
-        bodyPartsIds: Array<Int>? = null
-    ): Array<Field>
+        bodyPartsIds: List<Int>? = null
+    ): List<Field>
     {
         return when
         {

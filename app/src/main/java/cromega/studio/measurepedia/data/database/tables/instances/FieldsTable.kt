@@ -49,29 +49,29 @@ open class FieldsTable(context: Context) : Table<Field>(context)
             active = (columnsData[TABLE_INFO.COLUMN_ACTIVE]?.get(index) as Int).toBoolean()
         )
 
-    override fun readAll(): Array<Field> = read().toTypedArray()
+    override fun readAll(): List<Field> = read()
 
     fun readByActive(
         active: Boolean = true
-    ): Array<Field> =
+    ): List<Field> =
         read(
             selection = "${TABLE_INFO.COLUMN_ACTIVE} = ?",
             selectionArgs = arrayOf((if (active) 1 else 2).toString())
-        ).toTypedArray()
+        )
 
-    fun readByBodyParts(bodyPartsIds: Array<Int>): Array<Field> =
+    fun readByBodyParts(bodyPartsIds: List<Int>): List<Field> =
         read(
             selection = "${TABLE_INFO.COLUMN_BODY_PART_ID} in ${bodyPartsIds.toText()}"
-        ).toTypedArray()
+        )
 
     fun readByActiveAndBodyParts(
         active: Boolean = true,
-        bodyPartsIds: Array<Int>
-    ): Array<Field> =
+        bodyPartsIds: List<Int>
+    ): List<Field> =
         read(
             selection = "${TABLE_INFO.COLUMN_ACTIVE} = ? and ${TABLE_INFO.COLUMN_BODY_PART_ID} in ${bodyPartsIds.toText()}",
             selectionArgs = arrayOf((if (active) 1 else 2).toString())
-        ).toTypedArray()
+        )
 
     fun insert(name: String) =
         insertQuery(generateContentValue(name))
