@@ -109,7 +109,7 @@ class MeasuresScreen(
                                     start.linkTo(parent.start)
                                 },
                             fontWeight = FontWeight.Bold,
-                            text = bodyPart.getName()
+                            text = bodyPart.name
                         )
 
                         SpacerHorizontalLine(

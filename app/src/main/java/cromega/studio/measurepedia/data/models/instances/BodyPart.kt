@@ -5,16 +5,24 @@ import cromega.studio.measurepedia.extensions.titlecase
 
 class BodyPart(
     id: Int,
-    private var name: String,
+    name: String,
     var active: Boolean
 ) : Model(id = id)
 {
-    fun getName() = name.titlecase()
+    private var _name: String
+
+    var name: String
+        get() = _name.titlecase()
+        set(value) { _name = value }
+
+    init {
+        this._name = name
+    }
 
     override fun clone(): BodyPart {
         return BodyPart(
             id = id,
-            name = name,
+            name = _name,
             active = active
         )
     }
