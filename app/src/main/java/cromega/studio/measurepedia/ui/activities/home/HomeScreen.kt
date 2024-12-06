@@ -251,7 +251,7 @@ class HomeScreen(
                     Modifier
                         .fillMaxHeight()
                         .weight(1f),
-                    onClick = { /*TODO*/ }
+                    onClick = { viewModel.openFieldsActivity() }
                 ) {
                     FaceIcon()
                     Text(text = resources.getString(R.string.fields))

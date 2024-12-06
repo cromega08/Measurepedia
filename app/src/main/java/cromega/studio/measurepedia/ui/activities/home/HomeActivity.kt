@@ -2,6 +2,7 @@ package cromega.studio.measurepedia.ui.activities.home
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import cromega.studio.measurepedia.ui.activities.fields.FieldsActivity
 import cromega.studio.measurepedia.ui.activities.generic.Activity
 import cromega.studio.measurepedia.ui.activities.measures.MeasuresActivity
 import cromega.studio.measurepedia.ui.theme.MeasurepediaTheme
@@ -29,7 +30,8 @@ class HomeActivity : Activity<HomeViewModel, HomeScreen>()
             HomeViewModel(
                 tablesManager = tablesManager,
                 resources = resources,
-                openMeasuresFunction = ::openMeasuresFunction
+                openMeasuresFunction = ::openMeasuresFunction,
+                openFieldsFunction = ::openFieldsFunction
             )
 
         screen =
@@ -41,4 +43,7 @@ class HomeActivity : Activity<HomeViewModel, HomeScreen>()
 
     private fun openMeasuresFunction(data: Map<String, Any>) =
         changeActivity(activityToLoad = MeasuresActivity::class, data)
+
+    private fun openFieldsFunction() =
+        changeActivity(activityToLoad = FieldsActivity::class)
 }

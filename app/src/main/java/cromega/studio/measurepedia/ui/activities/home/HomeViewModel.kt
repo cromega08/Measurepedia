@@ -13,7 +13,8 @@ import cromega.studio.measurepedia.ui.activities.generic.ActivityViewModel
 class HomeViewModel(
     tablesManager: TablesManager,
     resources: Resources,
-    private val openMeasuresFunction: (Map<String, Any>) -> Unit
+    private val openMeasuresFunction: (Map<String, Any>) -> Unit,
+    private val openFieldsFunction: () -> Unit
 ): ActivityViewModel(
     tablesManager = tablesManager,
     resources = resources
@@ -71,4 +72,6 @@ class HomeViewModel(
                 "selectedPersonId" to selectedPerson!!.id
             )
         )
+
+    fun openFieldsActivity() = openFieldsFunction()
 }
