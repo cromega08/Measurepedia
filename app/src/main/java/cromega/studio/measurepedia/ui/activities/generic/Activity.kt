@@ -4,10 +4,12 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.enums.Languages
 import cromega.studio.measurepedia.extensions.putExtra
+import cromega.studio.measurepedia.ui.theme.MeasurepediaTheme
 import java.util.Locale
 import kotlin.reflect.KClass
 
@@ -25,6 +27,12 @@ abstract class Activity<VM: ActivityViewModel, SC: ActivityScreen<VM>>: Componen
         tablesManager.instantiate(context = applicationContext)
 
         instantiateVariables()
+
+        setContent {
+            MeasurepediaTheme {
+                screen.Screen()
+            }
+        }
     }
 
     fun setLocale(language: Languages)
