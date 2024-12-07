@@ -175,7 +175,7 @@ class MeasuresScreen(
 
                                         Text(
                                             modifier = Modifier.weight(1f),
-                                            text = field.getTitledName(),
+                                            text = field.name,
                                             overflow = TextOverflow.Clip
                                         )
 

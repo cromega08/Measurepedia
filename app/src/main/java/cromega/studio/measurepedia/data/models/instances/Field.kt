@@ -5,17 +5,26 @@ import cromega.studio.measurepedia.extensions.titlecase
 
 class Field(
     id: Int,
-    var name: String,
+    name: String,
     var bodyPartId: Int,
     var active: Boolean
 ): Model(id = id)
 {
-    fun getTitledName(): String = name.titlecase()
-    override fun clone(): Model
+    private var _name: String
+
+    var name: String
+        get() = _name.titlecase()
+        set(value) { _name = value }
+
+    init {
+        this._name = name
+    }
+
+    override fun clone(): Field
     {
         return Field(
             id = id,
-            name = name,
+            name = _name,
             bodyPartId = bodyPartId,
             active = active
         )
