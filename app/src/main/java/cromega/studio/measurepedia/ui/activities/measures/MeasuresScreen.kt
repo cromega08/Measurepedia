@@ -201,7 +201,9 @@ class MeasuresScreen(
                                                         recordId = record.id,
                                                         newMeasurePrintable = userInput
                                                     )
-                                            }
+                                            },
+                                            singleLine = true,
+                                            maxLines = 1
                                         )
 
                                         Dropdown(
