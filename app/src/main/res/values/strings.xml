@@ -25,4 +25,6 @@
     <string name="update_measures">Update Measures</string>
     <string name="title_activity_fields" translatable="false">FieldsActivity</string>
     <string name="measures_updated">Measures Updated</string>
+    <string name="update_fields">Update Fields</string>
+    <string name="field_name">Field Name</string>
 </resources>

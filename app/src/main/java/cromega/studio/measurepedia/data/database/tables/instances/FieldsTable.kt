@@ -73,15 +73,28 @@ open class FieldsTable(context: Context) : Table<Field>(context)
             selectionArgs = arrayOf((if (active) 1 else 2).toString())
         )
 
-    fun insert(name: String) =
-        insertQuery(generateContentValue(name))
+    fun insert(name: String, bodyPartId: Int, active: Boolean? = null): Long =
+        insertQuery(generateContentValue(name, bodyPartId, active))
 
-    fun update(id: Int, name: String, available: Boolean) =
-        updateQuery(id, generateContentValue(name, available))
+    fun update(id: Int, name: String, bodyPartId: Int, active: Boolean) =
+        updateQuery(id, generateContentValue(name, bodyPartId, active))
 
-    private fun generateContentValue(name: String? = null, active: Boolean? = null): ContentValues =
+    fun delete(id: Int) = deleteQuery(id = id)
+
+    fun deleteByIds(ids: List<Int>) =
+        deleteQuery(
+            selection = "${TABLE_INFO.COLUMN_ID} in ${ids.toText()}",
+            selectionArgs = arrayOf()
+        )
+
+    private fun generateContentValue(
+        name: String? = null,
+        bodyPartId: Int? = null,
+        active: Boolean? = null
+    ): ContentValues =
         ContentValues().apply {
             if (name.isNotNullOrBlank()) put(TABLE_INFO.COLUMN_NAME, name)
+            if (bodyPartId.isNotNull()) put(TABLE_INFO.COLUMN_BODY_PART_ID, bodyPartId)
             if (active.isNotNull()) put(TABLE_INFO.COLUMN_ACTIVE, active)
         }
 

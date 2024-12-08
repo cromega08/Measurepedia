@@ -112,7 +112,7 @@ abstract class Table<M: Model>(context: Context) : MeasurepediaDatabase(context)
         )
     }
 
-    protected fun insertQuery(toInsert: ContentValues) =
+    protected fun insertQuery(toInsert: ContentValues): Long =
         writableDatabase.insert(
             TABLE_INFO.TABLE,
             null,
@@ -120,30 +120,27 @@ abstract class Table<M: Model>(context: Context) : MeasurepediaDatabase(context)
         )
 
     protected fun updateQuery(
-        id: Int,
+        id: Int = 0,
         toUpdate: ContentValues,
         selection: String = "${TABLE_INFO.COLUMN_ID} = ?",
         selectionArgs: Array<String> = arrayOf(id.toString())
-    )
-    {
+    ) =
         writableDatabase.update(
             TABLE_INFO.TABLE,
             toUpdate,
             selection,
             selectionArgs
         )
-    }
 
-    fun delete(id: Int)
-    {
-        val selection: String = "${TABLE_INFO.COLUMN_ID} = ?"
-        val selectionArgs: Array<String> = arrayOf(id.toString())
-
+    protected fun deleteQuery(
+        id: Int = 0,
+        selection: String = "${TABLE_INFO.COLUMN_ID} = ?",
+        selectionArgs: Array<String> = arrayOf(id.toString())
+    ) =
         writableDatabase.delete(
             TABLE_INFO.TABLE,
             selection, selectionArgs
         )
-    }
 
     protected abstract fun afterInit(): Any
 

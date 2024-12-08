@@ -53,7 +53,7 @@ class MeasuresViewModel(
                     .recordsManager
                     .readFilteredBy(
                         personId = selectedPersonId,
-                        fieldIds = fields.extractIds()
+                        fieldsIds = fields.extractIds()
                     ).toTypedArray()
                 )
         )

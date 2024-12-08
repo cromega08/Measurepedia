@@ -2,27 +2,35 @@ package cromega.studio.measurepedia.data.managers.instances
 
 import cromega.studio.measurepedia.data.database.tables.instances.RecordsTable
 import cromega.studio.measurepedia.data.models.instances.Record
+import cromega.studio.measurepedia.extensions.extractIds
+import cromega.studio.measurepedia.extensions.isNeitherNullOrEmpty
 import cromega.studio.measurepedia.extensions.isNotNull
+import cromega.studio.measurepedia.extensions.isNull
 
 class RecordsManager(
     private val recordsTable: RecordsTable
 ) {
     fun readAll(): List<Record> = recordsTable.readAll()
 
-    fun readFilteredBy(personId: Int, fieldIds: List<Int>? = null): List<Record>
+    fun readFilteredBy(personId: Int? = null, fieldsIds: List<Int>? = null): List<Record>
     {
-        return if (fieldIds.isNotNull())
-            {
+        return when
+        {
+            personId.isNotNull() && fieldsIds.isNeitherNullOrEmpty() ->
                 recordsTable
                     .readByPersonAndFields(
-                        personId = personId,
-                        fieldIds = fieldIds!!
+                        personId = personId!!,
+                        fieldIds = fieldsIds!!
                     )
-            }
-            else
-            {
-                recordsTable.readByPerson(personId = personId)
-            }
+
+            personId.isNotNull() && fieldsIds.isNullOrEmpty() ->
+                recordsTable.readByPerson(personId = personId!!)
+
+            personId.isNull() && fieldsIds.isNeitherNullOrEmpty() ->
+                recordsTable.readByFields(fieldsIds = fieldsIds!!)
+
+            else -> readAll()
+        }
     }
 
     fun insert(
@@ -54,4 +62,9 @@ class RecordsManager(
                 measure = measure,
                 metricSystemUnitId = metricSystemUnitId
             )
+
+    fun delete(id: Int) = recordsTable.delete(id = id)
+
+    fun deleteByFieldsIds(fieldIds: List<Int>) =
+        recordsTable.deleteByIds(ids = readFilteredBy(fieldsIds = fieldIds).extractIds())
 }

@@ -22,4 +22,6 @@
     <string name="import_person_info">Importar Informacion</string>
     <string name="update_measures">Actualizar Medidas</string>
     <string name="measures_updated">Medidas Actualizadas</string>
+    <string name="update_fields">Actualizar Campos</string>
+    <string name="field_name">Nombre del Campo</string>
 </resources>

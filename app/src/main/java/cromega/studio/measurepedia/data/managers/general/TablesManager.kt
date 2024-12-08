@@ -58,12 +58,16 @@ class TablesManager
 
         bodyPartsManager =
             BodyPartsManager(
-                bodyPartsTable = bodyPartsTable
+                bodyPartsTable = bodyPartsTable,
+                fieldsTable = fieldsTable,
+                recordsTable = recordsTable
             )
-
         fieldsManager =
             FieldsManager(
-                fieldsTable = fieldsTable
+                fieldsTable = fieldsTable,
+                recordsTable = recordsTable,
+                personsTable = personsTable,
+                metricSystemsUnitsTable = metricSystemsUnitsTable
             )
 
         recordsManager =

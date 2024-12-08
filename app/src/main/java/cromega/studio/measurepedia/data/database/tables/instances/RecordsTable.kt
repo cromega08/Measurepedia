@@ -64,12 +64,6 @@ open class RecordsTable(context: Context) : Table<Record>(context) {
     
     override fun readAll(): List<Record> = read()
 
-    fun readByPerson(personId: Int): List<Record> =
-        read(
-            selection = "${TABLE_INFO.COLUMN_PERSON_ID} = ?",
-            selectionArgs = arrayOf(personId.toString())
-        )
-
     fun readByPersonAndFields(
         personId: Int,
         fieldIds: List<Int>
@@ -79,11 +73,32 @@ open class RecordsTable(context: Context) : Table<Record>(context) {
             selectionArgs = arrayOf(personId.toString())
         )
 
+    fun readByPerson(personId: Int): List<Record> =
+        read(
+            selection = "${TABLE_INFO.COLUMN_PERSON_ID} = ?",
+            selectionArgs = arrayOf(personId.toString())
+        )
+
+    fun readByFields(
+        fieldsIds: List<Int>
+    ): List<Record> =
+        read(
+            selection = "${TABLE_INFO.COLUMN_FIELD_ID} in ${fieldsIds.toText()}"
+        )
+
     fun insert(personId: Int, fieldId: Int, measure: Float? = null, metricSystemUnitId: Int) =
         insertQuery(generateContentValue(personId, fieldId, measure, metricSystemUnitId))
 
     fun update(id: Int, personId: Int, fieldId: Int, measure: Float, metricSystemUnitId: Int) =
         updateQuery(id, generateContentValue(personId, fieldId, measure, metricSystemUnitId))
+
+    fun delete(id: Int) = deleteQuery(id = id)
+
+    fun deleteByIds(ids: List<Int>) =
+        deleteQuery(
+            selection = "${TABLE_INFO.COLUMN_ID} in ${ids.toText()}",
+            selectionArgs = arrayOf()
+        )
 
     private fun generateContentValue(
         personId: Int? = null,
@@ -92,9 +107,9 @@ open class RecordsTable(context: Context) : Table<Record>(context) {
         metricSystemUnitId: Int? = null
     ) = ContentValues().apply {
             if (personId.isNotNull()) put(TABLE_INFO.COLUMN_PERSON_ID, personId)
-            if (personId.isNotNull()) put(TABLE_INFO.COLUMN_FIELD_ID, fieldId)
-            if (personId.isNotNull()) put(TABLE_INFO.COLUMN_MEASURE, measure)
-            if (personId.isNotNull()) put(TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID, metricSystemUnitId)
+            if (fieldId.isNotNull()) put(TABLE_INFO.COLUMN_FIELD_ID, fieldId)
+            if (measure.isNotNull()) put(TABLE_INFO.COLUMN_MEASURE, measure)
+            if (metricSystemUnitId.isNotNull()) put(TABLE_INFO.COLUMN_METRIC_SYSTEM_UNIT_ID, metricSystemUnitId)
         }
 
     protected inner class RecordsTableInfo : TableInfo() {

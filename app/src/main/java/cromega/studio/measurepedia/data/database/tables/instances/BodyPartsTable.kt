@@ -7,6 +7,7 @@ import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 import cromega.studio.measurepedia.extensions.toBoolean
+import cromega.studio.measurepedia.extensions.toText
 
 open class BodyPartsTable(context: Context) : Table<BodyPart>(context)
 {
@@ -57,6 +58,14 @@ open class BodyPartsTable(context: Context) : Table<BodyPart>(context)
 
     fun update(id: Int, name: String, active: Boolean) =
         updateQuery(id, generateContentValue(name, active))
+
+    fun delete(id: Int) = deleteQuery(id = id)
+
+    fun deleteIds(ids: List<Int>) =
+        deleteQuery(
+            selection = "${TABLE_INFO.COLUMN_ID} in ${ids.toText()}",
+            selectionArgs = arrayOf()
+        )
 
     private fun generateContentValue(name: String? = null, active: Boolean? = null) =
         ContentValues().apply {
