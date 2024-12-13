@@ -5,16 +5,19 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,10 +71,15 @@ class HomeScreen(
             topBar = { Header() },
             content = {
                 Main(it)
-                if (
-                    viewModel.optionsDialogOpened &&
-                    viewModel.hasSelectedPerson
-                ) PersonsOptionsDialog()
+                when
+                {
+                    viewModel.hasSelectedPerson -> PersonOptionsDialog()
+                    viewModel.hasEditingPerson -> PersonEditorDialog()
+                    viewModel.hasDeletingPerson -> PersonDeleterDialog()
+                }
+
+                if (viewModel.hasSelectedPerson) PersonOptionsDialog()
+
             },
             bottomBar = { Footer() },
             floatingActionButton = { FAB() },
@@ -106,7 +114,11 @@ class HomeScreen(
                     option = viewModel.dateOrderOption,
                     options = DateOrder.asArray(),
                     extractOptionName = { resources.getString(it.textStringId) },
-                    onOptionSelected = { viewModel.dateOrderOption = it; viewModel.dateFilterExpanded = false },
+                    onOptionSelected = {
+                        viewModel.dateOrderOption = it
+                        viewModel.dateFilterExpanded = false
+                        viewModel.requestUpdateOfPersons()
+                                       },
                     onClickMenu = { viewModel.invertDateFilterExpanded() }
                 )
 
@@ -121,7 +133,10 @@ class HomeScreen(
                     option = viewModel.measuredOrderOption,
                     options = MeasuredOrder.asArray(),
                     extractOptionName = { resources.getString(it.textStringId) },
-                    onOptionSelected = { viewModel.measuredOrderOption = it ; viewModel.measuredFilterExpanded = false
+                    onOptionSelected = {
+                        viewModel.measuredOrderOption = it
+                        viewModel.measuredFilterExpanded = false
+                        viewModel.requestUpdateOfPersons()
                                        },
                     onClickMenu = { viewModel.invertMeasuredFilterExpanded() }
                 )
@@ -134,7 +149,7 @@ class HomeScreen(
         GenericBodyLazyColumn(
             contentPadding = paddingValues
         ) {
-            val persons: List<Person> = viewModel.readByDateAndMeasured()
+            val persons: List<Person> = viewModel.persons
 
             items(persons.size)
             {
@@ -155,9 +170,9 @@ class HomeScreen(
                         Modifier
                             .fillMaxWidth()
                             .combinedClickable(
-                                onLongClick = { viewModel.selectedPerson = person ; viewModel.optionsDialogOpened = true },
-                                onDoubleClick = { viewModel.selectedPerson = person ; viewModel.optionsDialogOpened = true },
-                                onClick = { viewModel.selectedPerson = person ; viewModel.openMeasuresActivity() }
+                                onLongClick = { viewModel.setSelectedPersonOnly(person = person) },
+                                onDoubleClick = { viewModel.setSelectedPersonOnly(person = person) },
+                                onClick = { viewModel.openMeasuresActivity(person = person) }
                             )
                     ) {
                         val (nameRef, aliasRef, optionsRef, measuredRef, updateRef, middleSpaceRef) = createRefs()
@@ -192,7 +207,7 @@ class HomeScreen(
                                     start.linkTo(nameRef.end)
                                     end.linkTo(parent.end)
                                 },
-                            onClick = { viewModel.selectedPerson = person; viewModel.optionsDialogOpened = true },
+                            onClick = { viewModel.setSelectedPersonOnly(person = person) },
                             content = { KebabMenuIcon() }
                         )
 
@@ -293,32 +308,36 @@ class HomeScreen(
         }
 
     @Composable
-    private fun FAB() = FloatingActionButton(onClick = { /*TODO*/ }) { AddIcon() }
+    private fun FAB() =
+        FloatingActionButton(
+            onClick = { viewModel.openEditorDialogWithEmptyPerson() },
+            content = { AddIcon() }
+        )
 
     @Composable
-    private fun PersonsOptionsDialog() =
+    private fun PersonOptionsDialog() =
         /*
          * TODO: Include functionalities for buttons
          * */
         ColumnOrderedDialog(
             columnModifier = Modifier.fillMaxWidth(),
-            onDismissRequest = { viewModel.selectedPerson = null ; viewModel.optionsDialogOpened = false }
+            onDismissRequest = { viewModel.selectedPerson = null }
         ) {
-            val selectedPerson: Person = viewModel.selectedPerson!!
+            val person: Person = viewModel.selectedPerson!!
 
             SpacerVerticalMedium()
 
             TextTitle(
                 modifier = Modifier.fillMaxWidth(0.7f),
                 textAlign = TextAlign.Center,
-                text = selectedPerson.name
+                text = person.name
             )
 
-            if (selectedPerson.hasAlias)
+            if (person.hasAlias)
                 TextSubtitle(
                     modifier = Modifier.fillMaxWidth(0.7f),
                     textAlign = TextAlign.Center,
-                    text = selectedPerson.alias
+                    text = person.alias
                 )
 
             SpacerVerticalSmall()
@@ -329,7 +348,7 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
-                onClick = { /*TODO*/ }
+                onClick = { viewModel.setEditingPersonOnly(person = person) }
             ) {
                 Text(text = resources.getString(R.string.update_person_info))
             }
@@ -340,7 +359,7 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
-                onClick = { viewModel.openMeasuresActivity() }
+                onClick = { viewModel.openMeasuresActivity(person = person) }
             ) {
                 Text(text = resources.getString(R.string.take_measures))
             }
@@ -367,6 +386,133 @@ class HomeScreen(
                 Text(text = resources.getString(R.string.import_person_info))
             }
 
+            SpacerVerticalSmall()
+
+            RoundedCornerButton(
+                modifier = Modifier
+                    .scale(1.25f)
+                    .fillMaxWidth(0.7f),
+                onClick = { viewModel.setDeletingPersonOnly(person = person) }
+            ) {
+                Text(text = resources.getString(R.string.delete_person))
+            }
+
             SpacerVerticalMedium()
         }
+
+    @Composable
+    fun PersonEditorDialog() =
+        ColumnOrderedDialog(
+            columnModifier = Modifier.fillMaxWidth(),
+            onDismissRequest = { viewModel.editingPerson = null }
+        ) {
+            val person: Person = viewModel.editingPerson!!
+            val missingName: Boolean = viewModel.editingPersonMissingName
+
+            SpacerVerticalMedium()
+
+            TextField(
+                value = person.name,
+                onValueChange = { userInput -> viewModel.updateEditingPersonName(newName = userInput) },
+                label = { Text(text = resources.getString(R.string.person_name)) },
+                isError = missingName,
+                supportingText = {
+                    if (missingName)
+                        Text(
+                            text = resources.getString(R.string.required),
+                            color = Color.Red
+                        )
+                }
+            )
+
+            SpacerVerticalSmall()
+
+            TextField(
+                value = person.alias,
+                onValueChange = { userInput -> viewModel.updateEditingPersonAlias(newAlias = userInput) },
+                label = { Text(text = resources.getString(R.string.person_alias_optional)) }
+            )
+
+            SpacerVerticalSmall()
+
+            val stringId: Int =
+                if(person.id == 0) R.string.create_person
+                else R.string.update_person
+
+            RoundedCornerButton(
+                modifier =
+                Modifier
+                    .fillMaxWidth(0.8f),
+                onClick = {
+                    if (viewModel.editingPerson!!.name.isBlank())
+                        viewModel.editingPersonMissingName = true
+                    else
+                        viewModel.finishUpdateEditingPerson()
+                }
+            ) {
+                Column {
+                    SpacerVerticalSmall()
+
+                    Text(
+                        modifier = Modifier.scale(1.5f),
+                        text = resources.getString(stringId)
+                    )
+
+                    SpacerVerticalSmall()
+                }
+            }
+
+            SpacerVerticalMedium()
+        }
+
+    @Composable
+    fun PersonDeleterDialog() =
+        AlertDialog(
+            onDismissRequest = { viewModel.deletingPerson = null },
+            confirmButton = {
+                RoundedCornerButton(
+                    modifier =
+                    Modifier
+                        .fillMaxWidth(0.48f),
+                    onClick = { viewModel.finishDeleteDeletingPerson() }
+                ) {
+                    Column {
+                        SpacerVerticalSmall()
+
+                        Text(
+                            modifier = Modifier.scale(1.5f),
+                            text = resources.getString(R.string.confirm)
+                        )
+
+                        SpacerVerticalSmall()
+                    }
+                }
+            },
+            dismissButton = {
+                RoundedCornerButton(
+                    modifier =
+                    Modifier
+                        .fillMaxWidth(0.48f),
+                    onClick = { viewModel.setSelectedPersonOnly(person = viewModel.deletingPerson!!) }
+                ) {
+                    Column {
+                        SpacerVerticalSmall()
+
+                        Text(
+                            modifier = Modifier.scale(1.5f),
+                            text = resources.getString(R.string.cancel)
+                        )
+
+                        SpacerVerticalSmall()
+                    }
+                }
+            },
+            text = {
+                TextSubtitle(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = resources.getString(R.string.confirm_delete_person_text)
+                )
+            }
+        )
 }

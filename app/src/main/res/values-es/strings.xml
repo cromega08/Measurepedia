@@ -16,7 +16,9 @@
     <string name="settings">Ajustes</string>
     <string name="download">Descargar</string>
     <string name="upload">Subir</string>
+    <string name="create_person">Crear</string>
     <string name="update_person_info">Actualizar Informacion</string>
+    <string name="update_person">Actualizar</string>
     <string name="take_measures">Tomar Medidas</string>
     <string name="export_person_info">Exportar Informacion</string>
     <string name="import_person_info">Importar Informacion</string>
@@ -24,4 +26,11 @@
     <string name="measures_updated">Medidas Actualizadas</string>
     <string name="update_fields">Actualizar Campos</string>
     <string name="field_name">Nombre del Campo</string>
+    <string name="delete_person">Eliminar</string>
+    <string name="person_name">Nombre</string>
+    <string name="person_alias_optional">Alias (Opcional)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm_delete_person_text">¿Esta seguro de realizar la eliminacion?</string>
+    <string name="required">Obligatorio</string>
 </resources>
