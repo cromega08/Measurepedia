@@ -9,6 +9,7 @@ import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
 import cromega.studio.measurepedia.enums.MeasuredOrder
+import cromega.studio.measurepedia.extensions.extractIds
 import java.sql.Date
 
 class PersonsManager(
@@ -82,4 +83,14 @@ class PersonsManager(
 
     fun update(id: Int, name: String, alias: String? = null, updated: Date? = null, measured: Boolean? = null) =
         personsTable.update(id, name, alias, updated, measured)
+
+    fun delete(id: Int)
+    {
+        recordsTable
+            .deleteByIds(
+                ids =  recordsTable.readByPerson(personId = id).extractIds()
+            )
+
+        personsTable.delete(id = id)
+    }
 }

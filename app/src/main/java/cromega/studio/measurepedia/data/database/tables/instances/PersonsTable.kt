@@ -8,6 +8,7 @@ import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 import cromega.studio.measurepedia.extensions.toBoolean
 import cromega.studio.measurepedia.extensions.toDateWithFormat
+import cromega.studio.measurepedia.extensions.toText
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -77,6 +78,14 @@ open class PersonsTable(context: Context) : Table<Person>(context)
 
     fun update(id: Int, name: String, alias: String? = null, updated: Date? = null, measured: Boolean? = null) =
         updateQuery(id, generateContentValue(name, alias, updated, measured))
+
+    fun delete(id: Int) = deleteQuery(id = id)
+
+    fun delete(ids: List<Int>) =
+        deleteQuery(
+            selection = "${TABLE_INFO.COLUMN_ID} in ${ids.toText()}",
+            selectionArgs = arrayOf()
+        )
 
     private fun generateContentValue(
         name: String? = null,
