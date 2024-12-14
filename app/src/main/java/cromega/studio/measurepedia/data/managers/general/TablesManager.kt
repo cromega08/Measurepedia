@@ -53,7 +53,8 @@ class TablesManager
 
         metricSystemsUnitsManager =
             MetricSystemsUnitsManager(
-                metricSystemsUnitsTable = metricSystemsUnitsTable
+                metricSystemsUnitsTable = metricSystemsUnitsTable,
+                recordsTable = recordsTable
             )
 
         bodyPartsManager =

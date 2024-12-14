@@ -5,6 +5,7 @@ import android.content.Context
 import cromega.studio.measurepedia.data.database.tables.generic.Table
 import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
+import cromega.studio.measurepedia.extensions.toText
 
 open class MetricSystemsUnitsTable(context: Context) : Table<MetricSystemUnit>(context) {
     override val TABLE_INFO: MetricSystemsUnitsTableInfo
@@ -43,6 +44,14 @@ open class MetricSystemsUnitsTable(context: Context) : Table<MetricSystemUnit>(c
 
     fun update(id: Int, name: String, abbreviation: String) =
         updateQuery(id, generateContentValue(name, abbreviation))
+
+    fun delete(id: Int) = deleteQuery(id = id)
+
+    fun deleteByIds(ids: List<Int>) =
+        deleteQuery(
+            selection = "${TABLE_INFO.COLUMN_ID} in ${ids.toText()}",
+            selectionArgs = arrayOf()
+        )
 
     private fun generateContentValue(name: String?, abbreviation: String? = null) =
         ContentValues().apply {
