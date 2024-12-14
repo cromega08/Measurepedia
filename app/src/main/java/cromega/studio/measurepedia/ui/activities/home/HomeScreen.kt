@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
 import cromega.studio.measurepedia.ui.components.elements.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.elements.DownloadIcon
+import cromega.studio.measurepedia.ui.components.elements.EditIcon
 import cromega.studio.measurepedia.ui.components.elements.FaceIcon
 import cromega.studio.measurepedia.ui.components.elements.KebabMenuIcon
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
@@ -52,6 +54,7 @@ import cromega.studio.measurepedia.ui.components.elements.TextSubtitle
 import cromega.studio.measurepedia.ui.components.elements.TextTitle
 import cromega.studio.measurepedia.ui.components.elements.UploadIcon
 import cromega.studio.measurepedia.ui.components.elements.VerticalIconButton
+import cromega.studio.measurepedia.ui.components.elements.WarningIcon
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
 import cromega.studio.measurepedia.ui.components.layouts.Dropdown
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
@@ -268,7 +271,7 @@ class HomeScreen(
                         .weight(1f),
                     onClick = { viewModel.openFieldsActivity() }
                 ) {
-                    FaceIcon()
+                    EditIcon()
                     Text(text = resources.getString(R.string.fields))
                 }
 
@@ -411,6 +414,13 @@ class HomeScreen(
 
             SpacerVerticalMedium()
 
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) { FaceIcon() }
+
+            SpacerVerticalSmall()
+
             TextField(
                 value = person.name,
                 onValueChange = { userInput -> viewModel.updateEditingPersonName(newName = userInput) },
@@ -506,6 +516,12 @@ class HomeScreen(
                         SpacerVerticalSmall()
                     }
                 }
+            },
+            icon = {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) { WarningIcon() }
             },
             text = {
                 TextSubtitle(

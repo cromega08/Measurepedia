@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -64,3 +66,11 @@ fun SettingsIcon() = Icon(imageVector = Icons.Default.Settings, contentDescripti
 @Composable
 fun KebabMenuIcon() =
     Icon(imageVector = Icons.Default.MoreVert, contentDescription = Icons.Default.MoreVert.name)
+
+@Composable
+fun EditIcon() =
+    Icon(imageVector = Icons.Default.Edit, contentDescription = Icons.Default.Edit.name)
+
+@Composable
+fun WarningIcon() =
+    Icon(imageVector = Icons.Default.Warning, contentDescription = Icons.Default.Warning.name)
