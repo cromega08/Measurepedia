@@ -66,7 +66,7 @@ class FieldsViewModel(
         get() = editingBodyPartNameMissingState.value
         set(value) { editingBodyPartNameMissingState.value = value }
 
-    fun refreshAllData()
+    private fun refreshAllData()
     {
         refreshMetricSystemUnits()
         refreshBodyParts()
@@ -129,7 +129,7 @@ class FieldsViewModel(
         refreshAllData()
     }
 
-    fun getAllMetricSystemUnits(): Array<MetricSystemUnit> =
+    private fun getAllMetricSystemUnits(): Array<MetricSystemUnit> =
         tablesManager
             .metricSystemsUnitsManager
             .readAll()
@@ -347,6 +347,7 @@ class FieldsViewModel(
 
     private fun flushPositiveOperationsBodyParts() =
         bodyPartsState
+            .filter { bodyPart -> bodyPart.name.isNotBlank() }
             .forEach { bodyPart ->
                 if (bodyPart.id == 0) flushInsertBodyPart(bodyPart = bodyPart)
                 else flushUpdateBodyParts(bodyPart = bodyPart)
@@ -371,6 +372,7 @@ class FieldsViewModel(
 
     private fun flushPositiveOperationsFields() =
         fieldsState
+            .filter { field -> field.name.isNotBlank() }
             .forEach { field ->
                 if (field.id == 0) flushInsertField(field = field)
                 else flushUpdateField(field = field)
@@ -408,6 +410,9 @@ class FieldsViewModel(
 
     private fun flushPositiveOperationsMetricSystemUnits() =
         metricSystemsUnitsState
+            .filter { metricSystemUnit ->
+                metricSystemUnit.name.isNotBlank() && metricSystemUnit.abbreviation.isNotBlank()
+            }
             .forEach { metricSystemUnit ->
                 if (metricSystemUnit.id == 0) flushInsertMetricSystemUnit(metricSystemUnit = metricSystemUnit)
                 else flushUpdateMetricSystemUnit(metricSystemUnit = metricSystemUnit)
