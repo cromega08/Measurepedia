@@ -1,17 +1,28 @@
 package cromega.studio.measurepedia.data.models.instances
 
 import cromega.studio.measurepedia.data.models.generic.Model
+import cromega.studio.measurepedia.extensions.titlecase
 
 class MetricSystemUnit(
     id: Int,
-    val name: String,
-    val abbreviation: String
+    name: String,
+    var abbreviation: String
 ): Model(id = id)
 {
-    override fun clone(): Model {
+    private var _name: String
+
+    init {
+        this._name = name}
+
+    var name: String
+        get() = _name.titlecase()
+        set(value) { _name = value }
+
+    override fun clone(): MetricSystemUnit
+    {
         return MetricSystemUnit(
             id = id,
-            name = name,
+            name = _name,
             abbreviation = abbreviation
         )
     }
