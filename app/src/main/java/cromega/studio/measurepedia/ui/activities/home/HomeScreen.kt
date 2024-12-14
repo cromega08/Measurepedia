@@ -401,7 +401,7 @@ class HomeScreen(
         }
 
     @Composable
-    fun PersonEditorDialog() =
+    private fun PersonEditorDialog() =
         ColumnOrderedDialog(
             columnModifier = Modifier.fillMaxWidth(),
             onDismissRequest = { viewModel.editingPerson = null }
@@ -466,7 +466,7 @@ class HomeScreen(
         }
 
     @Composable
-    fun PersonDeleterDialog() =
+    private fun PersonDeleterDialog() =
         AlertDialog(
             onDismissRequest = { viewModel.deletingPerson = null },
             confirmButton = {
