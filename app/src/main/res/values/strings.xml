@@ -27,7 +27,9 @@
     <string name="update_measures">Update Measures</string>
     <string name="title_activity_fields" translatable="false">FieldsActivity</string>
     <string name="measures_updated">Measures Updated</string>
+    <string name="update_data">Update Data</string>
     <string name="update_fields">Update Fields</string>
+    <string name="update_metric_systems_units">Update Metric System Units</string>
     <string name="field_name">Field Name</string>
     <string name="delete_person">Delete Person</string>
     <string name="person_name">Person Name</string>
@@ -36,4 +38,5 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_delete_person_text">Are you sure about deleting this person?</string>
     <string name="required">Required</string>
+    <string name="metric_systems">Metric Systems</string>
 </resources>

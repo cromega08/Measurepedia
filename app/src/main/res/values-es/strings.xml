@@ -25,6 +25,7 @@
     <string name="update_measures">Actualizar Medidas</string>
     <string name="measures_updated">Medidas Actualizadas</string>
     <string name="update_fields">Actualizar Campos</string>
+    <string name="update_metric_systems_units">Actualizar Unidades de Medida</string>
     <string name="field_name">Nombre del Campo</string>
     <string name="delete_person">Eliminar</string>
     <string name="person_name">Nombre</string>
@@ -33,4 +34,6 @@
     <string name="cancel">Cancelar</string>
     <string name="confirm_delete_person_text">¿Esta seguro de realizar la eliminacion?</string>
     <string name="required">Obligatorio</string>
+    <string name="metric_systems">Sistemas Metricos</string>
+    <string name="update_data">Actualizar Datos</string>
 </resources>
