@@ -53,6 +53,12 @@ class MeasuresScreen(
     viewModel = viewModel,
     resources = resources
 ) {
+    override val screenModifier: Modifier =
+        Modifier.background(
+                color = Color.White,
+                shape = RectangleShape
+            )
+
     @Composable
     override fun Header() =
         GenericHeaderColumn(
@@ -236,7 +242,13 @@ class MeasuresScreen(
 
     @Composable
     override fun Footer() =
-        GenericFooterRow {
+        GenericFooterRow(
+            modifier =
+            Modifier.background(
+                color = Color.White,
+                shape = RectangleShape
+            )
+        ) {
             RoundedCornerButton(
                 modifier =
                     Modifier

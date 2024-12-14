@@ -4,12 +4,14 @@ import android.content.res.Resources
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import cromega.studio.measurepedia.R
 import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.data.models.instances.Field
 import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
+import cromega.studio.measurepedia.extensions.isNotNull
 import cromega.studio.measurepedia.ui.activities.generic.ActivityViewModel
 
 class FieldsViewModel(
@@ -49,6 +51,21 @@ class FieldsViewModel(
 
     val fields: List<Field> = fieldsState
 
+    private val editingBodyPartState: MutableState<BodyPart?> = mutableStateOf(null)
+
+    var editingBodyPart: BodyPart?
+        get() = editingBodyPartState.value
+        set(value) { editingBodyPartState.value = value }
+
+    val hasEditingBodyPart: Boolean
+        get() = editingBodyPart.isNotNull()
+
+    private val editingBodyPartNameMissingState: MutableState<Boolean> = mutableStateOf(false)
+
+    var editingBodyPartNameMissing: Boolean
+        get() = editingBodyPartNameMissingState.value
+        set(value) { editingBodyPartNameMissingState.value = value }
+
     fun refreshAllData()
     {
         refreshMetricSystemUnits()
@@ -72,6 +89,44 @@ class FieldsViewModel(
     {
         fieldsState.clear()
         fieldsState.addAll(getAllFields())
+    }
+
+    fun openEditorDialogWithEmptyBodyPart()
+    {
+        editingBodyPart =
+            BodyPart(
+                id = 0,
+                name = "",
+                active = false
+            )
+    }
+
+    private fun updateEditingBodyPart(apply: BodyPart.() -> Unit)
+    {
+        editingBodyPart =
+            editingBodyPart!!
+                .clone()
+                .apply(block = apply)
+    }
+
+    fun updateEditingBodyPartName(newName: String) =
+        updateEditingBodyPart { this.name = newName }
+
+    fun updateEditingBodyPartActive(active: Boolean) =
+        updateEditingBodyPart { this.active = active }
+
+    fun invertEditingBodyPartActive() =
+        updateEditingBodyPartActive(active = !editingBodyPart!!.active)
+
+    fun finishUpdateEditingBodyPart()
+    {
+        flushInsertBodyPart(bodyPart = editingBodyPart!!)
+
+        editingBodyPartNameMissing = false
+
+        editingBodyPart = null
+
+        refreshAllData()
     }
 
     fun getAllMetricSystemUnits(): Array<MetricSystemUnit> =
@@ -206,6 +261,27 @@ class FieldsViewModel(
             functionToApply = { this.active = isActive }
         )
 
+    fun removeFieldsByBodyPartId(bodyPartId: Int) =
+        filterFieldsByBodyPartId(bodyPartId)
+            .forEach { field -> removeField(field) }
+
+    fun removeField(field: Field)
+    {
+        fieldsState.remove(field)
+
+        if (field.id != 0) deletedFieldsIds.add(field.id)
+    }
+
+    fun createMetricSystemUnit() =
+        metricSystemsUnitsState
+            .add(
+                MetricSystemUnit(
+                    id = 0,
+                    name = resources.getString(R.string.default_metric_system_unit_name),
+                    abbreviation = resources.getString(R.string.default_metric_system_unit_abbreviation)
+                )
+            )
+
     private fun modifyMetricSystemUnit(
         metricSystemUnitIndex: Int,
         functionToApply: MetricSystemUnit.() -> Unit
@@ -228,15 +304,11 @@ class FieldsViewModel(
             functionToApply = { this.abbreviation = newAbbreviation }
         )
 
-    fun removeFieldsByBodyPartId(bodyPartId: Int) =
-        filterFieldsByBodyPartId(bodyPartId)
-            .forEach { field -> removeField(field) }
-
-    fun removeField(field: Field)
+    fun removeMetricSystemUnit(metricSystemUnit: MetricSystemUnit)
     {
-        fieldsState.remove(field)
+        metricSystemsUnitsState.remove(metricSystemUnit)
 
-        if (field.id != 0) deletedFieldsIds.add(field.id)
+        if (metricSystemUnit.id != 0) deletedMetricSystemsUnitsIds.add(metricSystemUnit.id)
     }
 
     fun updateData()

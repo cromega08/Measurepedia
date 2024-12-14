@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -34,8 +36,12 @@ import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
 import cromega.studio.measurepedia.ui.components.elements.ClearIcon
+import cromega.studio.measurepedia.ui.components.elements.ColumnOrderedDialog
+import cromega.studio.measurepedia.ui.components.elements.PersonIcon
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
+import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
+import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalMedium
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
@@ -49,14 +55,41 @@ class FieldsScreen(
     viewModel = viewModel,
     resources = resources
 ) {
+    override val screenModifier =
+        Modifier.background(
+            color = Color.White,
+            shape = RectangleShape
+        )
+
+    @Composable
+    override fun Screen() =
+        Scaffold(
+            modifier = screenModifier,
+            topBar = { Header() },
+            content = {
+                Main(it)
+
+                if (viewModel.hasEditingBodyPart) BodyPartEditorDialog()
+            },
+            bottomBar = { Footer() }
+        )
+
     @Composable
     override fun Header() =
-        GenericHeaderColumn {
+        GenericHeaderColumn(
+            modifier =
+                Modifier
+                    .background(
+                        color = Color.White,
+                        shape = RectangleShape
+                    )
+        ) {
             val selectedTabIndex: Int = viewModel.tabIndex
 
             TabRow(selectedTabIndex = selectedTabIndex) {
                 viewModel.tabs.forEachIndexed { index, title ->
                     Tab(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 5.dp),
                         selected = (selectedTabIndex == index),
                         onClick = { viewModel.tabIndex = index },
                         content = { Text(text = resources.getString(title)) }
@@ -79,11 +112,15 @@ class FieldsScreen(
 
     @Composable
     override fun Footer() =
-        GenericFooterRow {
+        GenericFooterRow(
+            modifier =
+            Modifier.background(
+                color = Color.White,
+                shape = RectangleShape
+            )
+        ) {
             RoundedCornerButton(
-                modifier =
-                Modifier
-                    .fillMaxWidth(0.8f),
+                modifier = Modifier.weight(0.8f),
                 onClick = {
                     viewModel.updateData()
                     viewModel.openHomeActivity()
@@ -96,6 +133,24 @@ class FieldsScreen(
                         modifier = Modifier.scale(1.5f),
                         text = resources.getString(R.string.update_data)
                     )
+
+                    SpacerVerticalSmall()
+                }
+            }
+
+            SpacerHorizontalSmall(modifier = Modifier.weight(0.1f))
+
+            RoundedCornerButton(
+                modifier = Modifier.weight(0.2f),
+                onClick = {
+                    if (viewModel.tabIndex == 0) viewModel.openEditorDialogWithEmptyBodyPart()
+                    else viewModel.createMetricSystemUnit()
+                }
+            ) {
+                Column {
+                    SpacerVerticalSmall()
+
+                    AddIcon()
 
                     SpacerVerticalSmall()
                 }
@@ -356,13 +411,103 @@ class FieldsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Default")
+                        Text(text = resources.getString(R.string.set_as_default))
+
                         RadioButton(
                             selected = false,
                             onClick = { /*TODO*/ }
                         )
                     }
+
+                    Row(
+                        modifier =
+                        Modifier
+                            .fillMaxWidth(fraction = widthFraction - 0.1f),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = resources.getString(R.string.delete_unit))
+
+                        FilledIconButton(
+                            onClick = { viewModel.removeMetricSystemUnit(metricSystemUnit = metricSystemUnit) },
+                            content = { ClearIcon() }
+                        )
+                    }
                 }
             }
+        }
+
+    @Composable
+    private fun BodyPartEditorDialog() =
+        ColumnOrderedDialog(
+            columnModifier = Modifier.fillMaxWidth(),
+            onDismissRequest = { viewModel.editingBodyPart = null }
+        ) {
+            val bodyPart: BodyPart = viewModel.editingBodyPart!!
+            val missingName: Boolean = viewModel.editingBodyPartNameMissing
+
+            SpacerVerticalMedium()
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) { PersonIcon() }
+
+            SpacerVerticalSmall()
+
+            TextField(
+                value = bodyPart.name,
+                onValueChange = { userInput -> viewModel.updateEditingBodyPartName(newName = userInput) },
+                label = { Text(text = resources.getString(R.string.person_name)) },
+                isError = missingName,
+                supportingText = {
+                    if (missingName)
+                        Text(
+                            text = resources.getString(R.string.required),
+                            color = Color.Red
+                        )
+                }
+            )
+
+            SpacerVerticalSmall()
+
+            Row(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = resources.getString(R.string.active))
+
+                RadioButton(
+                    selected = viewModel.editingBodyPart!!.active,
+                    onClick = { viewModel.invertEditingBodyPartActive() }
+                )
+            }
+
+            SpacerVerticalSmall()
+
+            RoundedCornerButton(
+                modifier =
+                Modifier.fillMaxWidth(0.8f),
+                onClick = {
+                    if (viewModel.editingBodyPart!!.name.isBlank())
+                        viewModel.editingBodyPartNameMissing = true
+                    else
+                        viewModel.finishUpdateEditingBodyPart()
+                }
+            ) {
+                Column {
+                    SpacerVerticalSmall()
+
+                    Text(
+                        modifier = Modifier.scale(1.5f),
+                        text = resources.getString(R.string.create_body_part)
+                    )
+
+                    SpacerVerticalSmall()
+                }
+            }
+
+            SpacerVerticalMedium()
         }
 }

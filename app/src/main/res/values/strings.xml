@@ -29,7 +29,9 @@
     <string name="measures_updated">Measures Updated</string>
     <string name="update_data">Update Data</string>
     <string name="update_fields">Update Fields</string>
+    <string name="create_body_part">Create Body Part</string>
     <string name="update_metric_systems_units">Update Metric System Units</string>
+    <string name="body_part_name">Body Part Name</string>
     <string name="field_name">Field Name</string>
     <string name="delete_person">Delete Person</string>
     <string name="person_name">Person Name</string>
@@ -39,4 +41,9 @@
     <string name="confirm_delete_person_text">Are you sure about deleting this person?</string>
     <string name="required">Required</string>
     <string name="metric_systems">Metric Systems</string>
+    <string name="set_as_default">Set as Default</string>
+    <string name="delete_unit">Delete Unit</string>
+    <string name="active">Active</string>
+    <string name="default_metric_system_unit_name">Metric System Unit Name</string>
+    <string name="default_metric_system_unit_abbreviation">msun</string>
 </resources>

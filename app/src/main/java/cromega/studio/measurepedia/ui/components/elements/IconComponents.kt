@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
@@ -74,3 +75,7 @@ fun EditIcon() =
 @Composable
 fun WarningIcon() =
     Icon(imageVector = Icons.Default.Warning, contentDescription = Icons.Default.Warning.name)
+
+@Composable
+fun PersonIcon() =
+    Icon(imageVector = Icons.Default.Person, contentDescription = Icons.Default.Person.name)

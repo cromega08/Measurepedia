@@ -36,4 +36,11 @@
     <string name="required">Obligatorio</string>
     <string name="metric_systems">Sistemas Metricos</string>
     <string name="update_data">Actualizar Datos</string>
+    <string name="set_as_default">Predeterminado</string>
+    <string name="delete_unit">Eliminar</string>
+    <string name="body_part_name">Nombre del Miembro</string>
+    <string name="active">Activo</string>
+    <string name="create_body_part">Crear</string>
+    <string name="default_metric_system_unit_name">Nombre de la Unidad</string>
+    <string name="default_metric_system_unit_abbreviation">ndlu</string>
 </resources>

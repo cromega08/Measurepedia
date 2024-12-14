@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,9 +69,16 @@ class HomeScreen(
     viewModel = viewModel,
     resources = resources
 ) {
+    override val screenModifier: Modifier =
+        Modifier.background(
+            color = Color.White,
+            shape = RectangleShape
+        )
+
     @Composable
     override fun Screen() =
         Scaffold(
+            modifier = screenModifier,
             topBar = { Header() },
             content = {
                 Main(it)
@@ -80,9 +88,6 @@ class HomeScreen(
                     viewModel.hasEditingPerson -> PersonEditorDialog()
                     viewModel.hasDeletingPerson -> PersonDeleterDialog()
                 }
-
-                if (viewModel.hasSelectedPerson) PersonOptionsDialog()
-
             },
             bottomBar = { Footer() },
             floatingActionButton = { FAB() },
@@ -91,7 +96,13 @@ class HomeScreen(
 
     @Composable
     override fun Header() =
-        GenericHeaderColumn {
+        GenericHeaderColumn(
+            modifier =
+            Modifier.background(
+                color = Color.White,
+                shape = RectangleShape
+            )
+        ) {
             val focusManager: FocusManager = LocalFocusManager.current
 
             SearchBar(
@@ -255,7 +266,13 @@ class HomeScreen(
         /*
         * TODO: Include functionalities for different Buttons
         * */
-        GenericFooterRow {
+        GenericFooterRow(
+            modifier =
+            Modifier.background(
+                color = Color.White,
+                shape = RectangleShape
+            )
+        ) {
             Row(
                 modifier =
                 Modifier
