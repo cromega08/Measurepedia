@@ -51,14 +51,19 @@ class FieldsViewModel(
     fun filterFieldsByBodyPartId(bodyPartId: Int): List<Field> =
         fields.filter { field -> field.bodyPartId == bodyPartId }
 
-    fun modifyBodyPartName(bodyPartIndex: Int, newName: String)
+    private fun modifyBodyPart(bodyPartIndex: Int, functionToApply: BodyPart.() -> Unit)
     {
         bodyPartsState[bodyPartIndex] =
             bodyPartsState[bodyPartIndex]
-                .apply {
-                    this.name = newName
-                }.clone()
+                .apply(block = functionToApply)
+                .clone()
     }
+
+    fun modifyBodyPartName(bodyPartIndex: Int, newName: String) =
+        modifyBodyPart(
+            bodyPartIndex = bodyPartIndex,
+            functionToApply = { this.name = newName }
+        )
 
     fun modifyBodyPartActiveAndPropagate(bodyPartIndex: Int, active: Boolean)
     {
@@ -73,14 +78,11 @@ class FieldsViewModel(
         )
     }
 
-    fun modifyBodyPartActive(bodyPartIndex: Int, isActive: Boolean)
-    {
-        bodyPartsState[bodyPartIndex] =
-            bodyPartsState[bodyPartIndex]
-                .apply {
-                    this.active = isActive
-                }.clone()
-    }
+    fun modifyBodyPartActive(bodyPartIndex: Int, isActive: Boolean) =
+        modifyBodyPart(
+            bodyPartIndex = bodyPartIndex,
+            functionToApply = { this.active = isActive }
+        )
 
     fun removeBodyPartAndPropagate(bodyPart: BodyPart)
     {
@@ -118,14 +120,19 @@ class FieldsViewModel(
             }
     }
 
-    fun modifyFieldName(fieldIndex: Int, newName: String)
+    private fun modifyField(fieldIndex: Int, functionToApply: Field.() -> Unit)
     {
         fieldsState[fieldIndex] =
             fieldsState[fieldIndex]
-                .apply {
-                    this.name = newName
-                }.clone()
+                .apply(block = functionToApply)
+                .clone()
     }
+
+    fun modifyFieldName(fieldIndex: Int, newName: String) =
+        modifyField(
+            fieldIndex = fieldIndex,
+            functionToApply = { this.name = newName }
+        )
 
     fun modifyFieldActiveAndPropagate(fieldIndex: Int, isActive: Boolean)
     {
@@ -153,6 +160,11 @@ class FieldsViewModel(
                 .apply {
                     this.active = isActive
                 }.clone()
+    fun modifyFieldActive(fieldIndex: Int, isActive: Boolean) =
+        modifyField(
+            fieldIndex = fieldIndex,
+            functionToApply = { this.active = isActive }
+        )
     }
 
     fun removeFieldsByBodyPartId(bodyPartId: Int) =
