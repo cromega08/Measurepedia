@@ -1,14 +1,18 @@
 package cromega.studio.measurepedia.ui.components.elements
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import cromega.studio.measurepedia.extensions.isNotNullOrBlank
 
 @Composable
@@ -22,7 +26,8 @@ fun SearchBar(
     modifier = modifier,
     value = query,
     onValueChange = onQueryChange,
-    placeholder = { Text(hint) },
+    placeholder = { Text(text = hint) },
+    prefix = { Text(text = "  ") },
     trailingIcon = {
         if (query.isNotNullOrBlank())
             IconButton(
@@ -35,5 +40,7 @@ fun SearchBar(
     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
     keyboardActions = KeyboardActions(onSearch = onSearch),
     singleLine = true,
-    maxLines = 1
+    maxLines = 1,
+    shape = RoundedCornerShape(50.dp),
+    colors = TextFieldDefaults.colors(focusedContainerColor = Color.White, unfocusedContainerColor = Color.White)
 )
