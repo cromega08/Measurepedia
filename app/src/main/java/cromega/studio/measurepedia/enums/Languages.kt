@@ -4,4 +4,15 @@ enum class Languages(val localeAcronym: String)
 {
     ENGLISH(localeAcronym = "en"),
     SPANISH(localeAcronym = "es");
+
+    companion object
+    {
+        fun findFromLocaleAcronym(localeAcronym: String): Languages =
+            if (localeAcronym == "en") ENGLISH
+            else SPANISH
+
+        fun asArray(): Array<Languages> = entries.toTypedArray()
+
+        fun asStringArray(): Array<String> = entries.map { it.localeAcronym }.toTypedArray()
+    }
 }

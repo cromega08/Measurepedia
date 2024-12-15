@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import cromega.studio.measurepedia.data.local.files.UserInfo
 import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.enums.Languages
 import cromega.studio.measurepedia.extensions.putExtra
@@ -15,9 +16,10 @@ import kotlin.reflect.KClass
 
 abstract class Activity<VM: ActivityViewModel, SC: ActivityScreen<VM>>: ComponentActivity()
 {
-    val tablesManager: TablesManager = TablesManager()
-    abstract val viewModel: VM
-    abstract val screen: SC
+    protected val tablesManager: TablesManager = TablesManager()
+    protected lateinit var userInfo: UserInfo
+    protected abstract val viewModel: VM
+    protected abstract val screen: SC
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -25,11 +27,16 @@ abstract class Activity<VM: ActivityViewModel, SC: ActivityScreen<VM>>: Componen
         enableEdgeToEdge()
 
         tablesManager.instantiate(context = applicationContext)
+        userInfo = UserInfo(context = applicationContext)
+
+        setLocale(language = userInfo.language)
 
         instantiateVariables()
 
         setContent {
-            MeasurepediaTheme {
+            MeasurepediaTheme(
+                darkTheme = userInfo.darkTheme
+            ) {
                 screen.Screen()
             }
         }

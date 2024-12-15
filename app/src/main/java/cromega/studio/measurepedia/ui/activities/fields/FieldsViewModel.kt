@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import cromega.studio.measurepedia.R
+import cromega.studio.measurepedia.data.local.files.UserInfo
 import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.data.models.instances.Field
@@ -16,10 +17,12 @@ import cromega.studio.measurepedia.ui.activities.generic.ActivityViewModel
 
 class FieldsViewModel(
     tablesManager: TablesManager,
+    userInfo: UserInfo,
     resources: Resources,
     private val openHomeFunction: () -> Unit
 ): ActivityViewModel(
     tablesManager = tablesManager,
+    userInfo = userInfo,
     resources = resources
 ) {
     val tabs: Array<Int> = arrayOf(R.string.fields, R.string.metric_systems)

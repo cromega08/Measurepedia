@@ -14,6 +14,7 @@ class MeasuresActivity : Activity<MeasuresViewModel, MeasuresScreen>()
         viewModel =
             MeasuresViewModel(
                 tablesManager = tablesManager,
+                userInfo = userInfo,
                 resources = resources,
                 selectedPersonId = intent.getIntExtra("selectedPersonId", 0),
                 openHomeFunction = ::openHomeFunction

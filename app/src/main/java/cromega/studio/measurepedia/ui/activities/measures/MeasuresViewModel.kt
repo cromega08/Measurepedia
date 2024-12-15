@@ -3,6 +3,7 @@ package cromega.studio.measurepedia.ui.activities.measures
 import android.content.res.Resources
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import cromega.studio.measurepedia.data.local.files.UserInfo
 import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.data.models.instances.BodyPart
 import cromega.studio.measurepedia.data.models.instances.Field
@@ -16,11 +17,13 @@ import java.sql.Date
 
 class MeasuresViewModel(
     tablesManager: TablesManager,
+    userInfo: UserInfo,
     resources: Resources,
     selectedPersonId: Int,
     private val openHomeFunction: () -> Unit
 ): ActivityViewModel(
     tablesManager = tablesManager,
+    userInfo = userInfo,
     resources = resources
 ) {
     val selectedPerson: Person =

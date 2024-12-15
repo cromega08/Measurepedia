@@ -15,6 +15,7 @@ class HomeActivity : Activity<HomeViewModel, HomeScreen>()
         viewModel =
             HomeViewModel(
                 tablesManager = tablesManager,
+                userInfo = userInfo,
                 resources = resources,
                 openMeasuresFunction = ::openMeasuresFunction,
                 openFieldsFunction = ::openFieldsFunction

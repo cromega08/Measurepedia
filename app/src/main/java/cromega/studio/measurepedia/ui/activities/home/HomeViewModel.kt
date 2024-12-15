@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import cromega.studio.measurepedia.data.local.files.UserInfo
 import cromega.studio.measurepedia.data.managers.general.TablesManager
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
@@ -15,11 +16,13 @@ import java.sql.Date
 
 class HomeViewModel(
     tablesManager: TablesManager,
+    userInfo: UserInfo,
     resources: Resources,
     private val openMeasuresFunction: (Map<String, Any>) -> Unit,
     private val openFieldsFunction: () -> Unit
 ): ActivityViewModel(
     tablesManager = tablesManager,
+    userInfo = userInfo,
     resources = resources
 ) {
     private val personsState: SnapshotStateList<Person> =

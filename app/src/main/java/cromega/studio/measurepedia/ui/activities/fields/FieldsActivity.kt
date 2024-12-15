@@ -14,6 +14,7 @@ class FieldsActivity : Activity<FieldsViewModel, FieldsScreen>()
         viewModel =
             FieldsViewModel(
                 tablesManager = tablesManager,
+                userInfo = userInfo,
                 resources = resources,
                 openHomeFunction = ::openHomeFunction
             )
