@@ -76,6 +76,12 @@ class FieldsViewModel(
         refreshFields()
     }
 
+    private fun refreshBodyPartsAndFieldsData()
+    {
+        refreshBodyParts()
+        refreshFields()
+    }
+
     private fun refreshMetricSystemUnits()
     {
         metricSystemsUnitsState.clear()
@@ -129,7 +135,7 @@ class FieldsViewModel(
 
         editingBodyPart = null
 
-        refreshAllData()
+        refreshBodyPartsAndFieldsData()
     }
 
     private fun getAllMetricSystemUnits(): Array<MetricSystemUnit> =

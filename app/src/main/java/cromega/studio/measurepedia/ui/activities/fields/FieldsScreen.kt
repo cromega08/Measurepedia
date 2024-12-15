@@ -89,7 +89,9 @@ class FieldsScreen(
             TabRow(selectedTabIndex = selectedTabIndex) {
                 viewModel.tabs.forEachIndexed { index, title ->
                     Tab(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
                         selected = (selectedTabIndex == index),
                         onClick = { viewModel.tabIndex = index },
                         content = { Text(text = resources.getString(title)) }
@@ -365,7 +367,7 @@ class FieldsScreen(
                 ) {
                     val widthFraction: Float = 0.9f
 
-                    SpacerVerticalSmall()
+                    SpacerVerticalMedium()
 
                     TextField(
                         modifier =
@@ -433,6 +435,8 @@ class FieldsScreen(
                             content = { ClearIcon() }
                         )
                     }
+
+                    SpacerVerticalMedium()
                 }
             }
         }
