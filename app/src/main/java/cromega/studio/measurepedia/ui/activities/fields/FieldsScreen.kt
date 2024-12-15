@@ -44,6 +44,7 @@ import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalMedium
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
+import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
@@ -80,7 +81,7 @@ class FieldsScreen(
             modifier =
                 Modifier
                     .background(
-                        color = Color.White,
+                        color = Color(0xFF31308F),
                         shape = RectangleShape
                     )
         ) {
@@ -102,13 +103,15 @@ class FieldsScreen(
 
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        GenericBodyLazyColumn(
-            contentPadding = paddingValues
-        ){
-            when(viewModel.tabIndex)
-            {
-                0 -> BodyPartsAndFieldsTab(lazyListScope = this)
-                1 -> MetricSystemsUnitsTab(lazyListScope = this)
+        FinalBackgroundBox {
+            GenericBodyLazyColumn(
+                contentPadding = paddingValues
+            ){
+                when(viewModel.tabIndex)
+                {
+                    0 -> BodyPartsAndFieldsTab(lazyListScope = this)
+                    1 -> MetricSystemsUnitsTab(lazyListScope = this)
+                }
             }
         }
 
@@ -116,10 +119,10 @@ class FieldsScreen(
     override fun Footer() =
         GenericFooterRow(
             modifier =
-            Modifier.background(
-                color = Color.White,
-                shape = RectangleShape
-            )
+                Modifier.background(
+                    color = Color.White,
+                    shape = RectangleShape
+                )
         ) {
             RoundedCornerButton(
                 modifier = Modifier.weight(0.8f),

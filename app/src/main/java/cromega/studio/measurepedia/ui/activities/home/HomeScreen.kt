@@ -9,12 +9,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,7 +41,6 @@ import cromega.studio.measurepedia.extensions.atLeastOneIs
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
 import cromega.studio.measurepedia.ui.components.elements.ColumnOrderedDialog
-import cromega.studio.measurepedia.ui.components.elements.DownloadIcon
 import cromega.studio.measurepedia.ui.components.elements.EditIcon
 import cromega.studio.measurepedia.ui.components.elements.FaceIcon
 import cromega.studio.measurepedia.ui.components.elements.KebabMenuIcon
@@ -45,7 +48,6 @@ import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SearchBar
 import cromega.studio.measurepedia.ui.components.elements.SettingsIcon
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
-import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalMedium
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.elements.TextLeftAligned
@@ -53,11 +55,11 @@ import cromega.studio.measurepedia.ui.components.elements.TextRightAligned
 import cromega.studio.measurepedia.ui.components.elements.TextSmall
 import cromega.studio.measurepedia.ui.components.elements.TextSubtitle
 import cromega.studio.measurepedia.ui.components.elements.TextTitle
-import cromega.studio.measurepedia.ui.components.elements.UploadIcon
 import cromega.studio.measurepedia.ui.components.elements.VerticalIconButton
 import cromega.studio.measurepedia.ui.components.elements.WarningIcon
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
 import cromega.studio.measurepedia.ui.components.layouts.Dropdown
+import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
@@ -70,10 +72,8 @@ class HomeScreen(
     resources = resources
 ) {
     override val screenModifier: Modifier =
-        Modifier.background(
-            color = Color.White,
-            shape = RectangleShape
-        )
+        Modifier
+
 
     @Composable
     override fun Screen() =
@@ -99,7 +99,7 @@ class HomeScreen(
         GenericHeaderColumn(
             modifier =
             Modifier.background(
-                color = Color.White,
+                color = Color(0xFF31308F),
                 shape = RectangleShape
             )
         ) {
@@ -116,12 +116,15 @@ class HomeScreen(
             SpacerVerticalSmall()
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp))
+                    .padding(start = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextSmall(text = resources.getString(R.string.order_by))
-
-                SpacerHorizontalSmall()
 
                 Dropdown(
                     expanded = viewModel.dateFilterExpanded,
@@ -136,11 +139,7 @@ class HomeScreen(
                     onClickMenu = { viewModel.invertDateFilterExpanded() }
                 )
 
-                SpacerHorizontalSmall()
-
                 TextSmall(text = resources.getString(R.string.and_if))
-
-                SpacerHorizontalSmall()
 
                 Dropdown(
                     expanded = viewModel.measuredFilterExpanded,
@@ -160,99 +159,101 @@ class HomeScreen(
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        GenericBodyLazyColumn(
-            contentPadding = paddingValues
-        ) {
-            val persons: List<Person> = viewModel.persons
+        FinalBackgroundBox {
+            GenericBodyLazyColumn(
+                contentPadding = paddingValues
+            ) {
+                val persons: List<Person> = viewModel.persons
 
-            items(persons.size)
-            {
-                val person: Person = persons[it]
-                val searchValidations: BooleanArray =
-                    booleanArrayOf(
-                        viewModel.searchText.lowercase().isBlank(),
-                        person.searchableIdentifier.contains(viewModel.searchText.lowercase().trim())
-                    )
-
-                if (searchValidations atLeastOneIs true)
+                items(persons.size)
                 {
-                    CardConstraintLayout(
-                        modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .combinedClickable(
-                                onLongClick = { viewModel.setSelectedPersonOnly(person = person) },
-                                onDoubleClick = { viewModel.setSelectedPersonOnly(person = person) },
-                                onClick = { viewModel.openMeasuresActivity(person = person) }
-                            )
-                    ) {
-                        val (nameRef, aliasRef, optionsRef, measuredRef, updateRef, middleSpaceRef) = createRefs()
-
-                        TextTitle(
-                            modifier = Modifier
-                                .fillMaxWidth(0.85f)
-                                .constrainAs(nameRef) {
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                },
-                            text = person.name
+                    val person: Person = persons[it]
+                    val searchValidations: BooleanArray =
+                        booleanArrayOf(
+                            viewModel.searchText.lowercase().isBlank(),
+                            person.searchableIdentifier.contains(viewModel.searchText.lowercase().trim())
                         )
 
-                        TextSubtitle(
-                            modifier = Modifier
+                    if (searchValidations atLeastOneIs true)
+                    {
+                        CardConstraintLayout(
+                            modifier =
+                            Modifier
                                 .fillMaxWidth()
-                                .constrainAs(aliasRef) {
-                                    top.linkTo(nameRef.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                },
-                            text = person.alias
-                        )
+                                .combinedClickable(
+                                    onLongClick = { viewModel.setSelectedPersonOnly(person = person) },
+                                    onDoubleClick = { viewModel.setSelectedPersonOnly(person = person) },
+                                    onClick = { viewModel.openMeasuresActivity(person = person) }
+                                )
+                        ) {
+                            val (nameRef, aliasRef, optionsRef, measuredRef, updateRef, middleSpaceRef) = createRefs()
 
-                        IconButton(
-                            modifier =
-                            Modifier
-                                .constrainAs(optionsRef) {
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(aliasRef.top)
-                                    start.linkTo(nameRef.end)
-                                    end.linkTo(parent.end)
-                                },
-                            onClick = { viewModel.setSelectedPersonOnly(person = person) },
-                            content = { KebabMenuIcon() }
-                        )
+                            TextTitle(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.85f)
+                                    .constrainAs(nameRef) {
+                                        top.linkTo(parent.top)
+                                        start.linkTo(parent.start)
+                                    },
+                                text = person.name
+                            )
 
-                        SpacerVerticalSmall(
-                            modifier =
-                            Modifier
-                                .constrainAs(middleSpaceRef) {
-                                    top.linkTo(aliasRef.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                }
-                        )
+                            TextSubtitle(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .constrainAs(aliasRef) {
+                                        top.linkTo(nameRef.bottom)
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                    },
+                                text = person.alias
+                            )
 
-                        TextLeftAligned(
-                            modifier = Modifier
-                                .constrainAs(updateRef) {
-                                    top.linkTo(middleSpaceRef.bottom)
-                                    bottom.linkTo(parent.bottom)
-                                    start.linkTo(parent.start)
-                                },
-                            text = person.updatedAsString
-                        )
+                            IconButton(
+                                modifier =
+                                Modifier
+                                    .constrainAs(optionsRef) {
+                                        top.linkTo(parent.top)
+                                        bottom.linkTo(aliasRef.top)
+                                        start.linkTo(nameRef.end)
+                                        end.linkTo(parent.end)
+                                    },
+                                onClick = { viewModel.setSelectedPersonOnly(person = person) },
+                                content = { KebabMenuIcon() }
+                            )
 
-                        TextRightAligned(
-                            modifier = Modifier
-                                .constrainAs(measuredRef) {
-                                    top.linkTo(middleSpaceRef.bottom)
-                                    bottom.linkTo(parent.bottom)
-                                    end.linkTo(parent.end)
-                                },
-                            text =
+                            SpacerVerticalSmall(
+                                modifier =
+                                Modifier
+                                    .constrainAs(middleSpaceRef) {
+                                        top.linkTo(aliasRef.bottom)
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                    }
+                            )
+
+                            TextLeftAligned(
+                                modifier = Modifier
+                                    .constrainAs(updateRef) {
+                                        top.linkTo(middleSpaceRef.bottom)
+                                        bottom.linkTo(parent.bottom)
+                                        start.linkTo(parent.start)
+                                    },
+                                text = person.updatedAsString
+                            )
+
+                            TextRightAligned(
+                                modifier = Modifier
+                                    .constrainAs(measuredRef) {
+                                        top.linkTo(middleSpaceRef.bottom)
+                                        bottom.linkTo(parent.bottom)
+                                        end.linkTo(parent.end)
+                                    },
+                                text =
                                 if (person.measured) resources.getString(R.string.measured)
                                 else resources.getString(R.string.not_measured)
-                        )
+                            )
+                        }
                     }
                 }
             }
@@ -260,9 +261,6 @@ class HomeScreen(
 
     @Composable
     override fun Footer() =
-        /*
-        * TODO: Include functionalities for different Buttons
-        * */
         GenericFooterRow(
             modifier =
             Modifier.background(
@@ -275,47 +273,29 @@ class HomeScreen(
                 Modifier
                     .fillMaxWidth()
                     .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 VerticalIconButton(
                     modifier =
                     Modifier
                         .fillMaxHeight()
-                        .weight(1f),
+                        .weight(0.3f),
                     onClick = { viewModel.openFieldsActivity() }
                 ) {
                     EditIcon()
                     Text(text = resources.getString(R.string.fields))
                 }
 
-                VerticalIconButton(
-                    modifier =
-                    Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    DownloadIcon()
-                    Text(text = resources.getString(R.string.import_data))
-                }
+                Spacer(modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.3f))
 
                 VerticalIconButton(
                     modifier =
                     Modifier
                         .fillMaxHeight()
-                        .weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    UploadIcon()
-                    Text(text = resources.getString(R.string.export))
-                }
-
-                VerticalIconButton(
-                    modifier =
-                    Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
+                        .weight(0.3f),
                     onClick = { viewModel.openSettingsActivity() }
                 ) {
                     SettingsIcon()
@@ -327,15 +307,17 @@ class HomeScreen(
     @Composable
     private fun FAB() =
         FloatingActionButton(
+            modifier =
+            Modifier
+                .offset(y = 90.dp)
+                .scale(1.5f),
+            elevation = FloatingActionButtonDefaults.elevation(0.dp),
             onClick = { viewModel.openEditorDialogWithEmptyPerson() },
             content = { AddIcon() }
         )
 
     @Composable
     private fun PersonOptionsDialog() =
-        /*
-         * TODO: Include functionalities for buttons
-         * */
         ColumnOrderedDialog(
             columnModifier = Modifier.fillMaxWidth(),
             onDismissRequest = { viewModel.selectedPerson = null }

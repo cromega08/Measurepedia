@@ -28,6 +28,7 @@ import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalMedium
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.layouts.Dropdown
+import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 
 class SettingsScreen(
@@ -38,61 +39,67 @@ class SettingsScreen(
     resources = resources
 ) {
     @Composable
-    override fun Header() = Spacer(modifier = Modifier
-        .width(width = 1.dp)
-        .height(50.dp))
+    override fun Header() =
+        Spacer(
+            modifier =
+                Modifier
+                    .width(width = 1.dp)
+                    .height(50.dp)
+        )
 
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        Column(
-            modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(paddingValues = paddingValues),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            SpacerVerticalMedium()
-
-            Row(
+        FinalBackgroundBox {
+            Column(
                 modifier =
                 Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .padding(paddingValues = paddingValues),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = resources.getString(R.string.default_language))
+                SpacerVerticalMedium()
 
-                Dropdown(
-                    expanded = viewModel.languageDropdownExpanded,
-                    option = viewModel.language,
-                    options = Languages.asArray(),
-                    extractOptionName = { language -> language.localeAcronym },
-                    onOptionSelected = { language ->
-                        viewModel.language = language
-                        viewModel.languageDropdownExpanded = false
-                                       },
-                    onClickMenu = { viewModel.invertLanguageDropdownExpanded() }
-                )
-            }
+                Row(
+                    modifier =
+                    Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = resources.getString(R.string.default_language))
 
-            SpacerVerticalMedium()
+                    Dropdown(
+                        expanded = viewModel.languageDropdownExpanded,
+                        option = viewModel.language,
+                        options = Languages.asArray(),
+                        extractOptionName = { language -> language.localeAcronym },
+                        onOptionSelected = { language ->
+                            viewModel.language = language
+                            viewModel.languageDropdownExpanded = false
+                        },
+                        onClickMenu = { viewModel.invertLanguageDropdownExpanded() }
+                    )
+                }
 
-            Row(
-                modifier =
-                Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = resources.getString(R.string.dark_theme))
+                SpacerVerticalMedium()
 
-                Switch(
-                    checked = viewModel.darkTheme,
-                    onCheckedChange = { viewModel.invertDarkTheme() }
-                )
+                Row(
+                    modifier =
+                    Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = resources.getString(R.string.dark_theme))
+
+                    Switch(
+                        checked = viewModel.darkTheme,
+                        onCheckedChange = { viewModel.invertDarkTheme() }
+                    )
+                }
             }
         }
 

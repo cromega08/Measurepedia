@@ -42,6 +42,7 @@ import cromega.studio.measurepedia.ui.components.elements.TextTitle
 import cromega.studio.measurepedia.ui.components.elements.VerticalArrowsIcon
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
 import cromega.studio.measurepedia.ui.components.layouts.Dropdown
+import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
 import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
@@ -55,16 +56,16 @@ class MeasuresScreen(
 ) {
     override val screenModifier: Modifier =
         Modifier.background(
-                color = Color.White,
-                shape = RectangleShape
-            )
+            color = Color(0xFF31308F),
+            shape = RectangleShape
+        )
 
     @Composable
     override fun Header() =
         GenericHeaderColumn(
             modifier =
                 Modifier.background(
-                    color = Color.White,
+                    color = Color(0xFF31308F),
                     shape = RectangleShape
                 )
         ) {
@@ -91,146 +92,148 @@ class MeasuresScreen(
 
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        GenericBodyLazyColumn(
-            contentPadding = paddingValues
-        ) {
-            val metricSystemsUnits = viewModel.metricSystemsUnits
-            val bodyParts: List<BodyPart> = viewModel.bodyParts
+        FinalBackgroundBox {
+            GenericBodyLazyColumn(
+                contentPadding = paddingValues
+            ) {
+                val metricSystemsUnits = viewModel.metricSystemsUnits
+                val bodyParts: List<BodyPart> = viewModel.bodyParts
 
-            items(bodyParts.size) { bodyPartIndex ->
-                val bodyPart: BodyPart = bodyParts[bodyPartIndex]
+                items(bodyParts.size) { bodyPartIndex ->
+                    val bodyPart: BodyPart = bodyParts[bodyPartIndex]
 
-                if (bodyPart.active)
-                {
-                    CardConstraintLayout(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        val (bodyPartRef, separationRef, iconRef, fieldsRef) = createRefs()
-
-                        Text(
-                            modifier =
-                            Modifier
-                                .constrainAs(bodyPartRef) {
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                },
-                            fontWeight = FontWeight.Bold,
-                            text = bodyPart.name
-                        )
-
-                        SpacerHorizontalLine(
-                            modifier =
-                            Modifier
-                                .height(2.5.dp)
-                                .constrainAs(separationRef) {
-                                    top.linkTo(bodyPartRef.top)
-                                    bottom.linkTo(bodyPartRef.bottom)
-                                    start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
-                                    end.linkTo(anchor = iconRef.start, margin = 7.5.dp)
-
-                                    width = Dimension.fillToConstraints
-                                },
-                            color = Color.White
-                        )
-
-                        Box(
-                            modifier =
-                            Modifier
-                                .constrainAs(iconRef) {
-                                    top.linkTo(bodyPartRef.top)
-                                    bottom.linkTo(bodyPartRef.bottom)
-                                    end.linkTo(parent.end)
-                                },
-                            contentAlignment = Alignment.Center,
-                            content = { VerticalArrowsIcon() }
-                        )
-
-                        Column (
-                            modifier =
-                            Modifier
-                                .constrainAs(fieldsRef) {
-                                    top.linkTo(anchor = bodyPartRef.bottom, margin = 5.dp)
-                                    bottom.linkTo(anchor = parent.bottom, margin = 5.dp)
-                                    start.linkTo(anchor = parent.start, margin = 7.5.dp)
-                                    end.linkTo(anchor = parent.end, margin = 7.5.dp)
-
-                                    width = Dimension.fillToConstraints
-                                }
+                    if (bodyPart.active)
+                    {
+                        CardConstraintLayout(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            val bodyPartFields: List<Field> = viewModel.filterFieldsByBodyPartId(bodyPartId = bodyPart.id)
+                            val (bodyPartRef, separationRef, iconRef, fieldsRef) = createRefs()
 
-                            bodyPartFields.forEach{ field ->
+                            Text(
+                                modifier =
+                                Modifier
+                                    .constrainAs(bodyPartRef) {
+                                        top.linkTo(parent.top)
+                                        start.linkTo(parent.start)
+                                    },
+                                fontWeight = FontWeight.Bold,
+                                text = bodyPart.name
+                            )
 
-                                if (field.active)
-                                {
-                                    val currentFieldGeneralIndex: Int = viewModel.findArrayIndexOfField(field = field)
+                            SpacerHorizontalLine(
+                                modifier =
+                                Modifier
+                                    .height(2.5.dp)
+                                    .constrainAs(separationRef) {
+                                        top.linkTo(bodyPartRef.top)
+                                        bottom.linkTo(bodyPartRef.bottom)
+                                        start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
+                                        end.linkTo(anchor = iconRef.start, margin = 7.5.dp)
 
-                                    val record: Record = viewModel.findRecordByFieldId(fieldId = field.id)
+                                        width = Dimension.fillToConstraints
+                                    },
+                                color = Color.White
+                            )
 
-                                    val metricSystemUnit =
-                                        viewModel.findMetricSystemUnitById(metricSystemUnitId = record.metricSystemUnitId)
+                            Box(
+                                modifier =
+                                Modifier
+                                    .constrainAs(iconRef) {
+                                        top.linkTo(bodyPartRef.top)
+                                        bottom.linkTo(bodyPartRef.bottom)
+                                        end.linkTo(parent.end)
+                                    },
+                                contentAlignment = Alignment.Center,
+                                content = { VerticalArrowsIcon() }
+                            )
 
-                                    Row(
-                                        modifier =
-                                        Modifier
-                                            .fillParentMaxWidth()
-                                            .padding(horizontal = 20.dp, vertical = 5.dp),
-                                        horizontalArrangement = Arrangement.SpaceEvenly,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                            Column (
+                                modifier =
+                                Modifier
+                                    .constrainAs(fieldsRef) {
+                                        top.linkTo(anchor = bodyPartRef.bottom, margin = 5.dp)
+                                        bottom.linkTo(anchor = parent.bottom, margin = 5.dp)
+                                        start.linkTo(anchor = parent.start, margin = 7.5.dp)
+                                        end.linkTo(anchor = parent.end, margin = 7.5.dp)
 
-                                        Text(
-                                            modifier = Modifier.weight(1f),
-                                            text = field.name,
-                                            overflow = TextOverflow.Clip
-                                        )
+                                        width = Dimension.fillToConstraints
+                                    }
+                            ) {
+                                val bodyPartFields: List<Field> = viewModel.filterFieldsByBodyPartId(bodyPartId = bodyPart.id)
 
-                                        Spacer(modifier = Modifier.weight(0.1f))
+                                bodyPartFields.forEach{ field ->
 
-                                        TextField(
+                                    if (field.active)
+                                    {
+                                        val currentFieldGeneralIndex: Int = viewModel.findArrayIndexOfField(field = field)
+
+                                        val record: Record = viewModel.findRecordByFieldId(fieldId = field.id)
+
+                                        val metricSystemUnit =
+                                            viewModel.findMetricSystemUnitById(metricSystemUnitId = record.metricSystemUnitId)
+
+                                        Row(
                                             modifier =
                                             Modifier
-                                                .widthIn(max = 100.dp)
-                                                .weight(0.83f)
-                                                .onFocusChanged {focusState ->
-                                                    if (!focusState.isFocused)
-                                                    {
-                                                        viewModel
-                                                            .updateRecordMeasureByPrintable(recordId = record.id)
-                                                    }
+                                                .fillParentMaxWidth()
+                                                .padding(horizontal = 20.dp, vertical = 5.dp),
+                                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+                                            Text(
+                                                modifier = Modifier.weight(1f),
+                                                text = field.name,
+                                                overflow = TextOverflow.Clip
+                                            )
+
+                                            Spacer(modifier = Modifier.weight(0.1f))
+
+                                            TextField(
+                                                modifier =
+                                                Modifier
+                                                    .widthIn(max = 100.dp)
+                                                    .weight(0.83f)
+                                                    .onFocusChanged {focusState ->
+                                                        if (!focusState.isFocused)
+                                                        {
+                                                            viewModel
+                                                                .updateRecordMeasureByPrintable(recordId = record.id)
+                                                        }
+                                                    },
+                                                value = record.measurePrintable,
+                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                                onValueChange = {userInput ->
+                                                    viewModel
+                                                        .updateRecordMeasurePrintable(
+                                                            recordId = record.id,
+                                                            newMeasurePrintable = userInput
+                                                        )
                                                 },
-                                            value = record.measurePrintable,
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                                            onValueChange = {userInput ->
-                                                viewModel
-                                                    .updateRecordMeasurePrintable(
-                                                        recordId = record.id,
-                                                        newMeasurePrintable = userInput
-                                                    )
-                                            },
-                                            singleLine = true,
-                                            maxLines = 1
-                                        )
+                                                singleLine = true,
+                                                maxLines = 1
+                                            )
 
-                                        Dropdown(
-                                            modifier = Modifier.weight(0.6f),
-                                            expanded = viewModel.metricSystemsUnitsSelectorsExpanded[currentFieldGeneralIndex],
-                                            option = metricSystemUnit,
-                                            options = metricSystemsUnits.toTypedArray(),
-                                            extractOptionName = { selectedUnit -> selectedUnit.abbreviation },
-                                            onOptionSelected = {selectedUnit ->
-                                                viewModel
-                                                    .updateRecordMetricSystemUnitId(
-                                                        recordId = record.id,
-                                                        newMetricSystemUnitId = selectedUnit.id
-                                                    )
+                                            Dropdown(
+                                                modifier = Modifier.weight(0.6f),
+                                                expanded = viewModel.metricSystemsUnitsSelectorsExpanded[currentFieldGeneralIndex],
+                                                option = metricSystemUnit,
+                                                options = metricSystemsUnits.toTypedArray(),
+                                                extractOptionName = { selectedUnit -> selectedUnit.abbreviation },
+                                                onOptionSelected = {selectedUnit ->
+                                                    viewModel
+                                                        .updateRecordMetricSystemUnitId(
+                                                            recordId = record.id,
+                                                            newMetricSystemUnitId = selectedUnit.id
+                                                        )
 
-                                                viewModel.invertMetricSystemUnitSelector(currentFieldGeneralIndex)
-                                            },
-                                            onClickMenu = {
-                                                viewModel.invertMetricSystemUnitSelector(currentFieldGeneralIndex)
-                                            }
-                                        )
+                                                    viewModel.invertMetricSystemUnitSelector(currentFieldGeneralIndex)
+                                                },
+                                                onClickMenu = {
+                                                    viewModel.invertMetricSystemUnitSelector(currentFieldGeneralIndex)
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }
