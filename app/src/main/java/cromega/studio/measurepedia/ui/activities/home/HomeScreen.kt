@@ -176,9 +176,6 @@ class HomeScreen(
 
                 if (searchValidations atLeastOneIs true)
                 {
-                    /*
-                    * TODO: Include "Missing Functionalities" related to other Activities
-                    * */
                     CardConstraintLayout(
                         modifier =
                         Modifier
