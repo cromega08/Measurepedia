@@ -119,7 +119,7 @@ class HomeScreen(
                 modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = Color.White, shape = RoundedCornerShape(10.dp))
+                    .background(color = Color.White, shape = RoundedCornerShape(5.dp))
                     .padding(start = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
