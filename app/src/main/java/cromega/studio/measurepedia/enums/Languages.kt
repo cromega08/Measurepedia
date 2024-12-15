@@ -8,8 +8,11 @@ enum class Languages(val localeAcronym: String)
     companion object
     {
         fun findFromLocaleAcronym(localeAcronym: String): Languages =
-            if (localeAcronym == "en") ENGLISH
-            else SPANISH
+            when(localeAcronym)
+            {
+                SPANISH.localeAcronym -> SPANISH
+                else -> ENGLISH
+            }
 
         fun asArray(): Array<Languages> = entries.toTypedArray()
 

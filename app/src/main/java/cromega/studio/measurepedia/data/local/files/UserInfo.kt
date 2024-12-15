@@ -5,11 +5,11 @@ import cromega.studio.measurepedia.enums.Languages
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.Locale
 
 class UserInfo(
     private val context: Context
 ) {
-    private val defaultUserInfoJSON: String = """{"language":"en","dark_theme":false}"""
     private val userInfoFileName: String = "user_info.json"
 
     var language: Languages
@@ -17,7 +17,9 @@ class UserInfo(
 
     init {
         try { readJSONFile() }
-        catch (e: Exception) { updateUserInfo(jsonString = defaultUserInfoJSON) }
+        catch (e: Exception) {
+            Locale.getDefault()
+            updateUserInfo(jsonString = generateDefaultUserInfoJSON()) }
         finally {
             val json: JSONObject = readJSONFile()
             language =
@@ -30,6 +32,16 @@ class UserInfo(
     }
 
     fun flushUpdateUserInfo() = updateUserInfo(jsonString = this.toString())
+
+    private fun generateDefaultUserInfoJSON(): String
+    {
+        val locale: String = Locale.getDefault().language
+
+        val selectedLanguage: Languages =
+            Languages.findFromLocaleAcronym(localeAcronym = locale)
+
+        return """{"language":"${selectedLanguage.localeAcronym}","dark_theme":false}"""
+    }
 
     private fun updateUserInfo(jsonString: String) =
         context
