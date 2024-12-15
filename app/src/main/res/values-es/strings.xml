@@ -40,7 +40,10 @@
     <string name="delete_unit">Eliminar</string>
     <string name="body_part_name">Nombre del Miembro</string>
     <string name="active">Activo</string>
+    <string name="update_settings">Actualizar Ajustes</string>
     <string name="create_body_part">Crear</string>
     <string name="default_metric_system_unit_name">Nombre de la Unidad</string>
     <string name="default_metric_system_unit_abbreviation">ndlu</string>
+    <string name="default_language">Lenguaje Predeterminado</string>
+    <string name="dark_theme">Tema Oscuro</string>
 </resources>

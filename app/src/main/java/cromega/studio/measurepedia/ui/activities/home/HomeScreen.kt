@@ -316,7 +316,7 @@ class HomeScreen(
                     Modifier
                         .fillMaxHeight()
                         .weight(1f),
-                    onClick = { /*TODO*/ }
+                    onClick = { viewModel.openSettingsActivity() }
                 ) {
                     SettingsIcon()
                     Text(text = resources.getString(R.string.settings))

@@ -19,7 +19,8 @@ class HomeViewModel(
     userInfo: UserInfo,
     resources: Resources,
     private val openMeasuresFunction: (Map<String, Any>) -> Unit,
-    private val openFieldsFunction: () -> Unit
+    private val openFieldsFunction: () -> Unit,
+    private val openSettingsFunction: () -> Unit
 ): ActivityViewModel(
     tablesManager = tablesManager,
     userInfo = userInfo,
@@ -226,4 +227,6 @@ class HomeViewModel(
         )
 
     fun openFieldsActivity() = openFieldsFunction()
+
+    fun openSettingsActivity() = openSettingsFunction()
 }

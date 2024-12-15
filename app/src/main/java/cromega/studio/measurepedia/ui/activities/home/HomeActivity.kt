@@ -3,6 +3,7 @@ package cromega.studio.measurepedia.ui.activities.home
 import cromega.studio.measurepedia.ui.activities.fields.FieldsActivity
 import cromega.studio.measurepedia.ui.activities.generic.Activity
 import cromega.studio.measurepedia.ui.activities.measures.MeasuresActivity
+import cromega.studio.measurepedia.ui.activities.settings.SettingsActivity
 
 class HomeActivity : Activity<HomeViewModel, HomeScreen>()
 {
@@ -18,7 +19,8 @@ class HomeActivity : Activity<HomeViewModel, HomeScreen>()
                 userInfo = userInfo,
                 resources = resources,
                 openMeasuresFunction = ::openMeasuresFunction,
-                openFieldsFunction = ::openFieldsFunction
+                openFieldsFunction = ::openFieldsFunction,
+                openSettingsFunction = ::openSettingsFunction
             )
 
         screen =
@@ -33,4 +35,7 @@ class HomeActivity : Activity<HomeViewModel, HomeScreen>()
 
     private fun openFieldsFunction() =
         changeActivity(activityToLoad = FieldsActivity::class)
+
+    private fun openSettingsFunction() =
+        changeActivity(activityToLoad = SettingsActivity::class)
 }

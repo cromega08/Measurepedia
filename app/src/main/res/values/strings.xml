@@ -26,9 +26,11 @@
     <string name="import_person_info">Import Person Info</string>
     <string name="update_measures">Update Measures</string>
     <string name="title_activity_fields" translatable="false">FieldsActivity</string>
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
     <string name="measures_updated">Measures Updated</string>
     <string name="update_data">Update Data</string>
     <string name="update_fields">Update Fields</string>
+    <string name="update_settings">Update Settings</string>
     <string name="create_body_part">Create Body Part</string>
     <string name="update_metric_systems_units">Update Metric System Units</string>
     <string name="body_part_name">Body Part Name</string>
@@ -46,4 +48,6 @@
     <string name="active">Active</string>
     <string name="default_metric_system_unit_name">Metric System Unit Name</string>
     <string name="default_metric_system_unit_abbreviation">msun</string>
+    <string name="default_language">Default Language</string>
+    <string name="dark_theme">Dark Theme</string>
 </resources>
