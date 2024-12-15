@@ -46,4 +46,5 @@
     <string name="default_metric_system_unit_abbreviation">ndlu</string>
     <string name="default_language">Lenguaje Predeterminado</string>
     <string name="dark_theme">Tema Oscuro</string>
+    <string name="share">Compartir</string>
 </resources>

@@ -371,18 +371,7 @@ class HomeScreen(
                     .fillMaxWidth(0.7f),
                 onClick = { /*TODO*/ }
             ) {
-                Text(text = resources.getString(R.string.export_person_info))
-            }
-
-            SpacerVerticalSmall()
-
-            RoundedCornerButton(
-                modifier = Modifier
-                    .scale(1.25f)
-                    .fillMaxWidth(0.7f),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = resources.getString(R.string.import_person_info))
+                Text(text = resources.getString(R.string.share))
             }
 
             SpacerVerticalSmall()
