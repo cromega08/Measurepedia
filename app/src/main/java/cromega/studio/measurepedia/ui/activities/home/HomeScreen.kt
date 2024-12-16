@@ -40,7 +40,7 @@ import cromega.studio.measurepedia.enums.MeasuredOrder
 import cromega.studio.measurepedia.extensions.atLeastOneIs
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
-import cromega.studio.measurepedia.ui.components.elements.ColumnOrderedDialog
+import cromega.studio.measurepedia.ui.components.layouts.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.elements.EditIcon
 import cromega.studio.measurepedia.ui.components.elements.FaceIcon
 import cromega.studio.measurepedia.ui.components.elements.KebabMenuIcon

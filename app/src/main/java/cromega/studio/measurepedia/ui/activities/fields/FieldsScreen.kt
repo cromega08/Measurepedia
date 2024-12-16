@@ -36,7 +36,7 @@ import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
 import cromega.studio.measurepedia.ui.components.elements.ClearIcon
-import cromega.studio.measurepedia.ui.components.elements.ColumnOrderedDialog
+import cromega.studio.measurepedia.ui.components.layouts.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.elements.PersonIcon
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
