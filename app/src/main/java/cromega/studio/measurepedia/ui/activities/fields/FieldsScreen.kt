@@ -51,7 +51,8 @@ import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 
 class FieldsScreen(
     viewModel: FieldsViewModel,
-    resources: Resources
+    resources: Resources,
+    private val showToastFunction: (Int) -> Unit
 ): ActivityScreen<FieldsViewModel>(
     viewModel = viewModel,
     resources = resources
@@ -224,7 +225,11 @@ class FieldsScreen(
                                 bottom.linkTo(bodyPartActiveRef.bottom)
                                 end.linkTo(anchor = parent.end, margin = 7.5.dp)
                             },
-                        onClick = { viewModel.removeBodyPartAndPropagate(bodyPart = bodyPart) },
+                        onClick = {
+                            if (viewModel.validateBodyParts())
+                                viewModel.removeBodyPartAndPropagate(bodyPart = bodyPart)
+                            else showToastFunction(R.string.insufficient_body_parts)
+                                  },
                         content = { ClearIcon() }
                     )
 
@@ -328,7 +333,11 @@ class FieldsScreen(
                                             bottom.linkTo(fieldActiveRef.bottom)
                                             end.linkTo(anchor = parent.end)
                                         },
-                                    onClick = { viewModel.removeField(field = field) },
+                                    onClick = {
+                                        if (viewModel.validateFields(bodyPart = bodyPart))
+                                            viewModel.removeField(field = field)
+                                        else showToastFunction(R.string.insufficient_fields)
+                                              },
                                     content = { ClearIcon() }
                                 )
                             }
@@ -434,7 +443,11 @@ class FieldsScreen(
                         Text(text = resources.getString(R.string.delete_unit))
 
                         FilledIconButton(
-                            onClick = { viewModel.removeMetricSystemUnit(metricSystemUnit = metricSystemUnit) },
+                            onClick = {
+                                if (viewModel.validateMetricSystemUnits())
+                                    viewModel.removeMetricSystemUnit(metricSystemUnit = metricSystemUnit)
+                                else showToastFunction(R.string.insufficient_metric_systems_units)
+                                      },
                             content = { ClearIcon() }
                         )
                     }

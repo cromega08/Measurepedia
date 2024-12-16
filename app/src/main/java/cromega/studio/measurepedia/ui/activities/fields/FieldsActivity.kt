@@ -1,5 +1,6 @@
 package cromega.studio.measurepedia.ui.activities.fields
 
+import android.widget.Toast
 import cromega.studio.measurepedia.ui.activities.generic.Activity
 import cromega.studio.measurepedia.ui.activities.home.HomeActivity
 
@@ -22,8 +23,19 @@ class FieldsActivity : Activity<FieldsViewModel, FieldsScreen>()
         screen =
             FieldsScreen(
                 viewModel = viewModel,
-                resources = resources
+                resources = resources,
+                showToastFunction = ::showInsufficientToast
             )
+    }
+
+    private fun showInsufficientToast(stringId: Int)
+    {
+        val toast: Toast = Toast(applicationContext)
+
+        toast.setText(stringId)
+        toast.duration = Toast.LENGTH_SHORT
+
+        toast.show()
     }
 
     private fun openHomeFunction() =

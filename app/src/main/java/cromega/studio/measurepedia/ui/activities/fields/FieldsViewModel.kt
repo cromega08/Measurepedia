@@ -195,6 +195,8 @@ class FieldsViewModel(
             functionToApply = { this.active = isActive }
         )
 
+    fun validateBodyParts(): Boolean = bodyParts.size > 1
+
     fun removeBodyPartAndPropagate(bodyPart: BodyPart)
     {
         bodyPartsState.remove(bodyPart)
@@ -274,6 +276,15 @@ class FieldsViewModel(
         filterFieldsByBodyPartId(bodyPartId)
             .forEach { field -> removeField(field) }
 
+    fun validateFields(bodyPart: BodyPart): Boolean
+    {
+        val relatedFields: List<Field> =
+            fieldsState
+                .filter { field -> field.bodyPartId == bodyPart.id }
+
+        return relatedFields.size > 1
+    }
+
     fun removeField(field: Field)
     {
         fieldsState.remove(field)
@@ -312,6 +323,8 @@ class FieldsViewModel(
             metricSystemUnitIndex = fieldIndex,
             functionToApply = { this.abbreviation = newAbbreviation }
         )
+
+    fun validateMetricSystemUnits(): Boolean = metricSystemUnits.size > 1
 
     fun removeMetricSystemUnit(metricSystemUnit: MetricSystemUnit)
     {
@@ -408,8 +421,8 @@ class FieldsViewModel(
 
     private fun updateMetricSystemsUnitsData()
     {
-        flushDeleteMetricSystemUnits()
         flushPositiveOperationsMetricSystemUnits()
+        flushDeleteMetricSystemUnits()
     }
 
     private fun flushDeleteMetricSystemUnits() =

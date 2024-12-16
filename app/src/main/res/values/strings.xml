@@ -53,4 +53,7 @@
     <string name="share">Share</string>
     <string name="share_person_info_placeholder">%s Information</string>
     <string name="share_status_placeholder">Status: %s</string>
+    <string name="insufficient_body_parts">Insufficient Body Parts</string>
+    <string name="insufficient_fields">Insufficient Fields</string>
+    <string name="insufficient_metric_systems_units">Insufficient Metric Systems Units</string>
 </resources>
