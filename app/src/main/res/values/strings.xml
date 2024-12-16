@@ -51,4 +51,6 @@
     <string name="default_language">Default Language</string>
     <string name="dark_theme">Dark Theme</string>
     <string name="share">Share</string>
+    <string name="share_person_info_placeholder">%s Information</string>
+    <string name="share_status_placeholder">Status: %s</string>
 </resources>

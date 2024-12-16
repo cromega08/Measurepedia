@@ -47,4 +47,6 @@
     <string name="default_language">Lenguaje Predeterminado</string>
     <string name="dark_theme">Tema Oscuro</string>
     <string name="share">Compartir</string>
+    <string name="share_person_info_placeholder">Informacion de %s</string>
+    <string name="share_status_placeholder">Estado: %s</string>
 </resources>

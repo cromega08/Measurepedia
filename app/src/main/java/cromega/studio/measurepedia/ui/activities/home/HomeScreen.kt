@@ -369,7 +369,7 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
-                onClick = { /*TODO*/ }
+                onClick = { viewModel.sharePersonInfo(person = person) }
             ) {
                 Text(text = resources.getString(R.string.share))
             }

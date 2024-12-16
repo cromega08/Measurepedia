@@ -5,8 +5,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import cromega.studio.measurepedia.R
 import cromega.studio.measurepedia.data.local.files.UserInfo
 import cromega.studio.measurepedia.data.managers.general.TablesManager
+import cromega.studio.measurepedia.data.models.instances.BodyPart
+import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
 import cromega.studio.measurepedia.enums.MeasuredOrder
@@ -18,6 +21,7 @@ class HomeViewModel(
     tablesManager: TablesManager,
     userInfo: UserInfo,
     resources: Resources,
+    private val sharePersonInfoFunction: (String, String) -> Unit,
     private val openMeasuresFunction: (Map<String, Any>) -> Unit,
     private val openFieldsFunction: () -> Unit,
     private val openSettingsFunction: () -> Unit
@@ -217,6 +221,57 @@ class HomeViewModel(
             .personsManager
             .delete(id = person.id)
             .run { requestUpdateOfPersons() }
+    }
+
+    fun sharePersonInfo(person: Person)
+    {
+        val metricSystemUnits: List<MetricSystemUnit> = tablesManager.metricSystemsUnitsManager.readAll()
+        val bodyParts: List<BodyPart> = tablesManager.bodyPartsManager.readByActive(active = true)
+        val personName: String = "${person.name} - ${person.alias}"
+        val textToShare: StringBuilder = StringBuilder()
+
+        val placeholder: String = resources.getString(R.string.share_person_info_placeholder)
+        val measured: String =
+            resources
+                .getString(
+                    if (person.measured) R.string.measured
+                    else R.string.not_measured
+                )
+
+        textToShare.appendLine(personName)
+        textToShare.appendLine(String.format(placeholder, measured))
+        textToShare.appendLine("----------")
+
+        bodyParts
+            .forEach { bodyPart ->
+                textToShare.appendLine()
+                textToShare.appendLine(bodyPart.name)
+                textToShare.appendLine("-----")
+
+                tablesManager
+                    .fieldsManager
+                    .readFilteredBy(
+                        active = true,
+                        bodyPartsIds = listOf(bodyPart.id)
+                    )
+                    .forEach { field ->
+                        tablesManager
+                            .recordsManager
+                            .readFilteredBy(
+                                personId = person.id,
+                                fieldsIds = listOf(field.id)
+                            ).forEach { record ->
+                                val metricSystemUnit: MetricSystemUnit =
+                                    metricSystemUnits.find { record.metricSystemUnitId == it.id }!!
+
+                                textToShare.appendLine("${field.name} = ${record.measure} ${metricSystemUnit.abbreviation}")
+                            }
+                    }
+            }
+
+        textToShare.appendLine()
+
+        sharePersonInfoFunction("\"$personName\"", textToShare.toString())
     }
 
     fun openMeasuresActivity(person: Person) =
