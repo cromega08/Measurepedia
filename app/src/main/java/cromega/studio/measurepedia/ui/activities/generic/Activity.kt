@@ -1,6 +1,7 @@
 package cromega.studio.measurepedia.ui.activities.generic
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,6 +26,7 @@ abstract class Activity<VM: ActivityViewModel, SC: ActivityScreen<VM>>: Componen
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         tablesManager.instantiate(context = applicationContext)
         userInfo = UserInfo(context = applicationContext)
