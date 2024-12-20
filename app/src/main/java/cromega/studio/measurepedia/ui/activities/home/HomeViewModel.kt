@@ -196,7 +196,8 @@ class HomeViewModel(
             .personsManager
             .insert(
                 name = person.name,
-                alias = person.alias.ifBlank { null }
+                alias = person.alias.ifBlank { null },
+                defaultMetricSystemUnitId = userInfo.defaultMetricSystemUnitId
             )
             .run { requestUpdateOfPersons() }
     }

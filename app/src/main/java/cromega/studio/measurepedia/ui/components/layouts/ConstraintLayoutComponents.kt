@@ -13,12 +13,13 @@ import androidx.constraintlayout.compose.ConstraintLayoutScope
 @Composable
 inline fun CardConstraintLayout(
     modifier: Modifier = Modifier,
+    backgroundColor: Color,
     crossinline content: @Composable (ConstraintLayoutScope.() -> Unit)
 ) =
     ConstraintLayout(
         modifier =
             modifier
-                .background(color = Color.LightGray, shape = RoundedCornerShape(15.dp))
+                .background(color = backgroundColor, shape = RoundedCornerShape(15.dp))
                 .padding(horizontal = 20.dp, vertical = 15.dp),
         content = content
     )

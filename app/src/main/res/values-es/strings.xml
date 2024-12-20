@@ -38,6 +38,8 @@
     <string name="update_data">Actualizar Datos</string>
     <string name="set_as_default">Predeterminado</string>
     <string name="delete_unit">Eliminar</string>
+    <string name="metric_system_unit_name">Nombre de la Unidad</string>
+    <string name="metric_system_unit_abbreviation">Abreviacion de la Unidad</string>
     <string name="body_part_name">Nombre del Miembro</string>
     <string name="active">Activo</string>
     <string name="update_settings">Actualizar Ajustes</string>
@@ -52,4 +54,6 @@
     <string name="insufficient_body_parts">Miembros Insuficientes</string>
     <string name="insufficient_metric_systems_units">Unidades de Medida Insuficientes</string>
     <string name="insufficient_fields">Campos Insuficientes</string>
+    <string name="update_all_records_unit">Actualizar las unidades de \"Registros\"</string>
+    <string name="action_replace_all_records_units">Esta accion reemplazara todas las unidades de medida de los registros</string>
 </resources>

@@ -3,7 +3,6 @@ package cromega.studio.measurepedia.ui.activities.measures
 import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,9 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +22,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.Dimension
@@ -34,12 +31,13 @@ import cromega.studio.measurepedia.data.models.instances.Field
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.data.models.instances.Record
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
+import cromega.studio.measurepedia.ui.components.elements.FloatTextField
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
+import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
 import cromega.studio.measurepedia.ui.components.elements.TextSubtitle
 import cromega.studio.measurepedia.ui.components.elements.TextTitle
-import cromega.studio.measurepedia.ui.components.elements.VerticalArrowsIcon
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
 import cromega.studio.measurepedia.ui.components.layouts.Dropdown
 import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
@@ -49,23 +47,19 @@ import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 
 class MeasuresScreen(
     viewModel: MeasuresViewModel,
-    resources: Resources
+    resources: Resources,
+    darkTheme: Boolean
 ): ActivityScreen<MeasuresViewModel>(
     viewModel = viewModel,
-    resources = resources
+    resources = resources,
+    darkTheme = darkTheme
 ) {
-    override val screenModifier: Modifier =
-        Modifier.background(
-            color = Color(0xFF31308F),
-            shape = RectangleShape
-        )
-
     @Composable
     override fun Header() =
         GenericHeaderColumn(
             modifier =
                 Modifier.background(
-                    color = Color(0xFF31308F),
+                    color = contrastColor,
                     shape = RectangleShape
                 )
         ) {
@@ -73,7 +67,7 @@ class MeasuresScreen(
                 modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
+                    .background(color = contrastColor, shape = RoundedCornerShape(10.dp)),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -81,10 +75,10 @@ class MeasuresScreen(
 
                 SpacerVerticalSmall()
 
-                TextTitle(text = selectedPerson.name)
+                TextTitle(text = selectedPerson.name, textColor = mainColor)
 
                 if (selectedPerson.hasAlias)
-                    TextSubtitle(text = selectedPerson.alias)
+                    TextSubtitle(text = selectedPerson.alias, textColor = mainColor)
 
                 SpacerVerticalSmall()
             }
@@ -92,7 +86,10 @@ class MeasuresScreen(
 
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        FinalBackgroundBox {
+        FinalBackgroundBox(
+            backgroundColor = mainColor,
+            oppositeColor = contrastColor
+        ) {
             GenericBodyLazyColumn(
                 contentPadding = paddingValues
             ) {
@@ -105,9 +102,10 @@ class MeasuresScreen(
                     if (bodyPart.active)
                     {
                         CardConstraintLayout(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = secondaryColor
                         ) {
-                            val (bodyPartRef, separationRef, iconRef, fieldsRef) = createRefs()
+                            val (bodyPartRef, separationRef, fieldsRef) = createRefs()
 
                             Text(
                                 modifier =
@@ -128,23 +126,11 @@ class MeasuresScreen(
                                         top.linkTo(bodyPartRef.top)
                                         bottom.linkTo(bodyPartRef.bottom)
                                         start.linkTo(anchor = bodyPartRef.end, margin = 7.5.dp)
-                                        end.linkTo(anchor = iconRef.start, margin = 7.5.dp)
+                                        end.linkTo(anchor = parent.end, margin = 7.5.dp)
 
                                         width = Dimension.fillToConstraints
                                     },
                                 color = Color.White
-                            )
-
-                            Box(
-                                modifier =
-                                Modifier
-                                    .constrainAs(iconRef) {
-                                        top.linkTo(bodyPartRef.top)
-                                        bottom.linkTo(bodyPartRef.bottom)
-                                        end.linkTo(parent.end)
-                                    },
-                                contentAlignment = Alignment.Center,
-                                content = { VerticalArrowsIcon() }
                             )
 
                             Column (
@@ -189,33 +175,37 @@ class MeasuresScreen(
 
                                             Spacer(modifier = Modifier.weight(0.1f))
 
-                                            TextField(
+                                            FloatTextField(
                                                 modifier =
                                                 Modifier
                                                     .widthIn(max = 100.dp)
-                                                    .weight(0.83f)
-                                                    .onFocusChanged {focusState ->
-                                                        if (!focusState.isFocused)
-                                                        {
+                                                    .weight(0.8f)
+                                                    .onFocusChanged { focusState ->
+                                                        if (!focusState.isFocused) {
                                                             viewModel
-                                                                .updateRecordMeasureByPrintable(recordId = record.id)
+                                                                .updateRecordMeasureByPrintable(
+                                                                    recordId = record.id
+                                                                )
                                                         }
                                                     },
+                                                backgroundColor = mainColor,
+                                                textColor = contrastColor,
                                                 value = record.measurePrintable,
-                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                                 onValueChange = {userInput ->
                                                     viewModel
                                                         .updateRecordMeasurePrintable(
                                                             recordId = record.id,
                                                             newMeasurePrintable = userInput
                                                         )
-                                                },
-                                                singleLine = true,
-                                                maxLines = 1
+                                                }
                                             )
+
+                                            SpacerHorizontalSmall(modifier = Modifier.weight(0.2f))
 
                                             Dropdown(
                                                 modifier = Modifier.weight(0.6f),
+                                                backgroundColor = tertiaryColor,
+                                                textColor = mainColor,
                                                 expanded = viewModel.metricSystemsUnitsSelectorsExpanded[currentFieldGeneralIndex],
                                                 option = metricSystemUnit,
                                                 options = metricSystemsUnits.toTypedArray(),
@@ -248,7 +238,7 @@ class MeasuresScreen(
         GenericFooterRow(
             modifier =
             Modifier.background(
-                color = Color.White,
+                color = mainColor,
                 shape = RectangleShape
             )
         ) {
@@ -256,6 +246,13 @@ class MeasuresScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth(0.8f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = {
                     viewModel.updateData()
                     viewModel.openHomeActivity()

@@ -33,6 +33,8 @@
     <string name="update_settings">Update Settings</string>
     <string name="create_body_part">Create Body Part</string>
     <string name="update_metric_systems_units">Update Metric System Units</string>
+    <string name="metric_system_unit_name">Metric System Unit Name</string>
+    <string name="metric_system_unit_abbreviation">Unit Abbreviation</string>
     <string name="body_part_name">Body Part Name</string>
     <string name="field_name">Field Name</string>
     <string name="delete_person">Delete Person</string>
@@ -56,4 +58,6 @@
     <string name="insufficient_body_parts">Insufficient Body Parts</string>
     <string name="insufficient_fields">Insufficient Fields</string>
     <string name="insufficient_metric_systems_units">Insufficient Metric Systems Units</string>
+    <string name="update_all_records_unit">Update all \"Records Unit\"</string>
+    <string name="action_replace_all_records_units">This action will replace all records units by the default one</string>
 </resources>

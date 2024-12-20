@@ -26,16 +26,10 @@ class MetricSystemsUnitsManager(
                 abbreviation = abbreviation
             )
 
-    fun delete(id: Int)
+    fun delete(id: Int, defaultMetricSystemUnitId: Int)
     {
-        val metricSystemUnits: List<MetricSystemUnit> =
-            metricSystemsUnitsTable.readAll()
-
         val records: List<Record> =
             recordsTable.readAll()
-
-        val defaultMetricSystemUnit: MetricSystemUnit =
-            metricSystemUnits.find { it.id != id }!!
 
         records
             .forEach { record ->
@@ -46,13 +40,13 @@ class MetricSystemsUnitsManager(
                             personId = record.personId,
                             fieldId = record.fieldId,
                             measure = record.measure,
-                            metricSystemUnitId = defaultMetricSystemUnit.id
+                            metricSystemUnitId = defaultMetricSystemUnitId
                         )
             }
 
         metricSystemsUnitsTable.delete(id = id)
     }
 
-    fun deleteByIds(ids: List<Int>) =
-        ids.forEach { metricSystemUnitIndex -> delete(id = metricSystemUnitIndex) }
+    fun deleteByIds(ids: List<Int>, defaultMetricSystemUnitId: Int) =
+        ids.forEach { metricSystemUnitIndex -> delete(id = metricSystemUnitIndex, defaultMetricSystemUnitId = defaultMetricSystemUnitId) }
 }

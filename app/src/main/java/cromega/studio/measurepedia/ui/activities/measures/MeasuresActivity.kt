@@ -23,7 +23,8 @@ class MeasuresActivity : Activity<MeasuresViewModel, MeasuresScreen>()
         screen =
             MeasuresScreen(
                 viewModel = viewModel,
-                resources = resources
+                resources = resources,
+                darkTheme = userInfo.darkTheme
             )
     }
 

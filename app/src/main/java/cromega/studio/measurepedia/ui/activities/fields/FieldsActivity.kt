@@ -24,6 +24,7 @@ class FieldsActivity : Activity<FieldsViewModel, FieldsScreen>()
             FieldsScreen(
                 viewModel = viewModel,
                 resources = resources,
+                darkTheme = userInfo.darkTheme,
                 showToastFunction = ::showInsufficientToast
             )
     }

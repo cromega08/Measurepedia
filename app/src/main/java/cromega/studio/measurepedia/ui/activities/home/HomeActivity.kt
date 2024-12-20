@@ -29,7 +29,8 @@ class HomeActivity : Activity<HomeViewModel, HomeScreen>()
         screen =
             HomeScreen(
                 viewModel = viewModel,
-                resources = resources
+                resources = resources,
+                darkTheme = userInfo.darkTheme
             )
     }
 

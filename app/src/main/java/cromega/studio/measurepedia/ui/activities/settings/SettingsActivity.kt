@@ -21,7 +21,8 @@ class SettingsActivity : Activity<SettingsViewModel, SettingsScreen>()
         screen =
             SettingsScreen(
                 viewModel = viewModel,
-                resources = resources
+                resources = resources,
+                darkTheme = userInfo.darkTheme
             )
     }
 

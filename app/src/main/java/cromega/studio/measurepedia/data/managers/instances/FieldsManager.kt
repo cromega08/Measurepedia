@@ -5,7 +5,6 @@ import cromega.studio.measurepedia.data.database.tables.instances.MetricSystemsU
 import cromega.studio.measurepedia.data.database.tables.instances.PersonsTable
 import cromega.studio.measurepedia.data.database.tables.instances.RecordsTable
 import cromega.studio.measurepedia.data.models.instances.Field
-import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.extensions.extractIds
 import cromega.studio.measurepedia.extensions.isNeitherNullOrEmpty
 import cromega.studio.measurepedia.extensions.isNotNull
@@ -42,7 +41,7 @@ class FieldsManager(
         }
     }
 
-    fun insert(name: String, bodyPartId: Int, active: Boolean? = null)
+    fun insert(name: String, bodyPartId: Int, active: Boolean? = null, defaultMetricSystemUnitId: Int)
     {
         val insertedFieldId: Long = fieldsTable
             .insert(
@@ -50,8 +49,6 @@ class FieldsManager(
                 bodyPartId = bodyPartId,
                 active = active
             )
-
-        val defaultMetricSystemUnit: MetricSystemUnit = metricSystemsUnitsTable.readAll()[0]
 
         if (insertedFieldId > 0)
         {
@@ -62,7 +59,7 @@ class FieldsManager(
                         .insert(
                             personId = person.id,
                             fieldId = insertedFieldId.toInt(),
-                            metricSystemUnitId = defaultMetricSystemUnit.id
+                            metricSystemUnitId = defaultMetricSystemUnitId
                         )
                 }
         }

@@ -33,6 +33,7 @@ fun GenericDialog(
 @Composable
 fun ColumnOrderedDialog(
     columnModifier: Modifier = Modifier,
+    backgroundColor: Color,
     onDismissRequest: () -> Unit,
     properties: DialogProperties =
         DialogProperties(
@@ -51,7 +52,7 @@ fun ColumnOrderedDialog(
             modifier =
                 columnModifier
                     .padding(all = 10.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(20.dp)),
+                    .background(color = backgroundColor, shape = RoundedCornerShape(20.dp)),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
             content = content

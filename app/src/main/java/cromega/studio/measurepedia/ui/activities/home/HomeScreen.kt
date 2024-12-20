@@ -16,19 +16,18 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +39,6 @@ import cromega.studio.measurepedia.enums.MeasuredOrder
 import cromega.studio.measurepedia.extensions.atLeastOneIs
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
-import cromega.studio.measurepedia.ui.components.layouts.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.elements.EditIcon
 import cromega.studio.measurepedia.ui.components.elements.FaceIcon
 import cromega.studio.measurepedia.ui.components.elements.KebabMenuIcon
@@ -50,6 +48,7 @@ import cromega.studio.measurepedia.ui.components.elements.SettingsIcon
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalMedium
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
+import cromega.studio.measurepedia.ui.components.elements.StringTextField
 import cromega.studio.measurepedia.ui.components.elements.TextLeftAligned
 import cromega.studio.measurepedia.ui.components.elements.TextRightAligned
 import cromega.studio.measurepedia.ui.components.elements.TextSmall
@@ -58,6 +57,7 @@ import cromega.studio.measurepedia.ui.components.elements.TextTitle
 import cromega.studio.measurepedia.ui.components.elements.VerticalIconButton
 import cromega.studio.measurepedia.ui.components.elements.WarningIcon
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
+import cromega.studio.measurepedia.ui.components.layouts.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.layouts.Dropdown
 import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
@@ -66,19 +66,16 @@ import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 
 class HomeScreen(
     viewModel: HomeViewModel,
-    resources: Resources
+    resources: Resources,
+    darkTheme: Boolean
 ): ActivityScreen<HomeViewModel>(
     viewModel = viewModel,
-    resources = resources
+    resources = resources,
+    darkTheme = darkTheme
 ) {
-    override val screenModifier: Modifier =
-        Modifier
-
-
     @Composable
     override fun Screen() =
         Scaffold(
-            modifier = screenModifier,
             topBar = { Header() },
             content = {
                 Main(it)
@@ -99,7 +96,7 @@ class HomeScreen(
         GenericHeaderColumn(
             modifier =
             Modifier.background(
-                color = Color(0xFF31308F),
+                color = contrastColor,
                 shape = RectangleShape
             )
         ) {
@@ -107,6 +104,8 @@ class HomeScreen(
 
             SearchBar(
                 modifier = Modifier.fillMaxWidth(),
+                backgroundColor = mainColor,
+                textColor = contrastColor,
                 hint = resources.getString(R.string.search),
                 query = viewModel.searchText,
                 onQueryChange = { viewModel.searchText = it },
@@ -119,7 +118,7 @@ class HomeScreen(
                 modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = Color.White, shape = RoundedCornerShape(5.dp))
+                    .background(color = secondaryColor, shape = RoundedCornerShape(5.dp))
                     .padding(start = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -128,6 +127,8 @@ class HomeScreen(
 
                 Dropdown(
                     expanded = viewModel.dateFilterExpanded,
+                    backgroundColor = tertiaryColor,
+                    textColor = mainColor,
                     option = viewModel.dateOrderOption,
                     options = DateOrder.asArray(),
                     extractOptionName = { resources.getString(it.textStringId) },
@@ -143,6 +144,8 @@ class HomeScreen(
 
                 Dropdown(
                     expanded = viewModel.measuredFilterExpanded,
+                    backgroundColor = tertiaryColor,
+                    textColor = mainColor,
                     option = viewModel.measuredOrderOption,
                     options = MeasuredOrder.asArray(),
                     extractOptionName = { resources.getString(it.textStringId) },
@@ -159,7 +162,10 @@ class HomeScreen(
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        FinalBackgroundBox {
+        FinalBackgroundBox(
+            backgroundColor = mainColor,
+            oppositeColor = contrastColor
+        ) {
             GenericBodyLazyColumn(
                 contentPadding = paddingValues
             ) {
@@ -184,7 +190,8 @@ class HomeScreen(
                                     onLongClick = { viewModel.setSelectedPersonOnly(person = person) },
                                     onDoubleClick = { viewModel.setSelectedPersonOnly(person = person) },
                                     onClick = { viewModel.openMeasuresActivity(person = person) }
-                                )
+                                ),
+                            backgroundColor = secondaryColor
                         ) {
                             val (nameRef, aliasRef, optionsRef, measuredRef, updateRef, middleSpaceRef) = createRefs()
 
@@ -250,8 +257,8 @@ class HomeScreen(
                                         end.linkTo(parent.end)
                                     },
                                 text =
-                                if (person.measured) resources.getString(R.string.measured)
-                                else resources.getString(R.string.not_measured)
+                                    if (person.measured) resources.getString(R.string.measured)
+                                    else resources.getString(R.string.not_measured)
                             )
                         }
                     }
@@ -264,7 +271,7 @@ class HomeScreen(
         GenericFooterRow(
             modifier =
             Modifier.background(
-                color = Color.White,
+                color = mainColor,
                 shape = RectangleShape
             )
         ) {
@@ -272,7 +279,7 @@ class HomeScreen(
                 modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
+                    .background(color = secondaryColor, shape = RoundedCornerShape(10.dp)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -311,6 +318,8 @@ class HomeScreen(
             Modifier
                 .offset(y = 90.dp)
                 .scale(1.5f),
+            containerColor = tertiaryColor,
+            contentColor = secondaryColor,
             elevation = FloatingActionButtonDefaults.elevation(0.dp),
             onClick = { viewModel.openEditorDialogWithEmptyPerson() },
             content = { AddIcon() }
@@ -320,6 +329,7 @@ class HomeScreen(
     private fun PersonOptionsDialog() =
         ColumnOrderedDialog(
             columnModifier = Modifier.fillMaxWidth(),
+            backgroundColor = secondaryColor,
             onDismissRequest = { viewModel.selectedPerson = null }
         ) {
             val person: Person = viewModel.selectedPerson!!
@@ -329,14 +339,16 @@ class HomeScreen(
             TextTitle(
                 modifier = Modifier.fillMaxWidth(0.7f),
                 textAlign = TextAlign.Center,
-                text = person.name
+                text = person.name,
+                textColor = contrastColor
             )
 
             if (person.hasAlias)
                 TextSubtitle(
                     modifier = Modifier.fillMaxWidth(0.7f),
                     textAlign = TextAlign.Center,
-                    text = person.alias
+                    text = person.alias,
+                    textColor = contrastColor
                 )
 
             SpacerVerticalSmall()
@@ -347,6 +359,13 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
+                buttonColors =
+                    ButtonColors(
+                        containerColor = tertiaryColor,
+                        contentColor = mainColor,
+                        disabledContentColor = tertiaryColor,
+                        disabledContainerColor = mainColor
+                    ),
                 onClick = { viewModel.setEditingPersonOnly(person = person) }
             ) {
                 Text(text = resources.getString(R.string.update_person_info))
@@ -358,6 +377,13 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = { viewModel.openMeasuresActivity(person = person) }
             ) {
                 Text(text = resources.getString(R.string.take_measures))
@@ -369,6 +395,13 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = { viewModel.sharePersonInfo(person = person) }
             ) {
                 Text(text = resources.getString(R.string.share))
@@ -380,6 +413,13 @@ class HomeScreen(
                 modifier = Modifier
                     .scale(1.25f)
                     .fillMaxWidth(0.7f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = { viewModel.setDeletingPersonOnly(person = person) }
             ) {
                 Text(text = resources.getString(R.string.delete_person))
@@ -392,6 +432,7 @@ class HomeScreen(
     private fun PersonEditorDialog() =
         ColumnOrderedDialog(
             columnModifier = Modifier.fillMaxWidth(),
+            backgroundColor = secondaryColor,
             onDismissRequest = { viewModel.editingPerson = null }
         ) {
             val person: Person = viewModel.editingPerson!!
@@ -406,26 +447,25 @@ class HomeScreen(
 
             SpacerVerticalSmall()
 
-            TextField(
+            StringTextField(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                backgroundColor = mainColor,
+                textColor = contrastColor,
+                hasError = missingName,
+                labelText = resources.getString(R.string.person_name),
                 value = person.name,
                 onValueChange = { userInput -> viewModel.updateEditingPersonName(newName = userInput) },
-                label = { Text(text = resources.getString(R.string.person_name)) },
-                isError = missingName,
-                supportingText = {
-                    if (missingName)
-                        Text(
-                            text = resources.getString(R.string.required),
-                            color = Color.Red
-                        )
-                }
             )
 
             SpacerVerticalSmall()
 
-            TextField(
+            StringTextField(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                backgroundColor = mainColor,
+                textColor = contrastColor,
+                labelText = resources.getString(R.string.person_alias_optional),
                 value = person.alias,
                 onValueChange = { userInput -> viewModel.updateEditingPersonAlias(newAlias = userInput) },
-                label = { Text(text = resources.getString(R.string.person_alias_optional)) }
             )
 
             SpacerVerticalSmall()
@@ -435,9 +475,13 @@ class HomeScreen(
                 else R.string.update_person
 
             RoundedCornerButton(
-                modifier =
-                Modifier
-                    .fillMaxWidth(0.8f),
+                modifier = Modifier.fillMaxWidth(0.8f),
+                buttonColors = ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = {
                     if (viewModel.editingPerson!!.name.isBlank())
                         viewModel.editingPersonMissingName = true
@@ -463,12 +507,19 @@ class HomeScreen(
     @Composable
     private fun PersonDeleterDialog() =
         AlertDialog(
+            containerColor = secondaryColor,
+            iconContentColor = contrastColor,
+            textContentColor = contrastColor,
             onDismissRequest = { viewModel.deletingPerson = null },
             confirmButton = {
                 RoundedCornerButton(
-                    modifier =
-                    Modifier
-                        .fillMaxWidth(0.48f),
+                    modifier = Modifier.fillMaxWidth(0.48f),
+                    buttonColors = ButtonColors(
+                        containerColor = tertiaryColor,
+                        contentColor = mainColor,
+                        disabledContentColor = tertiaryColor,
+                        disabledContainerColor = mainColor
+                    ),
                     onClick = { viewModel.finishDeleteDeletingPerson() }
                 ) {
                     Column {
@@ -485,9 +536,13 @@ class HomeScreen(
             },
             dismissButton = {
                 RoundedCornerButton(
-                    modifier =
-                    Modifier
-                        .fillMaxWidth(0.48f),
+                    modifier = Modifier.fillMaxWidth(0.48f),
+                    buttonColors = ButtonColors(
+                        containerColor = tertiaryColor,
+                        contentColor = mainColor,
+                        disabledContentColor = tertiaryColor,
+                        disabledContainerColor = mainColor
+                    ),
                     onClick = { viewModel.setSelectedPersonOnly(person = viewModel.deletingPerson!!) }
                 ) {
                     Column {

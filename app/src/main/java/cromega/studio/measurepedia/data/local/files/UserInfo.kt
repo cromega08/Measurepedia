@@ -14,12 +14,15 @@ class UserInfo(
 
     var language: Languages
     var darkTheme: Boolean
+    var defaultMetricSystemUnitId: Int
 
     init {
         try { readJSONFile() }
-        catch (e: Exception) {
+        catch (e: Exception)
+        {
             Locale.getDefault()
-            updateUserInfo(jsonString = generateDefaultUserInfoJSON()) }
+            updateUserInfo(jsonString = generateDefaultUserInfoJSON())
+        }
         finally {
             val json: JSONObject = readJSONFile()
             language =
@@ -28,6 +31,7 @@ class UserInfo(
                         localeAcronym = json.get("language") as String
                     )
             darkTheme = json.get("dark_theme") as Boolean
+            defaultMetricSystemUnitId = json.get("default_metric_system_unit_id") as Int
         }
     }
 
@@ -40,7 +44,7 @@ class UserInfo(
         val selectedLanguage: Languages =
             Languages.findFromLocaleAcronym(localeAcronym = locale)
 
-        return """{"language":"${selectedLanguage.localeAcronym}","dark_theme":false}"""
+        return """{"language":"${selectedLanguage.localeAcronym}","dark_theme":false,"default_metric_system_unit_id":1}"""
     }
 
     private fun updateUserInfo(jsonString: String) =
@@ -57,5 +61,5 @@ class UserInfo(
     }
 
     override fun toString(): String =
-        """{"language":"${language.localeAcronym}","dark_theme":$darkTheme}"""
+        """{"language":"${language.localeAcronym}","dark_theme":$darkTheme,"default_metric_system_unit_id":$defaultMetricSystemUnitId}"""
 }

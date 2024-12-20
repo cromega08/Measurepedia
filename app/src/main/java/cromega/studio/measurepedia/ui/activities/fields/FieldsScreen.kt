@@ -12,14 +12,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,14 +38,15 @@ import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.ui.activities.generic.ActivityScreen
 import cromega.studio.measurepedia.ui.components.elements.AddIcon
 import cromega.studio.measurepedia.ui.components.elements.ClearIcon
-import cromega.studio.measurepedia.ui.components.layouts.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.elements.PersonIcon
 import cromega.studio.measurepedia.ui.components.elements.RoundedCornerButton
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalLine
 import cromega.studio.measurepedia.ui.components.elements.SpacerHorizontalSmall
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalMedium
 import cromega.studio.measurepedia.ui.components.elements.SpacerVerticalSmall
+import cromega.studio.measurepedia.ui.components.elements.StringTextField
 import cromega.studio.measurepedia.ui.components.layouts.CardConstraintLayout
+import cromega.studio.measurepedia.ui.components.layouts.ColumnOrderedDialog
 import cromega.studio.measurepedia.ui.components.layouts.FinalBackgroundBox
 import cromega.studio.measurepedia.ui.components.layouts.GenericBodyLazyColumn
 import cromega.studio.measurepedia.ui.components.layouts.GenericFooterRow
@@ -52,21 +55,16 @@ import cromega.studio.measurepedia.ui.components.layouts.GenericHeaderColumn
 class FieldsScreen(
     viewModel: FieldsViewModel,
     resources: Resources,
+    darkTheme: Boolean,
     private val showToastFunction: (Int) -> Unit
 ): ActivityScreen<FieldsViewModel>(
     viewModel = viewModel,
-    resources = resources
+    resources = resources,
+    darkTheme = darkTheme
 ) {
-    override val screenModifier =
-        Modifier.background(
-            color = Color.White,
-            shape = RectangleShape
-        )
-
     @Composable
     override fun Screen() =
         Scaffold(
-            modifier = screenModifier,
             topBar = { Header() },
             content = {
                 Main(it)
@@ -82,18 +80,24 @@ class FieldsScreen(
             modifier =
                 Modifier
                     .background(
-                        color = Color(0xFF31308F),
+                        color = contrastColor,
                         shape = RectangleShape
                     )
         ) {
             val selectedTabIndex: Int = viewModel.tabIndex
 
-            TabRow(selectedTabIndex = selectedTabIndex) {
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = contrastColor,
+                contentColor = mainColor
+            ) {
                 viewModel.tabs.forEachIndexed { index, title ->
                     Tab(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp, vertical = 5.dp),
+                        selectedContentColor = secondaryColor,
+                        unselectedContentColor = secondaryColor,
                         selected = (selectedTabIndex == index),
                         onClick = { viewModel.tabIndex = index },
                         content = { Text(text = resources.getString(title)) }
@@ -104,7 +108,10 @@ class FieldsScreen(
 
     @Composable
     override fun Main(paddingValues: PaddingValues) =
-        FinalBackgroundBox {
+        FinalBackgroundBox(
+            backgroundColor = mainColor,
+            oppositeColor = contrastColor
+        ) {
             GenericBodyLazyColumn(
                 contentPadding = paddingValues
             ){
@@ -121,12 +128,21 @@ class FieldsScreen(
         GenericFooterRow(
             modifier =
                 Modifier.background(
-                    color = Color.White,
+                    color = mainColor,
                     shape = RectangleShape
                 )
         ) {
             RoundedCornerButton(
-                modifier = Modifier.weight(0.8f),
+                modifier =
+                    Modifier
+                        .weight(0.8f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = {
                     viewModel.updateData()
                     viewModel.openHomeActivity()
@@ -147,7 +163,16 @@ class FieldsScreen(
             SpacerHorizontalSmall(modifier = Modifier.weight(0.1f))
 
             RoundedCornerButton(
-                modifier = Modifier.weight(0.2f),
+                modifier =
+                    Modifier
+                        .weight(0.2f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = {
                     if (viewModel.tabIndex == 0) viewModel.openEditorDialogWithEmptyBodyPart()
                     else viewModel.createMetricSystemUnit()
@@ -171,7 +196,8 @@ class FieldsScreen(
                 val bodyPart: BodyPart = bodyParts[bodyPartIndex]
 
                 CardConstraintLayout(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    backgroundColor = secondaryColor
                 ) {
                     val (bodyPartRef, bodyPartActiveRef, deleteBodyPartRef, separationRef, fieldsRef, createFieldRef) = createRefs()
 
@@ -185,7 +211,10 @@ class FieldsScreen(
                                 end.linkTo(anchor = bodyPartActiveRef.start, margin = 5.dp)
                             }
                     ) {
-                        TextField(
+                        StringTextField(
+                            backgroundColor = mainColor,
+                            textColor = contrastColor,
+                            labelText = resources.getString(R.string.body_part_name),
                             value = bodyPart.name,
                             onValueChange = { userInput ->
                                 viewModel
@@ -193,9 +222,7 @@ class FieldsScreen(
                                         bodyPartIndex = bodyPartIndex,
                                         newName = userInput
                                     )
-                            },
-                            singleLine = true,
-                            maxLines = 1
+                            }
                         )
                     }
 
@@ -207,6 +234,24 @@ class FieldsScreen(
                                 bottom.linkTo(bodyPartRef.bottom)
                                 end.linkTo(anchor = deleteBodyPartRef.start, margin = 5.dp)
                             },
+                        colors = SwitchColors(
+                            checkedThumbColor = mainColor,
+                            checkedTrackColor = secondaryColor,
+                            checkedBorderColor = contrastColor,
+                            checkedIconColor = contrastColor,
+                            uncheckedThumbColor = mainColor,
+                            uncheckedTrackColor = tertiaryColor,
+                            uncheckedBorderColor = contrastColor,
+                            uncheckedIconColor = contrastColor,
+                            disabledCheckedThumbColor = mainColor,
+                            disabledCheckedTrackColor = secondaryColor,
+                            disabledCheckedBorderColor = contrastColor,
+                            disabledCheckedIconColor = contrastColor,
+                            disabledUncheckedThumbColor = mainColor,
+                            disabledUncheckedTrackColor = tertiaryColor,
+                            disabledUncheckedBorderColor = contrastColor,
+                            disabledUncheckedIconColor = contrastColor
+                        ),
                         checked = bodyPart.active,
                         onCheckedChange = {
                             viewModel
@@ -225,6 +270,12 @@ class FieldsScreen(
                                 bottom.linkTo(bodyPartActiveRef.bottom)
                                 end.linkTo(anchor = parent.end, margin = 7.5.dp)
                             },
+                        colors = IconButtonColors(
+                            containerColor = tertiaryColor,
+                            contentColor = mainColor,
+                            disabledContainerColor = tertiaryColor,
+                            disabledContentColor = mainColor
+                        ),
                         onClick = {
                             if (viewModel.validateBodyParts())
                                 viewModel.removeBodyPartAndPropagate(bodyPart = bodyPart)
@@ -282,7 +333,10 @@ class FieldsScreen(
                                             end.linkTo(anchor = fieldActiveRef.start, margin = 8.dp)
                                         }
                                 ) {
-                                    TextField(
+                                    StringTextField(
+                                        backgroundColor = mainColor,
+                                        textColor = contrastColor,
+                                        labelText = resources.getString(R.string.field_name),
                                         value = field.name,
                                         onValueChange = { userInput ->
                                             viewModel
@@ -290,9 +344,7 @@ class FieldsScreen(
                                                     fieldIndex = generalFieldIndex,
                                                     newName = userInput
                                                 )
-                                        },
-                                        singleLine = true,
-                                        maxLines = 1
+                                        }
                                     )
                                 }
 
@@ -304,6 +356,24 @@ class FieldsScreen(
                                             bottom.linkTo(fieldRef.bottom)
                                             end.linkTo(anchor = deleteFieldRef.start, margin = 5.dp)
                                         },
+                                    colors = SwitchColors(
+                                        checkedThumbColor = mainColor,
+                                        checkedTrackColor = secondaryColor,
+                                        checkedBorderColor = contrastColor,
+                                        checkedIconColor = contrastColor,
+                                        uncheckedThumbColor = mainColor,
+                                        uncheckedTrackColor = tertiaryColor,
+                                        uncheckedBorderColor = contrastColor,
+                                        uncheckedIconColor = contrastColor,
+                                        disabledCheckedThumbColor = mainColor,
+                                        disabledCheckedTrackColor = secondaryColor,
+                                        disabledCheckedBorderColor = contrastColor,
+                                        disabledCheckedIconColor = contrastColor,
+                                        disabledUncheckedThumbColor = mainColor,
+                                        disabledUncheckedTrackColor = tertiaryColor,
+                                        disabledUncheckedBorderColor = contrastColor,
+                                        disabledUncheckedIconColor = contrastColor
+                                    ),
                                     checked = field.active,
                                     onCheckedChange = { isChecked ->
                                         if (isChecked && !bodyPart.active)
@@ -333,6 +403,12 @@ class FieldsScreen(
                                             bottom.linkTo(fieldActiveRef.bottom)
                                             end.linkTo(anchor = parent.end)
                                         },
+                                    colors = IconButtonColors(
+                                        containerColor = tertiaryColor,
+                                        contentColor = mainColor,
+                                        disabledContainerColor = tertiaryColor,
+                                        disabledContentColor = mainColor
+                                    ),
                                     onClick = {
                                         if (viewModel.validateFields(bodyPart = bodyPart))
                                             viewModel.removeField(field = field)
@@ -355,6 +431,13 @@ class FieldsScreen(
 
                                 width = Dimension.fillToConstraints
                             },
+                        buttonColors =
+                        ButtonColors(
+                            containerColor = tertiaryColor,
+                            contentColor = mainColor,
+                            disabledContentColor = tertiaryColor,
+                            disabledContainerColor = mainColor
+                        ),
                         onClick = { viewModel.createField(bodyPartId = bodyPart.id) }
                     ) { AddIcon() }
                 }
@@ -371,7 +454,7 @@ class FieldsScreen(
                 Column(
                     modifier =
                     Modifier
-                        .background(color = Color.LightGray, shape = RoundedCornerShape(15.dp))
+                        .background(color = secondaryColor, shape = RoundedCornerShape(15.dp))
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp, vertical = 5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -381,10 +464,13 @@ class FieldsScreen(
 
                     SpacerVerticalMedium()
 
-                    TextField(
+                    StringTextField(
                         modifier =
-                            Modifier
-                                .fillMaxWidth(fraction = widthFraction),
+                        Modifier
+                            .fillMaxWidth(fraction = widthFraction),
+                        backgroundColor = mainColor,
+                        textColor = contrastColor,
+                        labelText = resources.getString(R.string.metric_system_unit_name),
                         value = metricSystemUnit.name,
                         onValueChange = { userInput ->
                             viewModel
@@ -397,10 +483,14 @@ class FieldsScreen(
 
                     SpacerVerticalSmall()
 
-                    TextField(
+                    StringTextField(
                         modifier =
-                            Modifier
-                                .fillMaxWidth(fraction = widthFraction),
+                        Modifier
+                            .fillMaxWidth(fraction = widthFraction),
+                        backgroundColor = mainColor,
+                        textColor = contrastColor,
+                        labelText = resources.getString(R.string.metric_system_unit_abbreviation),
+                        maxCharacters = 7,
                         value = metricSystemUnit.abbreviation,
                         onValueChange = { userInput ->
                             viewModel
@@ -415,23 +505,9 @@ class FieldsScreen(
                     SpacerHorizontalLine(
                         modifier = Modifier.fillMaxWidth(widthFraction),
                         height = 2.5.dp,
-                        color = Color.White
+                        color = tertiaryColor
                     )
-
-                    Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth(fraction = widthFraction - 0.1f),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = resources.getString(R.string.set_as_default))
-
-                        RadioButton(
-                            selected = false,
-                            onClick = { /*TODO*/ }
-                        )
-                    }
+                    SpacerVerticalSmall()
 
                     Row(
                         modifier =
@@ -440,7 +516,45 @@ class FieldsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = resources.getString(R.string.delete_unit))
+                        Text(text = resources.getString(R.string.set_as_default), color = contrastColor)
+
+                        Switch(
+                            colors = SwitchColors(
+                                checkedThumbColor = mainColor,
+                                checkedTrackColor = secondaryColor,
+                                checkedBorderColor = contrastColor,
+                                checkedIconColor = contrastColor,
+                                uncheckedThumbColor = mainColor,
+                                uncheckedTrackColor = tertiaryColor,
+                                uncheckedBorderColor = contrastColor,
+                                uncheckedIconColor = contrastColor,
+                                disabledCheckedThumbColor = mainColor,
+                                disabledCheckedTrackColor = secondaryColor,
+                                disabledCheckedBorderColor = contrastColor,
+                                disabledCheckedIconColor = contrastColor,
+                                disabledUncheckedThumbColor = mainColor,
+                                disabledUncheckedTrackColor = tertiaryColor,
+                                disabledUncheckedBorderColor = contrastColor,
+                                disabledUncheckedIconColor = contrastColor
+                            ),
+                            checked = viewModel.defaultMetricSystemUnitId == metricSystemUnit.id,
+                            onCheckedChange = {
+                                viewModel.defaultMetricSystemUnitId = metricSystemUnit.id
+                                viewModel.defaultMetricSystemUnitIndex = metricSystemUnitIndex
+                            }
+                        )
+                    }
+
+                    SpacerVerticalSmall()
+
+                    Row(
+                        modifier =
+                        Modifier
+                            .fillMaxWidth(fraction = widthFraction - 0.1f),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = resources.getString(R.string.delete_unit), color = contrastColor)
 
                         FilledIconButton(
                             onClick = {
@@ -448,6 +562,12 @@ class FieldsScreen(
                                     viewModel.removeMetricSystemUnit(metricSystemUnit = metricSystemUnit)
                                 else showToastFunction(R.string.insufficient_metric_systems_units)
                                       },
+                            colors = IconButtonColors(
+                                containerColor = tertiaryColor,
+                                contentColor = mainColor,
+                                disabledContainerColor = tertiaryColor,
+                                disabledContentColor = mainColor
+                            ),
                             content = { ClearIcon() }
                         )
                     }
@@ -460,6 +580,7 @@ class FieldsScreen(
     @Composable
     private fun BodyPartEditorDialog() =
         ColumnOrderedDialog(
+            backgroundColor = secondaryColor,
             columnModifier = Modifier.fillMaxWidth(),
             onDismissRequest = { viewModel.editingBodyPart = null }
         ) {
@@ -475,21 +596,15 @@ class FieldsScreen(
 
             SpacerVerticalSmall()
 
-            TextField(
+            StringTextField(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                backgroundColor = mainColor,
+                textColor = contrastColor,
+                hasError = missingName,
+                labelText = resources.getString(R.string.body_part_name),
                 value = bodyPart.name,
                 onValueChange = { userInput -> viewModel.updateEditingBodyPartName(newName = userInput) },
-                label = { Text(text = resources.getString(R.string.person_name)) },
-                isError = missingName,
-                supportingText = {
-                    if (missingName)
-                        Text(
-                            text = resources.getString(R.string.required),
-                            color = Color.Red
-                        )
-                }
             )
-
-            SpacerVerticalSmall()
 
             Row(
                 modifier = Modifier.fillMaxWidth(0.7f),
@@ -509,6 +624,13 @@ class FieldsScreen(
             RoundedCornerButton(
                 modifier =
                 Modifier.fillMaxWidth(0.8f),
+                buttonColors =
+                ButtonColors(
+                    containerColor = tertiaryColor,
+                    contentColor = mainColor,
+                    disabledContentColor = tertiaryColor,
+                    disabledContainerColor = mainColor
+                ),
                 onClick = {
                     if (viewModel.editingBodyPart!!.name.isBlank())
                         viewModel.editingBodyPartNameMissing = true

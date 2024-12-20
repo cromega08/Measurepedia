@@ -36,6 +36,17 @@ class SettingsViewModel(
         get() = darkThemeState.value
         set(value) { darkThemeState.value = value }
 
+    private val updateRecordsDialogOpenState: MutableState<Boolean> = mutableStateOf(false)
+
+    var updateRecordsDialogOpen: Boolean
+        get() = updateRecordsDialogOpenState.value
+        set(value) { updateRecordsDialogOpenState.value = value }
+
+    fun invertUpdateRecordsDialogOpen()
+    {
+        updateRecordsDialogOpen = !updateRecordsDialogOpen
+    }
+
     fun invertDarkTheme()
     {
         darkTheme = !darkTheme
@@ -45,6 +56,13 @@ class SettingsViewModel(
     {
         languageDropdownExpanded = !languageDropdownExpanded
     }
+
+    fun updateAllRecordsMetricSystemUnitIdToDefault() =
+        tablesManager
+            .recordsManager
+            .updateAllRecordsMetricSystemUnitId(
+                metricSystemUnitId = userInfo.defaultMetricSystemUnitId
+            )
 
     fun updateData()
     {

@@ -63,6 +63,45 @@ class RecordsManager(
                 metricSystemUnitId = metricSystemUnitId
             )
 
+    fun updateRecordsRequiringDefaultMetricSystemUnitId(metricSystemUnitId: Int)
+    {
+        val records: List<Record> = recordsTable.readAll()
+
+        records
+            .forEach { record ->
+                if (record.metricSystemUnitId == 0)
+                {
+                    record.metricSystemUnitId = metricSystemUnitId
+
+                    update(
+                        id = record.id,
+                        personId = record.personId,
+                        fieldId = record.fieldId,
+                        measure = record.measure,
+                        metricSystemUnitId = record.metricSystemUnitId
+                    )
+                }
+            }
+    }
+
+    fun updateAllRecordsMetricSystemUnitId(metricSystemUnitId: Int)
+    {
+        val records: List<Record> = recordsTable.readAll()
+
+        records
+            .forEach { record ->
+                record.metricSystemUnitId = metricSystemUnitId
+
+                update(
+                    id = record.id,
+                    personId = record.personId,
+                    fieldId = record.fieldId,
+                    measure = record.measure,
+                    metricSystemUnitId = record.metricSystemUnitId
+                )
+            }
+    }
+
     fun delete(id: Int) = recordsTable.delete(id = id)
 
     fun deleteByFieldsIds(fieldIds: List<Int>) =

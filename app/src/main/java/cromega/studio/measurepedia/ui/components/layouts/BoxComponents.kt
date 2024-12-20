@@ -27,6 +27,8 @@ import cromega.studio.measurepedia.ui.components.elements.VerticalArrowsIcon
 @Composable
 fun <T> Dropdown(
     modifier: Modifier = Modifier,
+    backgroundColor: Color,
+    textColor: Color = Color.Unspecified,
     expanded: Boolean = false,
     option: T,
     options: Array<T>,
@@ -37,7 +39,7 @@ fun <T> Dropdown(
     Box(
         modifier =
         modifier
-            .background(color = Color.LightGray, shape = RoundedCornerShape(5.dp))
+            .background(color = backgroundColor, shape = RoundedCornerShape(5.dp))
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clickable(onClick = onClickMenu),
         contentAlignment = Alignment.Center
@@ -46,17 +48,20 @@ fun <T> Dropdown(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextSmall( text = extractOptionName(option))
+            TextSmall( text = extractOptionName(option), textColor = textColor)
             VerticalArrowsIcon(arrowUp = expanded)
         }
 
         DropdownMenu(
+            modifier =
+                Modifier
+                    .background(color = backgroundColor),
             expanded = expanded,
             onDismissRequest = onClickMenu
         ) {
             options.forEach {
                 DropdownMenuItem(
-                    text = { Text(text = extractOptionName(it)) },
+                    text = { Text(text = extractOptionName(it), color = textColor) },
                     onClick = { onOptionSelected(it) }
                 )
             }
@@ -65,24 +70,26 @@ fun <T> Dropdown(
 
 @Composable
 fun FinalBackgroundBox(
+    backgroundColor: Color,
+    oppositeColor: Color,
     content: @Composable (BoxScope.() -> Unit)
 ) =
     Box(
         modifier =
         Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .drawBehind {
                 val canvasWidth = size.width
                 val canvasHeight = size.height
 
                 drawRect(
-                    color = Color(0xFF31308F),
+                    color = oppositeColor,
                     size = Size(canvasWidth, (canvasHeight / 7) * 3)
                 )
 
                 drawArc(
-                    color = Color.White,
+                    color = backgroundColor,
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,

@@ -25,13 +25,22 @@ class FieldsViewModel(
     userInfo = userInfo,
     resources = resources
 ) {
+    private val defaultMetricSystemUnitIdState: MutableState<Int> = mutableIntStateOf(userInfo.defaultMetricSystemUnitId)
+
+    var defaultMetricSystemUnitId: Int
+        get() = defaultMetricSystemUnitIdState.value
+        set(value) { defaultMetricSystemUnitIdState.value = value }
+
     val tabs: Array<Int> = arrayOf(R.string.fields, R.string.metric_systems)
 
     private val tabIndexState: MutableState<Int> = mutableIntStateOf(0)
 
     var tabIndex: Int
         get() = tabIndexState.value
-        set(value) { tabIndexState.value = value }
+        set(value) {
+            tabIndexState.value = value
+            refreshAllData()
+        }
 
     private val deletedBodyPartsIds: MutableList<Int> = mutableListOf()
 
@@ -68,6 +77,9 @@ class FieldsViewModel(
     var editingBodyPartNameMissing: Boolean
         get() = editingBodyPartNameMissingState.value
         set(value) { editingBodyPartNameMissingState.value = value }
+
+    var defaultMetricSystemUnitIndex: Int =
+        metricSystemUnits.indexOf(metricSystemUnits.find { it.id == defaultMetricSystemUnitId })
 
     private fun refreshAllData()
     {
@@ -331,12 +343,19 @@ class FieldsViewModel(
         metricSystemsUnitsState.remove(metricSystemUnit)
 
         if (metricSystemUnit.id != 0) deletedMetricSystemsUnitsIds.add(metricSystemUnit.id)
+
+        if (defaultMetricSystemUnitId == metricSystemUnit.id)
+        {
+            defaultMetricSystemUnitId = metricSystemUnits[0].id
+        }
     }
 
     fun updateData()
     {
         updateBodyPartsAndFieldsData()
         updateMetricSystemsUnitsData()
+
+        refreshUserInfo()
     }
 
     private fun updateBodyPartsAndFieldsData()
@@ -406,7 +425,8 @@ class FieldsViewModel(
             .insert(
                 name = field.name,
                 bodyPartId = field.bodyPartId,
-                active = field.active
+                active = field.active,
+                defaultMetricSystemUnitId = defaultMetricSystemUnitId
             )
 
     private fun flushUpdateField(field: Field) =
@@ -421,14 +441,18 @@ class FieldsViewModel(
 
     private fun updateMetricSystemsUnitsData()
     {
-        flushPositiveOperationsMetricSystemUnits()
         flushDeleteMetricSystemUnits()
+        flushPositiveOperationsMetricSystemUnits()
+        flushUpdateRecordsDefaultMetricSystemUnits()
     }
 
     private fun flushDeleteMetricSystemUnits() =
         tablesManager
             .metricSystemsUnitsManager
-            .deleteByIds(ids = deletedMetricSystemsUnitsIds)
+            .deleteByIds(
+                ids = deletedMetricSystemsUnitsIds,
+                defaultMetricSystemUnitId = defaultMetricSystemUnitId
+            )
 
     private fun flushPositiveOperationsMetricSystemUnits() =
         metricSystemsUnitsState
@@ -436,7 +460,15 @@ class FieldsViewModel(
                 metricSystemUnit.name.isNotBlank() && metricSystemUnit.abbreviation.isNotBlank()
             }
             .forEach { metricSystemUnit ->
-                if (metricSystemUnit.id == 0) flushInsertMetricSystemUnit(metricSystemUnit = metricSystemUnit)
+                if (metricSystemUnit.id == 0)
+                {
+                    val resultId: Int = flushInsertMetricSystemUnit(metricSystemUnit = metricSystemUnit).toInt()
+
+                    if (resultId > 0)
+                    {
+                        defaultMetricSystemUnitId = resultId
+                    }
+                }
                 else flushUpdateMetricSystemUnit(metricSystemUnit = metricSystemUnit)
             }
 
@@ -456,6 +488,19 @@ class FieldsViewModel(
                 name = metricSystemUnit.name,
                 abbreviation = metricSystemUnit.abbreviation
             )
+
+    private fun flushUpdateRecordsDefaultMetricSystemUnits() =
+        tablesManager
+            .recordsManager
+            .updateRecordsRequiringDefaultMetricSystemUnitId(
+                metricSystemUnitId = defaultMetricSystemUnitId
+            )
+
+    private fun refreshUserInfo()
+    {
+        userInfo.defaultMetricSystemUnitId = defaultMetricSystemUnitId
+        userInfo.flushUpdateUserInfo()
+    }
 
     fun openHomeActivity() = openHomeFunction()
 }

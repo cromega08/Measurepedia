@@ -4,8 +4,6 @@ import cromega.studio.measurepedia.data.database.tables.instances.FieldsTable
 import cromega.studio.measurepedia.data.database.tables.instances.MetricSystemsUnitsTable
 import cromega.studio.measurepedia.data.database.tables.instances.PersonsTable
 import cromega.studio.measurepedia.data.database.tables.instances.RecordsTable
-import cromega.studio.measurepedia.data.models.instances.Field
-import cromega.studio.measurepedia.data.models.instances.MetricSystemUnit
 import cromega.studio.measurepedia.data.models.instances.Person
 import cromega.studio.measurepedia.enums.DateOrder
 import cromega.studio.measurepedia.enums.MeasuredOrder
@@ -53,7 +51,7 @@ class PersonsManager(
                 }
             }
 
-    fun insert(name: String, alias: String? = null, updated: Date? = null)
+    fun insert(name: String, alias: String? = null, updated: Date? = null, defaultMetricSystemUnitId: Int)
     {
         val personInsertResult: Int =
             personsTable
@@ -64,21 +62,16 @@ class PersonsManager(
                 )
                 .toInt()
 
-        val personInsertedCorrectly: Boolean = personInsertResult > 0
-
-        if (personInsertedCorrectly)
-        {
-            val metricSystemUnitDefault: MetricSystemUnit = metricSystemsUnitsTable.readAll()[0]
-            val fields: List<Field> = fieldsTable.readAll()
-
-            fields.forEach { field ->
-                recordsTable.insert(
-                    personId = personInsertResult,
-                    fieldId = field.id,
-                    metricSystemUnitId = metricSystemUnitDefault.id
-                )
-            }
-        }
+        if (personInsertResult > 0)
+            fieldsTable
+                .readAll()
+                .forEach { field ->
+                    recordsTable.insert(
+                        personId = personInsertResult,
+                        fieldId = field.id,
+                        metricSystemUnitId = defaultMetricSystemUnitId
+                    )
+                }
     }
 
     fun update(id: Int, name: String, alias: String? = null, updated: Date? = null, measured: Boolean? = null) =
