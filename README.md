@@ -8,15 +8,20 @@ With **Measurepedia** forget about writing down your measurements in notebooks o
 
 ## Installation
 
-**Measurepedia** can be installed through the [published releases](https://github.com/cromega08/Light-Out---Another-One/releases) for the **Android Platform**.
+**Measurepedia** can be installed through 2 ways:
 
-Just download the _.apk_ file on your device and follow the established steps for installing.
+- Uptodown: **Measurepedia** is published [on Uptodown](https://measurepedia.uptodown.com/android), so can be downloaded through this platform.
+- Github Releases: **Measurepedia** can be downloaded through the [Github published releases](https://github.com/cromega08/Light-Out---Another-One/releases) for the **Android Platform**.
+
+Just obtain the _.apk_ file on your device and follow the device established steps for installing.
 
 ## Tech Stack
 
 - Languages: [Kotlin](https://kotlinlang.org).
 
 - Framework: [Jetpack Compose](https://developer.android.com/compose).
+
+- Database: [SQLite](https://www.sqlite.org).
 
 - Build Tools: [Gradle](https://gradle.org).
 
